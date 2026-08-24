@@ -1,0 +1,60 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Data directories (exclude contents, keep structure)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Output directories (exclude contents, keep structure)
+outputs/logs/*
+!outputs/logs/.gitkeep
+outputs/answers/*
+!outputs/answers/.gitkeep
+outputs/evaluations/*
+!outputs/evaluations/.gitkeep
+
+# IDEs and OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build & packaging
+dist/
+build/
+*.egg-info/
+*.egg
