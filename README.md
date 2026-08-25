@@ -223,3 +223,51 @@ Execute tests with coverage:
 ```bash
 pytest -v --tb=short
 ```
+
+---
+
+## 12. Token Counting & Cost Estimation
+
+The token utility uses `tiktoken` with the `cl100k_base` encoding. It counts prompt,
+answer, and document tokens, then estimates input and output cost separately using
+provider prices per 1,000 tokens. Prices are examples only and should be updated from
+the selected provider's current pricing page.
+
+Run the Python-only file estimator:
+
+```bash
+python -m scripts.token_cost_estimator prompt.txt answer.txt \
+  --input-price 0.0005 --output-price 0.0015
+```
+
+It prints JSON containing input tokens, output tokens, each cost, and total cost. The
+same functions can be imported from `src.services.token_usage` for RAG cost planning.
+
+Run the three-sample project demonstration and save its results:
+
+```bash
+python -m scripts.token_count_demo --output outputs/evaluations/token_count_results.json
+```
+
+The demonstration measures a short question, a financial paragraph, and the full
+project README. It reports characters, words, tokens, separate input/output costs, and
+the combined estimate. The checked-in output is available at
+`outputs/evaluations/token_count_results.json`.
+
+### Short Explanation
+
+1. `count_tokens` measures text with the model-compatible tokenizer; tokens are not
+  the same as words or characters.
+2. `estimate_cost` counts input and output independently because providers bill them
+  at different rates.
+3. `count_documents` totals a corpus so chunking and retrieval choices can be checked
+  before processing thousands of documents.
+
+### Mentor Questions
+
+- Why can token count differ from word count, especially for code or other languages?
+- Why should input and output prices be configured separately?
+- How do system instructions, retrieved chunks, and chat history affect context limits?
+- Why is measuring retrieved context important for both cost and answer quality?
+- How would you compare this estimate with the provider's reported usage fields?
+- What changes when the provider uses a tokenizer different from `cl100k_base`?
