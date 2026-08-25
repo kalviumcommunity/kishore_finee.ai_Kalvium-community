@@ -13,7 +13,6 @@ dependencies = [
     "uvicorn[standard]>=0.28.0",
     "python-dotenv>=1.0.1",
     "pydantic-settings>=2.2.1",
-    "tiktoken>=0.7.0",
 ]
 
 [project.optional-dependencies]
