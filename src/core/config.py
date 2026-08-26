@@ -62,6 +62,24 @@ class Settings(BaseSettings):
         description="Connection URL for PostgreSQL with pgvector extension",
     )
 
+    # LLM Generation & Output Control Settings
+    LLM_TEMPERATURE: float = Field(
+        default=0.1,
+        description="Controls randomness of the LLM generation",
+    )
+    LLM_MAX_TOKENS: int = Field(
+        default=500,
+        description="Maximum output tokens for the LLM",
+    )
+    LLM_TOP_P: float = Field(
+        default=1.0,
+        description="Top-p sampling parameter",
+    )
+    LLM_STOP_SEQUENCES: Optional[str] = Field(
+        default=None,
+        description="Comma-separated stop sequences for the LLM",
+    )
+
     # Observability & Logging
     LOG_LEVEL: str = Field(
         default="INFO",
@@ -77,6 +95,14 @@ class Settings(BaseSettings):
     def is_development(self) -> bool:
         """Check if application is running in development environment."""
         return self.APP_ENV == "development"
+
+    @property
+    def parsed_stop_sequences(self) -> Optional[list[str]]:
+        """Parse LLM_STOP_SEQUENCES from comma-separated string to list of strings."""
+        if not self.LLM_STOP_SEQUENCES:
+            return None
+        seqs = [s.strip() for s in self.LLM_STOP_SEQUENCES.split(",") if s.strip()]
+        return seqs if seqs else None
 
 
 @lru_cache
