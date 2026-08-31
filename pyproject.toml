@@ -27,3 +27,10 @@ testpaths = ["tests"]
 python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"
+
+[tool.pyright]
+extraPaths = [".", "src"]
+
+[tool.pyrefly]
+search-paths = [".", "src"]
+

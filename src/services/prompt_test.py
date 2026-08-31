@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+from prompts import FINANCIAL_INFO_SYSTEM_PROMPT
 
 load_dotenv()
 
@@ -11,17 +12,7 @@ client = OpenAI(
 
 MODEL = os.getenv("CHAT_MODEL")
 
-
-# System prompt defines the assistant's role and rules
-system_prompt = """
-You are a financial information assistant for FInee.ai.
-
-Rules:
-- Give concise and factual answers.
-- Do not invent financial information.
-- If the information is not provided, say "I don't know."
-- Do not provide personalized financial advice.
-"""
+system_prompt = FINANCIAL_INFO_SYSTEM_PROMPT
 
 prompts = [
     "What is a mutual fund?",

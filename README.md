@@ -271,3 +271,21 @@ the combined estimate. The checked-in output is available at
 - Why is measuring retrieved context important for both cost and answer quality?
 - How would you compare this estimate with the provider's reported usage fields?
 - What changes when the provider uses a tokenizer different from `cl100k_base`?
+
+---
+
+## 13. Prompt Templates & Reusable Prompt Design
+
+FInee.ai utilizes centralized prompt templates stored in `prompts/` to decouple prompt definitions, compliance guardrails, and citation rules from application logic.
+
+### Key Benefits
+1. **Single Source of Truth**: Grounding rules and citation requirements are edited once and immediately propagate across chat endpoints, batch evaluators, and CLI tools.
+2. **Dynamic Runtime Injection**: Named placeholders (`{context}`, `{question}`, etc.) are injected safely at runtime with automatic placeholder validation via `render()`.
+3. **Structured & Type-Safe**: Supports both straightforward string templates and `PromptTemplate` objects with explicit variable parsing and error handling.
+
+### Running the Prompt Template Demonstration
+
+```bash
+python -m scripts.prompt_template_demo
+```
+
