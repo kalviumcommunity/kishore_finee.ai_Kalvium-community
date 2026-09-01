@@ -5,8 +5,16 @@ import re
 from typing import Any, Dict, List
 
 import tiktoken
+from typing import Optional
 
 from src.ingestion.document_loader import load_text
+from src.ingestion.chunk_metadata import (
+    create_chunk,
+    attach_metadata_to_chunks,
+    get_source_reference,
+    Chunk,
+    ChunkMetadata,
+)
 
 
 DEFAULT_ENCODING = "cl100k_base"
@@ -205,6 +213,47 @@ def token_chunks_with_metadata(
 
 def show_strategy(name: str, chunks: List[str], is_token_strategy: bool = False, encoding_name: str = DEFAULT_ENCODING) -> None:
     """Print summary statistics and first chunk preview for a chunking strategy."""
+def chunk_document_with_metadata(
+    text: str,
+    source: str,
+    strategy: str = "recursive",
+    max_size: int = 150,
+    overlap: int = 20,
+    document_id: Optional[str] = None,
+    document_version: Optional[str] = None,
+    page: Optional[int] = None,
+    section: Optional[str] = None,
+    effective_date: Optional[str] = None,
+    approval_status: Optional[str] = None,
+) -> list[dict]:
+    """
+    Chunk document text using the specified strategy and attach metadata.
+    """
+    if strategy == "fixed":
+        raw_chunks = fixed_chunks(text, size=max_size, overlap=overlap)
+    elif strategy == "sentence":
+        raw_chunks = sentence_chunks(text, max_size=max_size)
+    elif strategy == "paragraph":
+        raw_chunks = paragraph_chunks(text)
+    elif strategy == "recursive":
+        raw_chunks = recursive_chunks(text, max_size=max_size)
+    else:
+        raise ValueError(f"Unknown chunking strategy: {strategy}")
+
+    return attach_metadata_to_chunks(
+        chunks=raw_chunks,
+        source=source,
+        document_id=document_id,
+        document_version=document_version,
+        page=page,
+        section=section,
+        effective_date=effective_date,
+        approval_status=approval_status,
+        full_text=text,
+    )
+
+
+def show_strategy(name, chunks):
     if not chunks:
         print(f"{name}: No chunks")
         return
