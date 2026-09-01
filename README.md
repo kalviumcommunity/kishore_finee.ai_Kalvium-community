@@ -271,3 +271,31 @@ the combined estimate. The checked-in output is available at
 - Why is measuring retrieved context important for both cost and answer quality?
 - How would you compare this estimate with the provider's reported usage fields?
 - What changes when the provider uses a tokenizer different from `cl100k_base`?
+
+---
+
+## 13. Token-Aware Chunk Sizing & Overlap
+
+The document ingestion pipeline implements token-aware chunking using `tiktoken` (`cl100k_base` encoding) with sliding token overlap.
+
+### Why Token-Based Sizing & Overlap?
+1. **Model Budget Adherence**: LLM context windows and vector embedding limits measure tokens, not characters. Token-based sizing prevents budget overruns on dense text.
+2. **Boundary Context Preservation**: Hard splits slice financial conditions and regulatory disclosures across chunk edges. Controlled overlap (default: 60 tokens / 15%) repeats boundary tokens so ideas appear intact in at least one chunk.
+
+### Recommended Settings for FInee.ai:
+- **Chunk Size**: `400` tokens (~300 words / 2–3 dense financial paragraphs)
+- **Chunk Overlap**: `60` tokens (15% overlap)
+- **Top-K Budget**: `5` chunks × `400` tokens = `2,000` tokens of context, well within the 8k context window limit.
+
+### Run the Demonstration:
+```bash
+python -m scripts.demonstrate_token_chunking --output outputs/evaluations/token_chunking_results.json
+```
+
+### Run Tests:
+```bash
+pytest -v tests/test_token_chunking.py
+```
+
+Detailed architectural explanation and trade-off analyses are documented in [`docs/token_chunking.md`](docs/token_chunking.md).
+
