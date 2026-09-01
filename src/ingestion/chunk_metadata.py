@@ -1,5 +1,6 @@
 """Chunk metadata models and source tracking helpers for finee.ai."""
 
+from pathlib import Path
 from typing import Any, Optional
 from pydantic import BaseModel, Field
 
@@ -97,6 +98,65 @@ def create_chunk(
     }
 
 
+def find_char_positions(text: str, chunks: list[str]) -> list[Optional[int]]:
+    """
+    Find the starting character position of each chunk within the source text.
+
+    Args:
+        text: The full source text.
+        chunks: List of chunk text strings.
+
+    Returns:
+        List of integer starting positions (or None if not found).
+    """
+    results = []
+    search_start = 0
+
+    for chunk in chunks:
+        position = text.find(chunk, search_start)
+        if position != -1:
+            results.append(position)
+            search_start = position + len(chunk)
+        else:
+            results.append(None)
+
+    return results
+
+
+def create_chunk_metadata(
+    source: str,
+    chunks: list[str],
+    positions: Optional[list[Optional[int]]] = None,
+) -> list[dict[str, Any]]:
+    """
+    Attach source and position metadata to a list of chunks.
+
+    Args:
+        source: Source document identifier.
+        chunks: List of chunk text strings.
+        positions: Optional list of starting character positions.
+
+    Returns:
+        List of chunk dictionaries with metadata.
+    """
+    documents = []
+
+    for index, chunk in enumerate(chunks):
+        pos = positions[index] if positions and index < len(positions) else None
+        char_end = pos + len(chunk) if pos is not None else None
+        documents.append(
+            create_chunk(
+                text=chunk,
+                source=source,
+                chunk_index=index,
+                char_start=pos,
+                char_end=char_end,
+            )
+        )
+
+    return documents
+
+
 def get_source_reference(chunk: dict | Any) -> str:
     """
     Generate a human-readable traceability citation reference for a chunk.
@@ -167,19 +227,12 @@ def attach_metadata_to_chunks(
     Returns:
         List of structured chunk dictionaries with metadata.
     """
+    positions = find_char_positions(full_text, chunks) if full_text is not None else None
     result = []
-    cursor = 0
 
     for idx, chunk_text in enumerate(chunks):
-        char_start = None
-        char_end = None
-
-        if full_text is not None:
-            found_pos = full_text.find(chunk_text, cursor)
-            if found_pos != -1:
-                char_start = found_pos
-                char_end = found_pos + len(chunk_text)
-                cursor = char_end
+        char_start = positions[idx] if positions is not None else None
+        char_end = char_start + len(chunk_text) if char_start is not None else None
 
         chunk_dict = create_chunk(
             text=chunk_text,
@@ -197,3 +250,88 @@ def attach_metadata_to_chunks(
         result.append(chunk_dict)
 
     return result
+
+
+def main() -> None:
+    """Demonstrate chunk metadata and source tracking across sample documents."""
+    from src.ingestion.document_loader import load_text
+    from src.ingestion.chunking import recursive_chunks
+
+    data_dir = Path("data")
+
+    print("=" * 60)
+    print("FInee.ai - CHUNK METADATA & SOURCE TRACKING")
+    print("=" * 60)
+
+    total_chunks = 0
+
+    for path in sorted(data_dir.rglob("*")):
+        if not path.is_file() or path.name == ".gitkeep":
+            continue
+
+        if path.suffix.lower() not in [
+            ".pdf",
+            ".txt",
+            ".md",
+            ".html",
+            ".htm",
+        ]:
+            continue
+
+        try:
+            # Load document
+            text = load_text(path)
+
+            if not text.strip():
+                continue
+
+            # Recursive chunking
+            chunks = recursive_chunks(text, max_size=150)
+
+            # Find starting character positions
+            positions = find_char_positions(text, chunks)
+
+            # Attach metadata
+            documents = []
+            for index, (chunk, position) in enumerate(zip(chunks, positions)):
+                char_end = position + len(chunk) if position is not None else None
+                documents.append(
+                    create_chunk(
+                        text=chunk,
+                        source=path.name,
+                        chunk_index=index,
+                        char_start=position,
+                        char_end=char_end,
+                    )
+                )
+
+            print("\n" + "-" * 60)
+            print(f"Document: {path.name}")
+            print(f"Chunks  : {len(documents)}")
+            print("-" * 60)
+
+            # Display first few chunks
+            for item in documents[:3]:
+                print(f"\nChunk {item['metadata']['chunk_index']}")
+                print(f"Source     : {item['metadata']['source']}")
+                print(f"Char start : {item['metadata']['char_start']}")
+                print(f"Text       : {item['text'][:120]}")
+
+            total_chunks += len(documents)
+
+        except Exception as error:
+            print(f"Could not process {path.name}: {error}")
+
+    print("\n" + "=" * 60)
+    print("METADATA SUMMARY")
+    print("=" * 60)
+    print(f"Total chunks with metadata: {total_chunks}")
+    print("Every chunk contains:")
+    print("  - source")
+    print("  - chunk_index")
+    print("  - char_start")
+    print("=" * 60)
+
+
+if __name__ == "__main__":
+    main()

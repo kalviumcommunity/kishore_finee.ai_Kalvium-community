@@ -8,6 +8,8 @@ from .document_loader import load_text, load_documents
 from .text_cleaner import clean_text, clean_documents
 from .chunk_metadata import (
     create_chunk,
+    create_chunk_metadata,
+    find_char_positions,
     get_source_reference,
     attach_metadata_to_chunks,
     Chunk,
@@ -28,6 +30,8 @@ __all__ = [
     "clean_text",
     "clean_documents",
     "create_chunk",
+    "create_chunk_metadata",
+    "find_char_positions",
     "get_source_reference",
     "attach_metadata_to_chunks",
     "Chunk",
@@ -39,4 +43,5 @@ __all__ = [
     "recursive_chunks",
     "chunk_document_with_metadata",
 ]
+
 

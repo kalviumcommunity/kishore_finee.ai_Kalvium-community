@@ -3,12 +3,15 @@
 import pytest
 from src.ingestion.chunk_metadata import (
     create_chunk,
+    create_chunk_metadata,
+    find_char_positions,
     get_source_reference,
     attach_metadata_to_chunks,
     Chunk,
     ChunkMetadata,
 )
 from src.ingestion.chunking import chunk_document_with_metadata
+
 
 
 def test_every_chunk_has_metadata():
@@ -189,3 +192,21 @@ def test_chunk_document_with_metadata_integration():
         assert chunk["metadata"]["approval_status"] == "approved"
         assert chunk["metadata"]["char_start"] is not None
         assert chunk["metadata"]["char_end"] is not None
+
+
+def test_find_char_positions_and_create_chunk_metadata():
+    text = "Intro paragraph. Body paragraph. Conclusion paragraph."
+    chunks = ["Intro paragraph.", "Body paragraph.", "Conclusion paragraph."]
+    positions = find_char_positions(text, chunks)
+
+    assert positions == [0, 17, 33]
+
+    docs = create_chunk_metadata("sample.txt", chunks, positions)
+    assert len(docs) == 3
+    assert docs[0]["metadata"]["source"] == "sample.txt"
+    assert docs[0]["metadata"]["chunk_index"] == 0
+    assert docs[0]["metadata"]["char_start"] == 0
+    assert docs[0]["metadata"]["char_end"] == 16
+    assert docs[1]["metadata"]["chunk_index"] == 1
+    assert docs[1]["metadata"]["char_start"] == 17
+
