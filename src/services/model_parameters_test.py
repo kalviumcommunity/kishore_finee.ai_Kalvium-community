@@ -2,6 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from openai import OpenAI
+from prompts import CONVERSATIONAL_SYSTEM_PROMPT
 
 load_dotenv()
 
@@ -15,10 +16,7 @@ MODEL = os.getenv("CHAT_MODEL")
 messages = [
     {
         "role": "system",
-        "content": (
-            "You are a concise financial information assistant for FInee.ai. "
-            "Answer factually. Do not provide personalized financial advice."
-        ),
+        "content": CONVERSATIONAL_SYSTEM_PROMPT,
     },
     {
         "role": "user",

@@ -274,6 +274,21 @@ the combined estimate. The checked-in output is available at
 
 ---
 
+## 13. Prompt Templates & Reusable Prompt Design
+
+FInee.ai utilizes centralized prompt templates stored in `prompts/` to decouple prompt definitions, compliance guardrails, and citation rules from application logic.
+
+### Key Benefits
+1. **Single Source of Truth**: Grounding rules and citation requirements are edited once and immediately propagate across chat endpoints, batch evaluators, and CLI tools.
+2. **Dynamic Runtime Injection**: Named placeholders (`{context}`, `{question}`, etc.) are injected safely at runtime with automatic placeholder validation via `render()`.
+3. **Structured & Type-Safe**: Supports both straightforward string templates and `PromptTemplate` objects with explicit variable parsing and error handling.
+
+### Running the Prompt Template Demonstration
+
+```bash
+python -m scripts.prompt_template_demo
+```
+
 ## 13. Token-Aware Chunk Sizing & Overlap
 
 The document ingestion pipeline implements token-aware chunking using `tiktoken` (`cl100k_base` encoding) with sliding token overlap.

@@ -1,8 +1,8 @@
 import os
 import json
-
 from dotenv import load_dotenv
 from openai import OpenAI
+from prompts import STRUCTURED_OUTPUT_SYSTEM_PROMPT
 
 load_dotenv()
 
@@ -13,18 +13,7 @@ client = OpenAI(
 
 MODEL = os.getenv("CHAT_MODEL")
 
-
-SYSTEM_PROMPT = """
-You are FInee.ai, a financial information assistant.
-
-Reply with ONLY a valid JSON object in exactly this format:
-{
-  "answer": "your answer",
-  "source": "source name"
-}
-
-Do not add markdown, explanations, or any text outside the JSON object.
-"""
+SYSTEM_PROMPT = STRUCTURED_OUTPUT_SYSTEM_PROMPT
 
 
 def parse_and_validate(raw):
