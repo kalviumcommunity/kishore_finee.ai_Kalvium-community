@@ -1,0 +1,114 @@
+{
+  "concept": "Concept 13: Token-Aware Chunk Sizing & Overlap",
+  "task1_sizing_comparison": {
+    "character_chunking": {
+      "size_chars": 100,
+      "overlap_chars": 20,
+      "chunk_count": 137,
+      "min_tokens_per_chunk": 11,
+      "max_tokens_per_chunk": 36,
+      "avg_tokens_per_chunk": 24
+    },
+    "token_aware_chunking": {
+      "size_tokens": 400,
+      "overlap_tokens": 60,
+      "chunk_count": 8,
+      "min_tokens_per_chunk": 184,
+      "max_tokens_per_chunk": 400,
+      "avg_tokens_per_chunk": 372
+    }
+  },
+  "task2_overlap_variations": [
+    {
+      "chunk_size_tokens": 400,
+      "overlap_tokens": 0,
+      "overlap_percentage": 0.0,
+      "chunk_count": 7,
+      "total_tokens_stored": 2563,
+      "duplicate_token_overhead_pct": 0.0
+    },
+    {
+      "chunk_size_tokens": 400,
+      "overlap_tokens": 40,
+      "overlap_percentage": 10.0,
+      "chunk_count": 8,
+      "total_tokens_stored": 2843,
+      "duplicate_token_overhead_pct": 10.88
+    },
+    {
+      "chunk_size_tokens": 400,
+      "overlap_tokens": 60,
+      "overlap_percentage": 15.0,
+      "chunk_count": 8,
+      "total_tokens_stored": 2982,
+      "duplicate_token_overhead_pct": 16.3
+    },
+    {
+      "chunk_size_tokens": 400,
+      "overlap_tokens": 100,
+      "overlap_percentage": 25.0,
+      "chunk_count": 9,
+      "total_tokens_stored": 3364,
+      "duplicate_token_overhead_pct": 31.2
+    }
+  ],
+  "task3_boundary_preservation": {
+    "text": "FInee.ai Compliance Advisory Memo: Section 4.2 Regulatory Fee Guidelines. Advisors must ensure that portfolio fee reductions comply strictly with SEC Rule 206(4)-1. Specifically, clients are eligible for a 0.50% advisory fee discount only if their aggregate qualifying asset balance across linked family accounts exceeds $250,000 as of the quarter-end evaluation date. Accounts failing to maintain this threshold will revert to standard asset management fee schedules without exception. All communications regarding fee tiers must retain audit logs for seven years.",
+    "total_tokens": 105,
+    "target_query": "What asset balance and evaluation timing are required for the 0.50% fee discount?",
+    "required_facts": [
+      "0.50% advisory fee discount",
+      "$250,000 qualifying balance",
+      "quarter-end evaluation date"
+    ],
+    "no_overlap": {
+      "chunk_size": 35,
+      "overlap": 0,
+      "chunks": [
+        "FInee.ai Compliance Advisory Memo: Section 4.2 Regulatory Fee Guidelines. Advisors must ensure that portfolio fee reductions comply strictly with SEC Rule 206(4)-1",
+        ". Specifically, clients are eligible for a 0.50% advisory fee discount only if their aggregate qualifying asset balance across linked family accounts exceeds $250,000 as of the",
+        "quarter-end evaluation date. Accounts failing to maintain this threshold will revert to standard asset management fee schedules without exception. All communications regarding fee tiers must retain audit logs for seven years."
+      ],
+      "intact_answer_found": false,
+      "explanation": "With overlap=0, the boundary cut splits the clause at 'as of the'. Chunk 2 contains '0.50%' and '$250,000' but misses 'quarter-end evaluation date'. Chunk 3 starts with 'quarter-end evaluation date' but misses the fee discount and amount. Neither chunk contains the complete fact, causing compliance retrieval to return fragmented info."
+    },
+    "with_overlap": {
+      "chunk_size": 35,
+      "overlap": 15,
+      "chunks": [
+        "FInee.ai Compliance Advisory Memo: Section 4.2 Regulatory Fee Guidelines. Advisors must ensure that portfolio fee reductions comply strictly with SEC Rule 206(4)-1",
+        "that portfolio fee reductions comply strictly with SEC Rule 206(4)-1. Specifically, clients are eligible for a 0.50% advisory fee discount only if their aggregate",
+        "eligible for a 0.50% advisory fee discount only if their aggregate qualifying asset balance across linked family accounts exceeds $250,000 as of the quarter-end evaluation date.",
+        "family accounts exceeds $250,000 as of the quarter-end evaluation date. Accounts failing to maintain this threshold will revert to standard asset management fee schedules without exception. All communications regarding",
+        "threshold will revert to standard asset management fee schedules without exception. All communications regarding fee tiers must retain audit logs for seven years.",
+        "logs for seven years."
+      ],
+      "intact_answer_found": true,
+      "explanation": "With overlap=15, the boundary tokens repeat. Chunk 3 contains '0.50% advisory fee discount', '$250,000', AND 'quarter-end evaluation date' intact in a single chunk, ensuring accurate retrieval."
+    }
+  },
+  "task4_model_budget_justification": {
+    "recommended_settings": {
+      "chunk_size_tokens": 400,
+      "overlap_tokens": 60,
+      "overlap_percentage": "15%",
+      "tokenizer": "cl100k_base (tiktoken)"
+    },
+    "context_window_budget": {
+      "model": "LLaMA-3-70B / Groq (8,192 context window minimum) & GPT-4o-mini",
+      "top_k_retrieval_chunks": 5,
+      "retrieved_context_tokens": 2000,
+      "system_prompt_and_guardrails_tokens": 350,
+      "user_query_and_history_tokens": 400,
+      "model_response_generation_budget": 500,
+      "total_budget_used": 3250,
+      "context_window_limit": 8192,
+      "headroom_remaining": 4942
+    },
+    "tradeoff_analysis": {
+      "chunk_size_400_tokens": "400 tokens (~300 words / 2-3 financial paragraphs) provides enough semantic density for embedding models while keeping chunks focused on a single compliance topic.",
+      "overlap_60_tokens": "60 tokens (~45 words / 2 sentences) ensures compound sentences, financial conditions, and regulatory disclaimers spanning chunk boundaries are preserved intact in at least one chunk.",
+      "cost_and_storage_impact": "At 15% overlap, embedding cost and storage increase by only ~15-18%, a modest trade-off for eliminating boundary-cut retrieval failures."
+    }
+  }
+}
