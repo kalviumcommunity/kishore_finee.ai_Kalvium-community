@@ -39,6 +39,7 @@ outputs/answers/*
 !outputs/answers/.gitkeep
 outputs/evaluations/*
 !outputs/evaluations/.gitkeep
+!outputs/evaluations/*.json
 
 # IDEs and OS
 .DS_Store

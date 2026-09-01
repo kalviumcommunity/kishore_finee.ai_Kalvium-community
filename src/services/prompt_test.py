@@ -15,7 +15,8 @@ MODEL = os.getenv("CHAT_MODEL")
 system_prompt = FINANCIAL_INFO_SYSTEM_PROMPT
 
 prompts = [
-    "What is a mutual fund?",
+    # "What is a mutual fund?",
+    "Give 2 points about India.",
     "Explain mutual funds in one sentence.",
 ]
 
