@@ -1,0 +1,133 @@
+{
+  "status": "success",
+  "vector_dimension": 1536,
+  "sample_count": 6,
+  "is_dimension_uniform": true,
+  "samples": [
+    {
+      "id": 0,
+      "text": "How do I reset my account password?",
+      "dimension": 1536,
+      "first_8_values": [
+        -0.011305,
+        -0.021101,
+        -0.01006,
+        -0.059126,
+        -0.020386,
+        0.016076,
+        -0.001883,
+        -0.075688
+      ]
+    },
+    {
+      "id": 1,
+      "text": "Steps to recover access to my login",
+      "dimension": 1536,
+      "first_8_values": [
+        -0.028103,
+        -0.024277,
+        -0.001686,
+        -0.019783,
+        -0.003026,
+        0.009929,
+        -0.001259,
+        -0.062588
+      ]
+    },
+    {
+      "id": 2,
+      "text": "The cafeteria menu has pasta today",
+      "dimension": 1536,
+      "first_8_values": [
+        -0.001315,
+        -0.012253,
+        0.000765,
+        -0.029393,
+        -0.017359,
+        0.008596,
+        0.001843,
+        -0.032433
+      ]
+    },
+    {
+      "id": 3,
+      "text": "What is the annual yield on a high-interest savings account?",
+      "dimension": 1536,
+      "first_8_values": [
+        -0.016482,
+        -0.003172,
+        -0.00997,
+        -0.023544,
+        -0.004121,
+        0.011233,
+        -0.002122,
+        -0.044203
+      ]
+    },
+    {
+      "id": 4,
+      "text": "How much interest does a high-yield savings deposit earn annually?",
+      "dimension": 1536,
+      "first_8_values": [
+        0.002182,
+        0.006974,
+        -0.005531,
+        -0.001371,
+        -0.002761,
+        -0.006591,
+        -0.002522,
+        -0.022533
+      ]
+    },
+    {
+      "id": 5,
+      "text": "The football match was postponed due to heavy rain",
+      "dimension": 1536,
+      "first_8_values": [
+        -0.024271,
+        -0.012356,
+        -0.001562,
+        -0.003597,
+        0.001867,
+        0.007212,
+        -0.012001,
+        -0.02018
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "comparison_name": "Account Password Reset vs Login Recovery (Similar)",
+      "text_a": "How do I reset my account password?",
+      "text_b": "Steps to recover access to my login",
+      "category": "similar",
+      "cosine_similarity": 0.7304
+    },
+    {
+      "comparison_name": "Account Password Reset vs Cafeteria Menu (Dissimilar)",
+      "text_a": "How do I reset my account password?",
+      "text_b": "The cafeteria menu has pasta today",
+      "category": "dissimilar",
+      "cosine_similarity": 0.4404
+    },
+    {
+      "comparison_name": "High-Yield Savings Yield vs Interest Earned (Similar)",
+      "text_a": "What is the annual yield on a high-interest savings account?",
+      "text_b": "How much interest does a high-yield savings deposit earn annually?",
+      "category": "similar",
+      "cosine_similarity": 0.8848
+    },
+    {
+      "comparison_name": "High-Yield Savings vs Football Match Weather (Dissimilar)",
+      "text_a": "What is the annual yield on a high-interest savings account?",
+      "text_b": "The football match was postponed due to heavy rain",
+      "category": "dissimilar",
+      "cosine_similarity": 0.4131
+    }
+  ],
+  "ranking_validation": {
+    "scenario_a_similar_higher": true,
+    "scenario_b_similar_higher": true
+  },
+  "explanation": "What Embedding Vectors Represent in Plain Terms:\n\n1. Vectors as Coordinates of Meaning:\n   An embedding vector is not a random identifier, integer hash, or simple keyword counter. It is an array of floating-point numbers that positions text within a continuous, high-dimensional semantic coordinate space (e.g. 1536 dimensions).\n\n2. Semantic Proximity in Vector Space:\n   During model training, the embedding model learns to map conceptual relationships. Texts expressing the same intent or semantic concept (such as 'How do I reset my account password?' and 'Steps to recover access to my login') are mapped to vectors pointing in nearly identical geometric directions. Conversely, unrelated topics ('The cafeteria menu has pasta today') point in divergent directions.\n\n3. Directional Comparison via Cosine Similarity:\n   By computing the cosine of the angle between two vectors, we quantify their semantic similarity on a scale from -1.0 to +1.0. A score near 1.0 indicates strong semantic equivalence, regardless of whether the texts share any exact keywords.\n\n4. Foundation of RAG Semantic Retrieval:\n   In a Retrieval-Augmented Generation (RAG) pipeline, knowledge chunks are embedded and indexed in a vector database. When a user submits a question, it is converted into an embedding vector, enabling fast nearest-neighbor search to retrieve conceptually relevant chunks even when phrasing differs entirely."
+}
