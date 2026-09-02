@@ -1,6 +1,6 @@
 """Embeddings module for FInee.ai.
 
-Responsible for integrating embedding models, vector generation,
+Responsible for integrating LangChain embedding models, vector generation,
 dimension verification, and vector similarity comparisons.
 """
 
@@ -10,10 +10,12 @@ from src.embeddings.embedder import (
     EmbeddingConfigurationError,
     EmbeddingError,
     EmbeddingService,
+    FIneeLangChainEmbeddings,
     cosine_similarity,
     embed,
     embed_text,
     embed_texts,
+    get_langchain_embeddings,
     verify_dimensions,
 )
 
@@ -23,9 +25,11 @@ __all__ = [
     "EmbeddingConfigurationError",
     "EmbeddingError",
     "EmbeddingService",
+    "FIneeLangChainEmbeddings",
     "cosine_similarity",
     "embed",
     "embed_text",
     "embed_texts",
+    "get_langchain_embeddings",
     "verify_dimensions",
 ]

@@ -1,7 +1,8 @@
-"""Embeddings service module for FInee.ai RAG platform.
+"""Embeddings service module for FInee.ai RAG platform using LangChain.
 
 Provides text embedding generation, vector dimension reporting,
-and cosine similarity computation for semantic retrieval.
+and cosine similarity computation for semantic retrieval, fully integrated
+with LangChain Core Embeddings interfaces.
 """
 
 from __future__ import annotations
@@ -10,8 +11,8 @@ import hashlib
 import re
 from typing import Any, Dict, List, Optional, Sequence, Union
 
-import httpx
 import numpy as np
+from langchain_core.embeddings import Embeddings
 
 from src.core.config import settings
 
@@ -75,7 +76,7 @@ def _generate_deterministic_semantic_vector(
 ) -> List[float]:
     """Generates a normalized semantic vector deterministically for offline/testing use.
 
-    Uses a vocabulary semantic mapping and character/word n-gram projections
+    Uses vocabulary semantic mapping and character/word n-gram projections
     to ensure texts with semantic overlap produce high cosine similarity,
     while unrelated texts produce low cosine similarity.
 
@@ -152,8 +153,8 @@ def _generate_deterministic_semantic_vector(
     return vec.tolist()
 
 
-class EmbeddingService:
-    """Service for generating and managing document and query embeddings."""
+class FIneeLangChainEmbeddings(Embeddings):
+    """LangChain-compatible Embeddings implementation for FInee.ai."""
 
     def __init__(
         self,
@@ -162,14 +163,7 @@ class EmbeddingService:
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
     ) -> None:
-        """Initializes the EmbeddingService.
-
-        Args:
-            model: Name of the embedding model (e.g. 'text-embedding-3-small').
-            dimension: Expected vector dimension.
-            api_key: OpenAI API key (reads from config if not provided).
-            base_url: Base endpoint URL for embedding API.
-        """
+        """Initializes the LangChain embeddings provider."""
         self.model = model or settings.EMBED_MODEL or DEFAULT_EMBED_MODEL
         self.dimension = dimension
         self.api_key = api_key or settings.OPENAI_API_KEY
@@ -179,73 +173,95 @@ class EmbeddingService:
         """Returns True if a live API key is configured."""
         return bool(self.api_key and self.api_key.strip())
 
-    def embed_text(self, text: str) -> List[float]:
-        """Generates an embedding vector for a single text string.
-
-        Args:
-            text: Text content to embed.
-
-        Returns:
-            List of float numbers of length `dimension`.
-        """
-        results = self.embed_texts([text])
-        return results[0]
-
-    def embed_texts(self, texts: Sequence[str]) -> List[List[float]]:
-        """Generates embedding vectors for a sequence of texts.
-
-        If API credentials are configured, makes an API call. Otherwise,
-        generates normalized semantic vectors deterministically.
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """LangChain standard interface: embed a list of documents/chunks.
 
         Args:
             texts: List of text strings to embed.
 
         Returns:
-            List of embedding vectors, where each vector is a list of floats.
-
-        Raises:
-            EmbeddingError: If API call fails.
+            List of embedding vectors (List[List[float]]).
         """
         if not texts:
             return []
 
         if self.is_api_configured():
             try:
-                return self._embed_via_api(texts)
+                from langchain_openai import OpenAIEmbeddings
+                openai_embedder = OpenAIEmbeddings(
+                    model=self.model,
+                    openai_api_key=self.api_key,
+                    openai_api_base=self.base_url,
+                )
+                return openai_embedder.embed_documents(texts)
             except Exception:
+                # Graceful fallback to deterministic semantic vector
                 return [_generate_deterministic_semantic_vector(t, self.dimension) for t in texts]
 
         return [_generate_deterministic_semantic_vector(t, self.dimension) for t in texts]
 
-    def _embed_via_api(self, texts: Sequence[str]) -> List[List[float]]:
-        """Invokes OpenAI-compatible embedding API endpoint."""
-        url = f"{self.base_url}/embeddings"
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-        }
-        payload = {
-            "model": self.model,
-            "input": list(texts),
-        }
+    def embed_query(self, text: str) -> List[float]:
+        """LangChain standard interface: embed a single search query.
 
-        with httpx.Client(timeout=30.0) as client:
-            response = client.post(url, json=payload, headers=headers)
-            if response.status_code != 200:
-                raise EmbeddingError(
-                    f"Embedding API error (Status {response.status_code}): {response.text}"
-                )
-            data = response.json()
-            data_items = sorted(data["data"], key=lambda x: x["index"])
-            return [item["embedding"] for item in data_items]
+        Args:
+            text: Text string of the search query.
+
+        Returns:
+            Embedding vector (List[float]).
+        """
+        results = self.embed_documents([text])
+        return results[0]
 
 
-# Module-level convenience functions
+class EmbeddingService:
+    """High-level service for document and query embeddings using LangChain."""
+
+    def __init__(
+        self,
+        model: Optional[str] = None,
+        dimension: int = DEFAULT_VECTOR_DIMENSION,
+        api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
+    ) -> None:
+        """Initializes the service with underlying LangChain Embeddings provider."""
+        self.provider = FIneeLangChainEmbeddings(
+            model=model,
+            dimension=dimension,
+            api_key=api_key,
+            base_url=base_url,
+        )
+
+    @property
+    def model(self) -> str:
+        return self.provider.model
+
+    @property
+    def dimension(self) -> int:
+        return self.provider.dimension
+
+    def is_api_configured(self) -> bool:
+        return self.provider.is_api_configured()
+
+    def embed_text(self, text: str) -> List[float]:
+        """Generates an embedding vector for a single text query via LangChain embed_query."""
+        return self.provider.embed_query(text)
+
+    def embed_texts(self, texts: Sequence[str]) -> List[List[float]]:
+        """Generates embedding vectors for documents via LangChain embed_documents."""
+        return self.provider.embed_documents(list(texts))
+
+
+# Module-level convenience functions & singleton
 _default_service = EmbeddingService()
 
 
+def get_langchain_embeddings() -> Embeddings:
+    """Returns the LangChain Embeddings instance for FInee.ai."""
+    return _default_service.provider
+
+
 def embed(texts: Union[str, Sequence[str]]) -> Union[List[float], List[List[float]]]:
-    """Generates embedding vector(s) for input text or sequence of texts.
+    """Generates embedding vector(s) using LangChain.
 
     Args:
         texts: A single text string or list of text strings.

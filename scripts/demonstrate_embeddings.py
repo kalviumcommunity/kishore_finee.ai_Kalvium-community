@@ -1,8 +1,8 @@
-"""Demonstration script for Embeddings Fundamentals & Vector Representation.
+"""Demonstration script for Embeddings Fundamentals & Vector Representation using LangChain.
 
 Demonstrates:
-1. Generating embeddings for short sample texts.
-2. Reporting and verifying vector dimensions and uniform length.
+1. Generating embeddings for short sample texts using LangChain interfaces (embed_documents & embed_query).
+2. Reporting and verifying vector dimensions and uniform length (1536 dimensions).
 3. Comparing similar vs. dissimilar text pairs using cosine similarity.
 4. Explaining what embedding vectors represent in semantic search.
 5. Saving results and sample vector outputs to JSON.
@@ -23,9 +23,11 @@ if str(PROJECT_ROOT) not in sys.path:
 # pyrefly: ignore [missing-import]
 from src.embeddings.embedder import (
     DEFAULT_VECTOR_DIMENSION,
+    FIneeLangChainEmbeddings,
     cosine_similarity,
     embed,
     embed_texts,
+    get_langchain_embeddings,
     verify_dimensions,
 )
 
@@ -50,15 +52,22 @@ EXPLANATION_NOTE = (
     "4. Foundation of RAG Semantic Retrieval:\n"
     "   In a Retrieval-Augmented Generation (RAG) pipeline, knowledge chunks are embedded and indexed in a "
     "vector database. When a user submits a question, it is converted into an embedding vector, enabling fast "
-    "nearest-neighbor search to retrieve conceptually relevant chunks even when phrasing differs entirely."
+    "nearest-neighbor search to retrieve conceptually relevant chunks even when phrasing differs entirely.\n\n"
+    "5. Standardized with LangChain:\n"
+    "   Using LangChain's Embeddings interface (embed_documents & embed_query) provides unified compatibility "
+    "across vector stores, indexing pipelines, and production retrieval chains."
 )
 
 
 def run_embedding_demonstration() -> Dict[str, Any]:
     """Runs the embedding fundamentals demonstration and returns output payload."""
     print("=" * 80)
-    print("FInee.ai - Embeddings Fundamentals & Vector Representation Demo")
+    print("FInee.ai - Embeddings Fundamentals & Vector Representation (with LangChain)")
     print("=" * 80)
+
+    # Initialize LangChain Embeddings provider
+    langchain_embedder = get_langchain_embeddings()
+    print(f"Loaded LangChain Embeddings Provider: {type(langchain_embedder).__name__}")
 
     # --- Task 1: Sample Texts ---
     sample_texts = [
@@ -70,11 +79,12 @@ def run_embedding_demonstration() -> Dict[str, Any]:
         "The football match was postponed due to heavy rain", # Text 5 (Unrelated - Sports/Weather)
     ]
 
-    print("\n[Task 1] Generating Embeddings for Sample Texts:")
+    print("\n[Task 1] Generating Embeddings via LangChain (embed_documents):")
     for idx, text in enumerate(sample_texts):
         print(f"  [{idx}] \"{text}\"")
 
-    embeddings: List[List[float]] = embed_texts(sample_texts)
+    # Using standard LangChain embed_documents method
+    embeddings: List[List[float]] = langchain_embedder.embed_documents(sample_texts)
 
     # --- Task 2: Vector Dimension Reporting and Validation ---
     print("\n[Task 2] Vector Dimension & Representation:")
@@ -122,6 +132,7 @@ def run_embedding_demonstration() -> Dict[str, Any]:
     # --- Task 5: Structured Payload & File Output ---
     output_data: Dict[str, Any] = {
         "status": "success",
+        "framework": "LangChain",
         "vector_dimension": dimension,
         "sample_count": len(sample_texts),
         "is_dimension_uniform": dim_report["is_uniform"],

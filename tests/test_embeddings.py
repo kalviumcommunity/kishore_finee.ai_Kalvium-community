@@ -1,35 +1,46 @@
-"""Unit test suite for Embeddings Fundamentals & Vector Representation."""
+"""Unit test suite for Embeddings Fundamentals & Vector Representation using LangChain."""
 
 from pathlib import Path
 import pytest
 import numpy as np
+from langchain_core.embeddings import Embeddings
 
 from src.embeddings.embedder import (
     DEFAULT_VECTOR_DIMENSION,
     EmbeddingService,
+    FIneeLangChainEmbeddings,
     cosine_similarity,
     embed,
     embed_text,
     embed_texts,
+    get_langchain_embeddings,
     verify_dimensions,
 )
 from scripts.demonstrate_embeddings import run_embedding_demonstration, OUTPUT_FILE
 
 
-class TestEmbeddings:
-    """Test suite for embedding service and vector representations."""
+class TestLangChainEmbeddings:
+    """Test suite for LangChain embedding integration and vector representations."""
+
+    def test_langchain_interface_compliance(self) -> None:
+        """Verifies that our embeddings implementation complies with LangChain Embeddings interface."""
+        embedder = get_langchain_embeddings()
+        assert isinstance(embedder, Embeddings)
+        assert hasattr(embedder, "embed_documents")
+        assert hasattr(embedder, "embed_query")
 
     def test_embed_single_text_dimension(self) -> None:
-        """Verifies that embedding a single text produces a vector of expected dimension."""
+        """Verifies that embedding a single query produces a vector of expected dimension."""
         text = "How do I reset my account password?"
-        vector = embed_text(text)
+        embedder = get_langchain_embeddings()
+        vector = embedder.embed_query(text)
 
         assert isinstance(vector, list)
         assert len(vector) == DEFAULT_VECTOR_DIMENSION
         assert all(isinstance(v, float) for v in vector)
 
     def test_embed_batch_texts_uniform_dimensions(self) -> None:
-        """Verifies that all embeddings in a batch have identical dimensionality."""
+        """Verifies that embed_documents returns vectors with uniform dimensionality."""
         texts = [
             "How do I reset my account password?",
             "Steps to recover access to my login",
@@ -37,7 +48,8 @@ class TestEmbeddings:
             "A short phrase",
             "A much longer financial disclaimer and policy explanation for compliance",
         ]
-        vectors = embed_texts(texts)
+        embedder = get_langchain_embeddings()
+        vectors = embedder.embed_documents(texts)
 
         assert len(vectors) == len(texts)
         verification = verify_dimensions(vectors)
@@ -88,13 +100,15 @@ class TestEmbeddings:
 
     def test_similar_vs_dissimilar_ranking(self) -> None:
         """Verifies that conceptually similar texts score higher than dissimilar texts."""
+        embedder = get_langchain_embeddings()
+
         password_query = "How do I reset my account password?"
         login_recovery = "Steps to recover access to my login"
         cafeteria_menu = "The cafeteria menu has pasta today"
 
-        vec_query = embed_text(password_query)
-        vec_recovery = embed_text(login_recovery)
-        vec_menu = embed_text(cafeteria_menu)
+        vec_query = embedder.embed_query(password_query)
+        vec_recovery = embedder.embed_query(login_recovery)
+        vec_menu = embedder.embed_query(cafeteria_menu)
 
         sim_score = cosine_similarity(vec_query, vec_recovery)
         dissim_score = cosine_similarity(vec_query, vec_menu)
@@ -104,13 +118,15 @@ class TestEmbeddings:
 
     def test_financial_domain_ranking(self) -> None:
         """Verifies ranking on financial domain statements."""
+        embedder = get_langchain_embeddings()
+
         finance_a = "What is the annual yield on a high-interest savings account?"
         finance_b = "How much interest does a high-yield savings deposit earn annually?"
         unrelated = "The football match was postponed due to heavy rain"
 
-        vec_a = embed_text(finance_a)
-        vec_b = embed_text(finance_b)
-        vec_u = embed_text(unrelated)
+        vec_a = embedder.embed_query(finance_a)
+        vec_b = embedder.embed_query(finance_b)
+        vec_u = embedder.embed_query(unrelated)
 
         sim_score = cosine_similarity(vec_a, vec_b)
         dissim_score = cosine_similarity(vec_a, vec_u)
@@ -119,10 +135,11 @@ class TestEmbeddings:
         assert (sim_score - dissim_score) > 0.20
 
     def test_demonstration_script_execution(self) -> None:
-        """Verifies that the demonstration script runs end-to-end and creates output artifact."""
+        """Verifies that the demonstration script runs end-to-end without errors."""
         result = run_embedding_demonstration()
 
         assert result["status"] == "success"
+        assert result["framework"] == "LangChain"
         assert result["vector_dimension"] == DEFAULT_VECTOR_DIMENSION
         assert result["is_dimension_uniform"] is True
         assert len(result["samples"]) == 6

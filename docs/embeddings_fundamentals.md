@@ -1,10 +1,12 @@
-# Embeddings Fundamentals & Vector Representation
+# Embeddings Fundamentals & Vector Representation (with LangChain)
 
 ## Overview
 
 In Retrieval-Augmented Generation (RAG) systems such as **FInee.ai**, keyword matching (lexical search) is insufficient for accurate knowledge retrieval. Users often formulate queries using terminology that differs from the exact phrasing in indexed documents (for example, asking *"How do I reset my password?"* when the compliance knowledge base contains *"Account recovery steps"*).
 
 **Vector embeddings** resolve this mismatch by converting textual chunks into dense numerical vectors that encode **semantic meaning**, placing conceptually related phrases close together in high-dimensional vector space.
+
+FInee.ai leverages **LangChain Core Embeddings** (`Embeddings`, `embed_documents`, `embed_query`) to provide standard, production-ready integration across vector stores and retrieval chains.
 
 ---
 
@@ -31,7 +33,29 @@ When texts are mapped into a high-dimensional vector space:
 
 ---
 
-## 2. Vector Dimension & Dimensional Consistency
+## 2. LangChain Embeddings Integration
+
+FInee.ai implements the standard LangChain `Embeddings` interface (`src/embeddings/embedder.py`):
+
+```python
+from src.embeddings import get_langchain_embeddings
+
+embedder = get_langchain_embeddings()
+
+# Embed multiple document chunks (Task 1)
+docs_embeddings = embedder.embed_documents([
+    "How do I reset my account password?",
+    "Steps to recover access to my login",
+    "The cafeteria menu has pasta today",
+])
+
+# Embed a user search query
+query_vector = embedder.embed_query("How do I reset my account password?")
+```
+
+---
+
+## 3. Vector Dimension & Dimensional Consistency
 
 The **dimension** of an embedding vector corresponds to the total number of numeric coordinates in the vector (e.g., 1536 for OpenAI `text-embedding-3-small` / `text-embedding-ada-002`).
 
@@ -41,7 +65,7 @@ The **dimension** of an embedding vector corresponds to the total number of nume
 
 ---
 
-## 3. Measuring Semantic Proximity with Cosine Similarity
+## 4. Measuring Semantic Proximity with Cosine Similarity
 
 Cosine similarity evaluates the cosine of the angle $\theta$ between two vectors $\mathbf{u}$ and $\mathbf{v}$:
 
@@ -53,7 +77,7 @@ $$\text{Cosine Similarity}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u} \cdot \mat
 
 ---
 
-## 4. Demonstration Results
+## 5. Demonstration Results
 
 Executing the demonstration script (`scripts/demonstrate_embeddings.py`) yields the following evaluations:
 
@@ -75,23 +99,19 @@ Executing the demonstration script (`scripts/demonstrate_embeddings.py`) yields 
 
 ---
 
-## 5. Role in the FInee.ai RAG Architecture
+## 6. Role in the FInee.ai RAG Architecture
 
 ```mermaid
 flowchart TD
     A["Raw Financial Documents"] --> B["Document Cleaner & Chunker"]
     B --> C["Knowledge Chunks"]
-    C --> D["Embedding Model (1536-dim)"]
+    C --> D["LangChain embed_documents (1536-dim)"]
     D --> E["Vector Database (pgvector / Index)"]
 
-    F["User Query ('How do I reset my password?')"] --> G["Embedding Model (1536-dim)"]
+    F["User Query ('How do I reset my password?')"] --> G["LangChain embed_query (1536-dim)"]
     G --> H["Query Vector"]
     H --> I["k-NN Cosine Similarity Search"]
     E --> I
     I --> J["Top-k Most Relevant Chunks ('Account Recovery Steps')"]
     J --> K["LLM Grounded Synthesis Context"]
 ```
-
-1. **Ingestion Time**: Each validated text chunk is converted into an embedding vector and indexed.
-2. **Query Time**: The user's prompt is embedded using the same embedding model.
-3. **Retrieval**: Nearest-neighbor search retrieves the top-$k$ chunks with highest cosine similarity to provide context for grounded answer generation.
