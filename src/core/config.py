@@ -53,7 +53,19 @@ class Settings(BaseSettings):
     )
     EMBED_MODEL: Optional[str] = Field(
         default=None,
-        description="Model identifier for document embedding generation",
+        description="Legacy model identifier for document embedding generation",
+    )
+    EMBEDDING_MODEL: str = Field(
+        default="text-embedding-3-small",
+        description="Model identifier for document and query embeddings",
+    )
+    EMBEDDING_BATCH_SIZE: int = Field(
+        default=50,
+        description="Default batch size for embedding generation requests",
+    )
+    EMBEDDING_DIMENSIONS: Optional[int] = Field(
+        default=None,
+        description="Optional vector dimension override for embedding model",
     )
 
     # Future Vector Storage / Relational Database (pgvector-ready)
