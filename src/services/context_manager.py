@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from src.services.token_usage import count_tokens
+from prompts import CONVERSATIONAL_SYSTEM_PROMPT
 
 load_dotenv()
 
@@ -14,11 +15,7 @@ client = OpenAI(
 
 MODEL = os.getenv("CHAT_MODEL")
 
-SYSTEM_PROMPT = (
-    "You are a concise financial information assistant for FInee.ai. "
-    "Answer in 2-3 sentences maximum. "
-    "Answer factually and do not provide personalized financial advice."
-)
+SYSTEM_PROMPT = CONVERSATIONAL_SYSTEM_PROMPT
 
 # Small enough to demonstrate trimming, but large enough
 # to preserve multiple conversation turns.

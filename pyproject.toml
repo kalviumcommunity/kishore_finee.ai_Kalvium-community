@@ -36,3 +36,8 @@ python_functions = "test_*"
 [tool.pyright]
 extraPaths = ["."]
 
+extraPaths = [".", "src"]
+
+[tool.pyrefly]
+search-paths = [".", "src"]
+

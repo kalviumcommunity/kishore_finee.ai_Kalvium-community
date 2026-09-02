@@ -23,6 +23,10 @@ This directory houses administrative, maintenance, demonstration, and ingestion 
 
 ### LLM & Model Parameters
 - `demonstrate_temperature.py`: Demonstrates temperature variance and deterministic output controls for compliance.
+- `prompt_template_demo.py`: Demonstrates reusable prompt design, runtime variable injection, error handling, and multi-feature template reuse.
+- `demonstrate_temperature.py`: Compares output consistency across LLM temperature settings (0.0 vs 1.0).
+- `token_count_demo.py`: Token counting and cost estimation across sample financial documents.
+- `token_cost_estimator.py`: CLI token and cost estimator for input prompt and answer files.
 
 ## Planned Scripts
 - `ingest_documents.py`: Batch ingestion pipeline runner for financial filings, factsheets, and disclosures.

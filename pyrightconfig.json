@@ -6,5 +6,23 @@
   ],
   "extraPaths": [
     "."
+    ".",
+    "src",
+    "scripts",
+    "prompts",
+    "tests"
+  ],
+  "extraPaths": [
+    ".",
+    "src"
+  ],
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "extraPaths": [
+        ".",
+        "src"
+      ]
+    }
   ]
 }
