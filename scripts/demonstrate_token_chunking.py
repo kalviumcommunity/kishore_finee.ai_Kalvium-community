@@ -11,7 +11,7 @@ This script demonstrates:
 from argparse import ArgumentParser
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import tiktoken
 
@@ -59,7 +59,7 @@ def compare_token_vs_char_sizing(text: str, encoding_name: str = DEFAULT_ENCODIN
     }
 
 
-def compare_overlap_variations(text: str, chunk_size: int = 400, overlaps: List[int] = None, encoding_name: str = DEFAULT_ENCODING) -> List[Dict[str, Any]]:
+def compare_overlap_variations(text: str, chunk_size: int = 400, overlaps: Optional[List[int]] = None, encoding_name: str = DEFAULT_ENCODING) -> List[Dict[str, Any]]:
     """Compare chunk counts and token overhead across different overlap values."""
     if overlaps is None:
         overlaps = [0, 40, 60, 100]
