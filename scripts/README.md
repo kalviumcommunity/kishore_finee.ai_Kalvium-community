@@ -5,6 +5,10 @@ This directory houses administrative, maintenance, demonstration, and ingestion 
 ## Available Scripts
 
 ### Embeddings & Semantic Search
+- `demonstrate_batch_embeddings.py`: Demonstrates chunk batching, rate-limit retry with exponential backoff, cost estimation, and skip-on-rerun idempotency. Outputs to `outputs/evaluations/batch_embedding_summary.json`.
+  ```bash
+  python scripts/demonstrate_batch_embeddings.py
+  ```
 - `demonstrate_embeddings.py`: Generates text embeddings, validates vector dimensions (1536), computes cosine similarities for similar and dissimilar text pairs, and exports evaluation JSON reports to `outputs/evaluations/embedding_similarity_demo.json`.
   ```bash
   python scripts/demonstrate_embeddings.py
