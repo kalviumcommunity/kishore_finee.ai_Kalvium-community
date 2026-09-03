@@ -4,6 +4,13 @@ Responsible for integrating embedding models, vector generation,
 batch processing, dimension verification, and vector representation.
 """
 
+from src.embeddings.batch_embedder import (
+    DEFAULT_MAX_ATTEMPTS,
+    DEFAULT_PRICE_PER_1K_TOKENS,
+    BatchEmbedder,
+    BatchRunSummary,
+    batches,
+)
 from src.embeddings.embedder import (
     DEFAULT_EMBED_MODEL,
     DEFAULT_VECTOR_DIMENSION,
@@ -34,7 +41,11 @@ __all__ = [
     "DEFAULT_EMBED_MODEL",
     "DEFAULT_EMBEDDING_MODEL",
     "DEFAULT_EMBEDDING_BATCH_SIZE",
+    "DEFAULT_MAX_ATTEMPTS",
+    "DEFAULT_PRICE_PER_1K_TOKENS",
     "DEFAULT_VECTOR_DIMENSION",
+    "BatchEmbedder",
+    "BatchRunSummary",
     "EmbeddingAPIError",
     "EmbeddingBatchError",
     "EmbeddingConfigError",
@@ -43,6 +54,7 @@ __all__ = [
     "EmbeddingService",
     "EmbeddingValidationError",
     "FIneeLangChainEmbeddings",
+    "batches",
     "cosine_similarity",
     "embed",
     "embed_chunks",
@@ -53,3 +65,4 @@ __all__ = [
     "get_langchain_embeddings",
     "verify_dimensions",
 ]
+

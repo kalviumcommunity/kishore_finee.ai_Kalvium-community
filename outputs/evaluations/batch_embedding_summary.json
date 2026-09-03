@@ -1,0 +1,49 @@
+{
+  "status": "success",
+  "pipeline": "BatchEmbedder",
+  "batch_size": 4,
+  "price_per_1k_tokens": 2e-05,
+  "initial_run": {
+    "total_chunks": 12,
+    "skipped_existing": 0,
+    "embedded": 12,
+    "failed": 0,
+    "input_tokens": 215,
+    "estimated_cost_usd": 4e-06,
+    "batches_processed": 3,
+    "retry_count": 1,
+    "failed_chunk_ids": [],
+    "errors": []
+  },
+  "rerun_identical": {
+    "total_chunks": 12,
+    "skipped_existing": 12,
+    "embedded": 0,
+    "failed": 0,
+    "input_tokens": 0,
+    "estimated_cost_usd": 0.0,
+    "batches_processed": 0,
+    "retry_count": 0,
+    "failed_chunk_ids": [],
+    "errors": []
+  },
+  "incremental_run": {
+    "total_chunks": 14,
+    "skipped_existing": 12,
+    "embedded": 2,
+    "failed": 0,
+    "input_tokens": 30,
+    "estimated_cost_usd": 1e-06,
+    "batches_processed": 1,
+    "retry_count": 0,
+    "failed_chunk_ids": [],
+    "errors": []
+  },
+  "verification": {
+    "batching_functional": true,
+    "retry_handled_successfully": true,
+    "rerun_skipped_all_existing": true,
+    "rerun_zero_cost": true,
+    "incremental_only_embedded_new": true
+  }
+}
