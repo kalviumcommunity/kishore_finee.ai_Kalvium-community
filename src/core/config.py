@@ -38,7 +38,17 @@ class Settings(BaseSettings):
         description="Port to bind the API server",
     )
 
-    # Future LLM / Embedding Service Settings (OpenAI-compatible)
+    # Groq API Settings (OpenAI-compatible)
+    GROQ_BASE_URL: Optional[str] = Field(
+        default="https://api.groq.com/openai/v1",
+        description="Base URL for Groq API endpoint",
+    )
+    GROQ_API_KEY: Optional[str] = Field(
+        default=None,
+        description="API key for Groq LLM provider",
+    )
+
+    # OpenAI-compatible LLM / Embedding Service Settings
     OPENAI_BASE_URL: Optional[str] = Field(
         default=None,
         description="Base URL for OpenAI or OpenAI-compatible LLM endpoint",
@@ -47,6 +57,7 @@ class Settings(BaseSettings):
         default=None,
         description="API key for LLM and Embedding provider",
     )
+
     CHAT_MODEL: Optional[str] = Field(
         default=None,
         description="Model identifier for financial advisory chat generation",
@@ -68,11 +79,47 @@ class Settings(BaseSettings):
         description="Optional vector dimension override for embedding model",
     )
 
-    # Future Vector Storage / Relational Database (pgvector-ready)
+    # Vector Storage Settings
+    VECTOR_DB_TYPE: str = Field(
+        default="chroma",
+        description="Vector database engine type (e.g. chroma, memory)",
+    )
+    VECTOR_COLLECTION_NAME: str = Field(
+        default="rag_chunks",
+        description="Default collection name for chunk vector embeddings",
+    )
+    VECTOR_DIMENSION: int = Field(
+        default=1536,
+        description="Expected embedding vector dimension",
+    )
+    VECTOR_DISTANCE_METRIC: str = Field(
+        default="cosine",
+        description="Distance metric for vector similarity (e.g. cosine, l2, ip)",
+    )
+    VECTOR_DB_PATH: str = Field(
+        default="./data/vector_db",
+        description="Local directory path for vector database persistence",
+    )
+    CHROMA_TENANT: Optional[str] = Field(
+        default=None,
+        description="Optional Chroma tenant ID for cloud/multi-tenant setup",
+    )
+    CHROMA_DATABASE: Optional[str] = Field(
+        default=None,
+        description="Optional Chroma database name",
+    )
+    DATABASE_API_KEY: Optional[str] = Field(
+        default=None,
+        description="Optional API key for managed vector or relational database",
+    )
+
+    # Relational Database / PostgreSQL (pgvector-ready)
     DATABASE_URL: Optional[str] = Field(
         default=None,
         description="Connection URL for PostgreSQL with pgvector extension",
     )
+
+
 
     # LLM Generation & Output Control Settings
     LLM_TEMPERATURE: float = Field(
