@@ -31,6 +31,9 @@ data/raw/*
 !data/raw/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+data/vector_db/*
+!data/vector_db/.gitkeep
+
 
 # Output directories (exclude contents, keep structure)
 outputs/logs/*

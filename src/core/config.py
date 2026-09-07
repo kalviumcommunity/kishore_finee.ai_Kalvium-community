@@ -68,11 +68,34 @@ class Settings(BaseSettings):
         description="Optional vector dimension override for embedding model",
     )
 
-    # Future Vector Storage / Relational Database (pgvector-ready)
+    # Vector Storage Settings
+    VECTOR_DB_TYPE: str = Field(
+        default="chroma",
+        description="Vector database engine type (e.g. chroma, memory)",
+    )
+    VECTOR_COLLECTION_NAME: str = Field(
+        default="rag_chunks",
+        description="Default collection name for chunk vector embeddings",
+    )
+    VECTOR_DIMENSION: int = Field(
+        default=1536,
+        description="Expected embedding vector dimension",
+    )
+    VECTOR_DISTANCE_METRIC: str = Field(
+        default="cosine",
+        description="Distance metric for vector similarity (e.g. cosine, l2, ip)",
+    )
+    VECTOR_DB_PATH: str = Field(
+        default="./data/vector_db",
+        description="Local directory path for vector database persistence",
+    )
+
+    # Relational Database / PostgreSQL (pgvector-ready)
     DATABASE_URL: Optional[str] = Field(
         default=None,
         description="Connection URL for PostgreSQL with pgvector extension",
     )
+
 
     # LLM Generation & Output Control Settings
     LLM_TEMPERATURE: float = Field(
