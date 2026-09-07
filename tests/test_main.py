@@ -34,3 +34,24 @@ def test_health_endpoint(client: TestClient):
     payload = response.json()
     assert payload["status"] == "healthy"
     assert payload["environment"] == settings.APP_ENV
+
+
+def test_documents_batch_upload_endpoint(client: TestClient):
+    """Verify that POST /api/documents uploads documents into the Chroma vector store."""
+    payload = {
+        "ids": ["doc_test_1", "doc_test_2"],
+        "documents": [
+            "Marcus paid the advisory fee on 20 August.",
+            "The mutual fund fact sheet outlines annual yield and expense ratio."
+        ],
+        "metadatas": [
+            {"source": "payment_record.pdf", "category": "payment"},
+            {"source": "factsheet.pdf", "category": "fund"}
+        ]
+    }
+    response = client.post("/api/documents", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["message"] == "Documents added successfully"
+    assert data["count"] == 2
+

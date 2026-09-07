@@ -25,6 +25,9 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+*.ses
+:memory:*
+
 
 # Data directories (exclude contents, keep structure)
 data/raw/*

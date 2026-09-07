@@ -108,10 +108,15 @@ class Settings(BaseSettings):
         default=None,
         description="Optional Chroma database name",
     )
+    CHROMA_API_KEY: Optional[str] = Field(
+        default=None,
+        description="Optional API key for Chroma Cloud",
+    )
     DATABASE_API_KEY: Optional[str] = Field(
         default=None,
         description="Optional API key for managed vector or relational database",
     )
+
 
     # Relational Database / PostgreSQL (pgvector-ready)
     DATABASE_URL: Optional[str] = Field(
