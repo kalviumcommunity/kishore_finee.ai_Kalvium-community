@@ -1,9 +1,15 @@
-"""Retrieval engine module for FInee.ai.
+"""Retrieval engine module for finee.ai.
 
-Responsible for semantic similarity calculation, chunk ranking,
-and embedding retrieval sanity testing.
+Responsible for semantic similarity search, compliance metadata filtering,
+Top-K document chunk retrieval, sanity checking, and reranking with In-Memory and ChromaDB stores.
 """
 
+from src.retrieval.chroma_store import ChromaVectorStore
+from src.retrieval.retriever import (
+    RetrievalResult,
+    compare_k_retrieval,
+    retrieve,
+)
 from src.retrieval.sanity_checker import (
     DimensionMismatchError,
     InvalidVectorError,
@@ -16,8 +22,18 @@ from src.retrieval.sanity_checker import (
     rank_chunks,
     run_sanity_tests,
 )
+from src.retrieval.vector_store import (
+    InMemoryVectorStore,
+    VectorRecord,
+)
 
 __all__ = [
+    "InMemoryVectorStore",
+    "ChromaVectorStore",
+    "VectorRecord",
+    "RetrievalResult",
+    "retrieve",
+    "compare_k_retrieval",
     "DimensionMismatchError",
     "InvalidVectorError",
     "ModelMismatchError",

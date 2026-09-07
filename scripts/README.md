@@ -4,6 +4,12 @@ This directory houses administrative, maintenance, demonstration, and ingestion 
 
 ## Available Scripts
 
+### Retrieval & Semantic Search
+- `demonstrate_retrieval.py`: Demonstrates Top-K similarity search, same-model query embedding, score and metadata inspection, changing-k context comparison (k=1, 3, 5), and export to `outputs/evaluations/similarity_search_retrieval_results.json` and `outputs/evaluations/top_k_retrieval_demo.json`.
+  ```bash
+  python scripts/demonstrate_retrieval.py
+  ```
+
 ### Embeddings & Semantic Search
 - `demonstrate_batch_embeddings.py`: Demonstrates chunk batching, rate-limit retry with exponential backoff, cost estimation, and skip-on-rerun idempotency. Outputs to `outputs/evaluations/batch_embedding_summary.json`.
   ```bash

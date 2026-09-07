@@ -1,0 +1,197 @@
+{
+  "query": "How can a learner reset their password?",
+  "embedding_model": "text-embedding-3-small",
+  "results_by_k": {
+    "k_1": [
+      {
+        "rank": 1,
+        "score": 0.9164,
+        "source": "auth-and-access-guide.md",
+        "chunk_index": 1,
+        "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+        "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+        "metadata": {
+          "source": "auth-and-access-guide.md",
+          "document_id": "doc_sec_001",
+          "chunk_index": 1,
+          "section": "Account Recovery",
+          "page": 2,
+          "approval_status": "approved",
+          "effective_date": "2026-01-01"
+        },
+        "embedding_model": "text-embedding-3-small"
+      }
+    ],
+    "k_3": [
+      {
+        "rank": 1,
+        "score": 0.9164,
+        "source": "auth-and-access-guide.md",
+        "chunk_index": 1,
+        "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+        "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+        "metadata": {
+          "source": "auth-and-access-guide.md",
+          "document_id": "doc_sec_001",
+          "chunk_index": 1,
+          "section": "Account Recovery",
+          "page": 2,
+          "approval_status": "approved",
+          "effective_date": "2026-01-01"
+        },
+        "embedding_model": "text-embedding-3-small"
+      },
+      {
+        "rank": 2,
+        "score": 0.8587,
+        "source": "auth-and-access-guide.md",
+        "chunk_index": 0,
+        "text_snippet": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered...",
+        "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+        "metadata": {
+          "source": "auth-and-access-guide.md",
+          "document_id": "doc_sec_001",
+          "chunk_index": 0,
+          "section": "Password Management",
+          "page": 1,
+          "approval_status": "approved",
+          "effective_date": "2026-01-01"
+        },
+        "embedding_model": "text-embedding-3-small"
+      },
+      {
+        "rank": 3,
+        "score": 0.7701,
+        "source": "mutual-fund-handbook.pdf",
+        "chunk_index": 2,
+        "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+        "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+        "metadata": {
+          "source": "mutual-fund-handbook.pdf",
+          "document_id": "doc_mf_101",
+          "chunk_index": 2,
+          "section": "Expense Ratios and Fee Structures",
+          "page": 7,
+          "approval_status": "approved",
+          "effective_date": "2026-01-15"
+        },
+        "embedding_model": "text-embedding-3-small"
+      }
+    ],
+    "k_5": [
+      {
+        "rank": 1,
+        "score": 0.9164,
+        "source": "auth-and-access-guide.md",
+        "chunk_index": 1,
+        "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+        "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+        "metadata": {
+          "source": "auth-and-access-guide.md",
+          "document_id": "doc_sec_001",
+          "chunk_index": 1,
+          "section": "Account Recovery",
+          "page": 2,
+          "approval_status": "approved",
+          "effective_date": "2026-01-01"
+        },
+        "embedding_model": "text-embedding-3-small"
+      },
+      {
+        "rank": 2,
+        "score": 0.8587,
+        "source": "auth-and-access-guide.md",
+        "chunk_index": 0,
+        "text_snippet": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered...",
+        "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+        "metadata": {
+          "source": "auth-and-access-guide.md",
+          "document_id": "doc_sec_001",
+          "chunk_index": 0,
+          "section": "Password Management",
+          "page": 1,
+          "approval_status": "approved",
+          "effective_date": "2026-01-01"
+        },
+        "embedding_model": "text-embedding-3-small"
+      },
+      {
+        "rank": 3,
+        "score": 0.7701,
+        "source": "mutual-fund-handbook.pdf",
+        "chunk_index": 2,
+        "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+        "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+        "metadata": {
+          "source": "mutual-fund-handbook.pdf",
+          "document_id": "doc_mf_101",
+          "chunk_index": 2,
+          "section": "Expense Ratios and Fee Structures",
+          "page": 7,
+          "approval_status": "approved",
+          "effective_date": "2026-01-15"
+        },
+        "embedding_model": "text-embedding-3-small"
+      },
+      {
+        "rank": 4,
+        "score": 0.627,
+        "source": "office-cafeteria-bulletin.txt",
+        "chunk_index": 0,
+        "text_snippet": "The company cafeteria menu features Italian pasta, chef specials, and fresh salads on alternating Tuesdays and Thursdays...",
+        "text": "The company cafeteria menu features Italian pasta, chef specials, and fresh salads on alternating Tuesdays and Thursdays.",
+        "metadata": {
+          "source": "office-cafeteria-bulletin.txt",
+          "document_id": "doc_misc_999",
+          "chunk_index": 0,
+          "section": "Dining and Lunch",
+          "page": 1,
+          "approval_status": "approved",
+          "effective_date": "2026-03-01"
+        },
+        "embedding_model": "text-embedding-3-small"
+      },
+      {
+        "rank": 5,
+        "score": 0.5837,
+        "source": "mutual-fund-handbook.pdf",
+        "chunk_index": 0,
+        "text_snippet": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity ...",
+        "text": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity shares, government bonds, money market instruments, or precious metals managed by professional fund managers.",
+        "metadata": {
+          "source": "mutual-fund-handbook.pdf",
+          "document_id": "doc_mf_101",
+          "chunk_index": 0,
+          "section": "Fund Fundamentals",
+          "page": 3,
+          "approval_status": "approved",
+          "effective_date": "2026-01-15"
+        },
+        "embedding_model": "text-embedding-3-small"
+      }
+    ]
+  },
+  "comparison_summary": [
+    {
+      "k": 1,
+      "total_chunks_returned": 1,
+      "new_chunks_introduced": 1,
+      "min_score_at_k": 0.9164,
+      "max_score_at_k": 0.9164
+    },
+    {
+      "k": 3,
+      "total_chunks_returned": 3,
+      "new_chunks_introduced": 2,
+      "min_score_at_k": 0.7701,
+      "max_score_at_k": 0.9164
+    },
+    {
+      "k": 5,
+      "total_chunks_returned": 5,
+      "new_chunks_introduced": 2,
+      "min_score_at_k": 0.5837,
+      "max_score_at_k": 0.9164
+    }
+  ]
+}
