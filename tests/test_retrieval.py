@@ -354,7 +354,7 @@ class TestChromaVectorStoreIntegration:
         retrieved_items = retrieve(
             query="Reset password",
             k=2,
-            collection=chroma_store,  # type: ignore[arg-type]
+            collection=chroma_store,
             embedding_service=mock_service,
         )
         assert len(retrieved_items) == 2

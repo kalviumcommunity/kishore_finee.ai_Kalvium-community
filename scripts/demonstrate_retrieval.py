@@ -256,7 +256,7 @@ def run_retrieval_demonstration() -> Dict[str, Any]:
     chroma_k3_results = retrieve(
         query=sample_query,
         k=3,
-        collection=chroma_store,  # type: ignore[arg-type]
+        collection=chroma_store,
         embedding_service=service,
     )
     for r in chroma_k3_results:

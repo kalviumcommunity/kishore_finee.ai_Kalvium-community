@@ -52,7 +52,7 @@ def _embed_query_safe(service: EmbeddingService, query: str) -> List[float]:
 def retrieve(
     query: str,
     k: int = 3,
-    collection: Optional[InMemoryVectorStore] = None,
+    collection: Optional[Union[InMemoryVectorStore, Any]] = None,
     embedding_service: Optional[EmbeddingService] = None,
     filter_metadata: Optional[Dict[str, Any]] = None,
     min_score: Optional[float] = None,
@@ -120,7 +120,7 @@ def retrieve(
 def compare_k_retrieval(
     query: str,
     k_values: Sequence[int] = (1, 3, 5),
-    collection: Optional[InMemoryVectorStore] = None,
+    collection: Optional[Union[InMemoryVectorStore, Any]] = None,
     embedding_service: Optional[EmbeddingService] = None,
     filter_metadata: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
