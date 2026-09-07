@@ -1,0 +1,1069 @@
+{
+  "status": "success",
+  "timestamp": "2026-09-07T13:20:00Z",
+  "embedding_model": "text-embedding-3-small",
+  "total_corpus_chunks": 8,
+  "primary_demonstration_query": "How can a learner reset their password?",
+  "sample_retrieval_k3": [
+    {
+      "rank": 1,
+      "score": 0.9164,
+      "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+      "metadata": {
+        "source": "auth-and-access-guide.md",
+        "document_id": "doc_sec_001",
+        "chunk_index": 1,
+        "section": "Account Recovery",
+        "page": 2,
+        "approval_status": "approved",
+        "effective_date": "2026-01-01"
+      },
+      "embedding_model": "text-embedding-3-small",
+      "id": "93e5b53d-be21-4151-9e2b-980e3926d9b8"
+    },
+    {
+      "rank": 2,
+      "score": 0.8587,
+      "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+      "metadata": {
+        "source": "auth-and-access-guide.md",
+        "document_id": "doc_sec_001",
+        "chunk_index": 0,
+        "section": "Password Management",
+        "page": 1,
+        "approval_status": "approved",
+        "effective_date": "2026-01-01"
+      },
+      "embedding_model": "text-embedding-3-small",
+      "id": "afc48ce1-f311-4d52-bd61-858a75d41d98"
+    },
+    {
+      "rank": 3,
+      "score": 0.7701,
+      "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+      "metadata": {
+        "source": "mutual-fund-handbook.pdf",
+        "document_id": "doc_mf_101",
+        "chunk_index": 2,
+        "section": "Expense Ratios and Fee Structures",
+        "page": 7,
+        "approval_status": "approved",
+        "effective_date": "2026-01-15"
+      },
+      "embedding_model": "text-embedding-3-small",
+      "id": "86eb3ba0-9bfb-46f3-b50c-73ad8d2590c1"
+    }
+  ],
+  "k_tradeoff_demonstration": {
+    "query": "How can a learner reset their password?",
+    "embedding_model": "text-embedding-3-small",
+    "k_values": [
+      1,
+      3,
+      5
+    ],
+    "results_by_k": {
+      "k_1": [
+        {
+          "rank": 1,
+          "score": 0.9164,
+          "source": "auth-and-access-guide.md",
+          "chunk_index": 1,
+          "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+          "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_sec_001",
+            "chunk_index": 1,
+            "section": "Account Recovery",
+            "page": 2,
+            "approval_status": "approved",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small"
+        }
+      ],
+      "k_3": [
+        {
+          "rank": 1,
+          "score": 0.9164,
+          "source": "auth-and-access-guide.md",
+          "chunk_index": 1,
+          "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+          "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_sec_001",
+            "chunk_index": 1,
+            "section": "Account Recovery",
+            "page": 2,
+            "approval_status": "approved",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small"
+        },
+        {
+          "rank": 2,
+          "score": 0.8587,
+          "source": "auth-and-access-guide.md",
+          "chunk_index": 0,
+          "text_snippet": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered...",
+          "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_sec_001",
+            "chunk_index": 0,
+            "section": "Password Management",
+            "page": 1,
+            "approval_status": "approved",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small"
+        },
+        {
+          "rank": 3,
+          "score": 0.7701,
+          "source": "mutual-fund-handbook.pdf",
+          "chunk_index": 2,
+          "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+          "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+          "metadata": {
+            "source": "mutual-fund-handbook.pdf",
+            "document_id": "doc_mf_101",
+            "chunk_index": 2,
+            "section": "Expense Ratios and Fee Structures",
+            "page": 7,
+            "approval_status": "approved",
+            "effective_date": "2026-01-15"
+          },
+          "embedding_model": "text-embedding-3-small"
+        }
+      ],
+      "k_5": [
+        {
+          "rank": 1,
+          "score": 0.9164,
+          "source": "auth-and-access-guide.md",
+          "chunk_index": 1,
+          "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+          "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_sec_001",
+            "chunk_index": 1,
+            "section": "Account Recovery",
+            "page": 2,
+            "approval_status": "approved",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small"
+        },
+        {
+          "rank": 2,
+          "score": 0.8587,
+          "source": "auth-and-access-guide.md",
+          "chunk_index": 0,
+          "text_snippet": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered...",
+          "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_sec_001",
+            "chunk_index": 0,
+            "section": "Password Management",
+            "page": 1,
+            "approval_status": "approved",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small"
+        },
+        {
+          "rank": 3,
+          "score": 0.7701,
+          "source": "mutual-fund-handbook.pdf",
+          "chunk_index": 2,
+          "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+          "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+          "metadata": {
+            "source": "mutual-fund-handbook.pdf",
+            "document_id": "doc_mf_101",
+            "chunk_index": 2,
+            "section": "Expense Ratios and Fee Structures",
+            "page": 7,
+            "approval_status": "approved",
+            "effective_date": "2026-01-15"
+          },
+          "embedding_model": "text-embedding-3-small"
+        },
+        {
+          "rank": 4,
+          "score": 0.627,
+          "source": "office-cafeteria-bulletin.txt",
+          "chunk_index": 0,
+          "text_snippet": "The company cafeteria menu features Italian pasta, chef specials, and fresh salads on alternating Tuesdays and Thursdays...",
+          "text": "The company cafeteria menu features Italian pasta, chef specials, and fresh salads on alternating Tuesdays and Thursdays.",
+          "metadata": {
+            "source": "office-cafeteria-bulletin.txt",
+            "document_id": "doc_misc_999",
+            "chunk_index": 0,
+            "section": "Dining and Lunch",
+            "page": 1,
+            "approval_status": "approved",
+            "effective_date": "2026-03-01"
+          },
+          "embedding_model": "text-embedding-3-small"
+        },
+        {
+          "rank": 5,
+          "score": 0.5837,
+          "source": "mutual-fund-handbook.pdf",
+          "chunk_index": 0,
+          "text_snippet": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity ...",
+          "text": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity shares, government bonds, money market instruments, or precious metals managed by professional fund managers.",
+          "metadata": {
+            "source": "mutual-fund-handbook.pdf",
+            "document_id": "doc_mf_101",
+            "chunk_index": 0,
+            "section": "Fund Fundamentals",
+            "page": 3,
+            "approval_status": "approved",
+            "effective_date": "2026-01-15"
+          },
+          "embedding_model": "text-embedding-3-small"
+        }
+      ]
+    },
+    "comparison_summary": [
+      {
+        "k": 1,
+        "total_chunks_returned": 1,
+        "new_chunks_introduced": 1,
+        "min_score_at_k": 0.9164,
+        "max_score_at_k": 0.9164
+      },
+      {
+        "k": 3,
+        "total_chunks_returned": 3,
+        "new_chunks_introduced": 2,
+        "min_score_at_k": 0.7701,
+        "max_score_at_k": 0.9164
+      },
+      {
+        "k": 5,
+        "total_chunks_returned": 5,
+        "new_chunks_introduced": 2,
+        "min_score_at_k": 0.5837,
+        "max_score_at_k": 0.9164
+      }
+    ]
+  },
+  "all_queries_evaluated": [
+    {
+      "query": "How can a learner reset their password?",
+      "embedding_model": "text-embedding-3-small",
+      "k_values": [
+        1,
+        3,
+        5
+      ],
+      "results_by_k": {
+        "k_1": [
+          {
+            "rank": 1,
+            "score": 0.9164,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 1,
+            "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+            "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 1,
+              "section": "Account Recovery",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ],
+        "k_3": [
+          {
+            "rank": 1,
+            "score": 0.9164,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 1,
+            "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+            "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 1,
+              "section": "Account Recovery",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 2,
+            "score": 0.8587,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 0,
+            "text_snippet": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered...",
+            "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 0,
+              "section": "Password Management",
+              "page": 1,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 3,
+            "score": 0.7701,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 2,
+            "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+            "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 2,
+              "section": "Expense Ratios and Fee Structures",
+              "page": 7,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ],
+        "k_5": [
+          {
+            "rank": 1,
+            "score": 0.9164,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 1,
+            "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+            "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 1,
+              "section": "Account Recovery",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 2,
+            "score": 0.8587,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 0,
+            "text_snippet": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered...",
+            "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 0,
+              "section": "Password Management",
+              "page": 1,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 3,
+            "score": 0.7701,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 2,
+            "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+            "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 2,
+              "section": "Expense Ratios and Fee Structures",
+              "page": 7,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 4,
+            "score": 0.627,
+            "source": "office-cafeteria-bulletin.txt",
+            "chunk_index": 0,
+            "text_snippet": "The company cafeteria menu features Italian pasta, chef specials, and fresh salads on alternating Tuesdays and Thursdays...",
+            "text": "The company cafeteria menu features Italian pasta, chef specials, and fresh salads on alternating Tuesdays and Thursdays.",
+            "metadata": {
+              "source": "office-cafeteria-bulletin.txt",
+              "document_id": "doc_misc_999",
+              "chunk_index": 0,
+              "section": "Dining and Lunch",
+              "page": 1,
+              "approval_status": "approved",
+              "effective_date": "2026-03-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 5,
+            "score": 0.5837,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity ...",
+            "text": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity shares, government bonds, money market instruments, or precious metals managed by professional fund managers.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 0,
+              "section": "Fund Fundamentals",
+              "page": 3,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ]
+      },
+      "comparison_summary": [
+        {
+          "k": 1,
+          "total_chunks_returned": 1,
+          "new_chunks_introduced": 1,
+          "min_score_at_k": 0.9164,
+          "max_score_at_k": 0.9164
+        },
+        {
+          "k": 3,
+          "total_chunks_returned": 3,
+          "new_chunks_introduced": 2,
+          "min_score_at_k": 0.7701,
+          "max_score_at_k": 0.9164
+        },
+        {
+          "k": 5,
+          "total_chunks_returned": 5,
+          "new_chunks_introduced": 2,
+          "min_score_at_k": 0.5837,
+          "max_score_at_k": 0.9164
+        }
+      ]
+    },
+    {
+      "query": "What is a mutual fund's Total Expense Ratio (TER) and operating cost?",
+      "embedding_model": "text-embedding-3-small",
+      "k_values": [
+        1,
+        3,
+        5
+      ],
+      "results_by_k": {
+        "k_1": [
+          {
+            "rank": 1,
+            "score": 0.9366,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 2,
+            "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+            "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 2,
+              "section": "Expense Ratios and Fee Structures",
+              "page": 7,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ],
+        "k_3": [
+          {
+            "rank": 1,
+            "score": 0.9366,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 2,
+            "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+            "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 2,
+              "section": "Expense Ratios and Fee Structures",
+              "page": 7,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 2,
+            "score": 0.851,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity ...",
+            "text": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity shares, government bonds, money market instruments, or precious metals managed by professional fund managers.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 0,
+              "section": "Fund Fundamentals",
+              "page": 3,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 3,
+            "score": 0.8285,
+            "source": "debt-instruments-overview.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Debt mutual funds invest in fixed-income securities like sovereign treasury bills, corporate debentures, and commercial ...",
+            "text": "Debt mutual funds invest in fixed-income securities like sovereign treasury bills, corporate debentures, and commercial paper. Debt fund performance is sensitive to central bank interest rate fluctuations and macroeconomic credit default risks.",
+            "metadata": {
+              "source": "debt-instruments-overview.pdf",
+              "document_id": "doc_debt_201",
+              "chunk_index": 0,
+              "section": "Fixed Income Mechanics",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-02-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ],
+        "k_5": [
+          {
+            "rank": 1,
+            "score": 0.9366,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 2,
+            "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+            "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 2,
+              "section": "Expense Ratios and Fee Structures",
+              "page": 7,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 2,
+            "score": 0.851,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity ...",
+            "text": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity shares, government bonds, money market instruments, or precious metals managed by professional fund managers.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 0,
+              "section": "Fund Fundamentals",
+              "page": 3,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 3,
+            "score": 0.8285,
+            "source": "debt-instruments-overview.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Debt mutual funds invest in fixed-income securities like sovereign treasury bills, corporate debentures, and commercial ...",
+            "text": "Debt mutual funds invest in fixed-income securities like sovereign treasury bills, corporate debentures, and commercial paper. Debt fund performance is sensitive to central bank interest rate fluctuations and macroeconomic credit default risks.",
+            "metadata": {
+              "source": "debt-instruments-overview.pdf",
+              "document_id": "doc_debt_201",
+              "chunk_index": 0,
+              "section": "Fixed Income Mechanics",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-02-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 4,
+            "score": 0.7778,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 1,
+            "text_snippet": "Equity mutual funds allocate at least 65% of assets into company equities and growth shares. While they offer higher lon...",
+            "text": "Equity mutual funds allocate at least 65% of assets into company equities and growth shares. While they offer higher long-term capital appreciation potential, they carry market volatility risk.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 1,
+              "section": "Equity Fund Classification",
+              "page": 4,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 5,
+            "score": 0.7551,
+            "source": "office-cafeteria-bulletin.txt",
+            "chunk_index": 0,
+            "text_snippet": "The company cafeteria menu features Italian pasta, chef specials, and fresh salads on alternating Tuesdays and Thursdays...",
+            "text": "The company cafeteria menu features Italian pasta, chef specials, and fresh salads on alternating Tuesdays and Thursdays.",
+            "metadata": {
+              "source": "office-cafeteria-bulletin.txt",
+              "document_id": "doc_misc_999",
+              "chunk_index": 0,
+              "section": "Dining and Lunch",
+              "page": 1,
+              "approval_status": "approved",
+              "effective_date": "2026-03-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ]
+      },
+      "comparison_summary": [
+        {
+          "k": 1,
+          "total_chunks_returned": 1,
+          "new_chunks_introduced": 1,
+          "min_score_at_k": 0.9366,
+          "max_score_at_k": 0.9366
+        },
+        {
+          "k": 3,
+          "total_chunks_returned": 3,
+          "new_chunks_introduced": 2,
+          "min_score_at_k": 0.8285,
+          "max_score_at_k": 0.9366
+        },
+        {
+          "k": 5,
+          "total_chunks_returned": 5,
+          "new_chunks_introduced": 2,
+          "min_score_at_k": 0.7551,
+          "max_score_at_k": 0.9366
+        }
+      ]
+    },
+    {
+      "query": "How do interest rate fluctuations affect debt mutual funds?",
+      "embedding_model": "text-embedding-3-small",
+      "k_values": [
+        1,
+        3,
+        5
+      ],
+      "results_by_k": {
+        "k_1": [
+          {
+            "rank": 1,
+            "score": 0.775,
+            "source": "debt-instruments-overview.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Debt mutual funds invest in fixed-income securities like sovereign treasury bills, corporate debentures, and commercial ...",
+            "text": "Debt mutual funds invest in fixed-income securities like sovereign treasury bills, corporate debentures, and commercial paper. Debt fund performance is sensitive to central bank interest rate fluctuations and macroeconomic credit default risks.",
+            "metadata": {
+              "source": "debt-instruments-overview.pdf",
+              "document_id": "doc_debt_201",
+              "chunk_index": 0,
+              "section": "Fixed Income Mechanics",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-02-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ],
+        "k_3": [
+          {
+            "rank": 1,
+            "score": 0.775,
+            "source": "debt-instruments-overview.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Debt mutual funds invest in fixed-income securities like sovereign treasury bills, corporate debentures, and commercial ...",
+            "text": "Debt mutual funds invest in fixed-income securities like sovereign treasury bills, corporate debentures, and commercial paper. Debt fund performance is sensitive to central bank interest rate fluctuations and macroeconomic credit default risks.",
+            "metadata": {
+              "source": "debt-instruments-overview.pdf",
+              "document_id": "doc_debt_201",
+              "chunk_index": 0,
+              "section": "Fixed Income Mechanics",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-02-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 2,
+            "score": 0.6982,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity ...",
+            "text": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity shares, government bonds, money market instruments, or precious metals managed by professional fund managers.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 0,
+              "section": "Fund Fundamentals",
+              "page": 3,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 3,
+            "score": 0.464,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 2,
+            "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+            "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 2,
+              "section": "Expense Ratios and Fee Structures",
+              "page": 7,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ],
+        "k_5": [
+          {
+            "rank": 1,
+            "score": 0.775,
+            "source": "debt-instruments-overview.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Debt mutual funds invest in fixed-income securities like sovereign treasury bills, corporate debentures, and commercial ...",
+            "text": "Debt mutual funds invest in fixed-income securities like sovereign treasury bills, corporate debentures, and commercial paper. Debt fund performance is sensitive to central bank interest rate fluctuations and macroeconomic credit default risks.",
+            "metadata": {
+              "source": "debt-instruments-overview.pdf",
+              "document_id": "doc_debt_201",
+              "chunk_index": 0,
+              "section": "Fixed Income Mechanics",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-02-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 2,
+            "score": 0.6982,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity ...",
+            "text": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity shares, government bonds, money market instruments, or precious metals managed by professional fund managers.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 0,
+              "section": "Fund Fundamentals",
+              "page": 3,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 3,
+            "score": 0.464,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 2,
+            "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+            "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 2,
+              "section": "Expense Ratios and Fee Structures",
+              "page": 7,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 4,
+            "score": 0.3955,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 1,
+            "text_snippet": "Equity mutual funds allocate at least 65% of assets into company equities and growth shares. While they offer higher lon...",
+            "text": "Equity mutual funds allocate at least 65% of assets into company equities and growth shares. While they offer higher long-term capital appreciation potential, they carry market volatility risk.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 1,
+              "section": "Equity Fund Classification",
+              "page": 4,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 5,
+            "score": 0.2671,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 1,
+            "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+            "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 1,
+              "section": "Account Recovery",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ]
+      },
+      "comparison_summary": [
+        {
+          "k": 1,
+          "total_chunks_returned": 1,
+          "new_chunks_introduced": 1,
+          "min_score_at_k": 0.775,
+          "max_score_at_k": 0.775
+        },
+        {
+          "k": 3,
+          "total_chunks_returned": 3,
+          "new_chunks_introduced": 2,
+          "min_score_at_k": 0.464,
+          "max_score_at_k": 0.775
+        },
+        {
+          "k": 5,
+          "total_chunks_returned": 5,
+          "new_chunks_introduced": 2,
+          "min_score_at_k": 0.2671,
+          "max_score_at_k": 0.775
+        }
+      ]
+    },
+    {
+      "query": "What are the mandatory compliance disclaimers for investment risks?",
+      "embedding_model": "text-embedding-3-small",
+      "k_values": [
+        1,
+        3,
+        5
+      ],
+      "results_by_k": {
+        "k_1": [
+          {
+            "rank": 1,
+            "score": 0.8502,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 0,
+            "text_snippet": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered...",
+            "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 0,
+              "section": "Password Management",
+              "page": 1,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ],
+        "k_3": [
+          {
+            "rank": 1,
+            "score": 0.8502,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 0,
+            "text_snippet": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered...",
+            "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 0,
+              "section": "Password Management",
+              "page": 1,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 2,
+            "score": 0.7244,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 1,
+            "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+            "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 1,
+              "section": "Account Recovery",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 3,
+            "score": 0.686,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 2,
+            "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+            "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 2,
+              "section": "Expense Ratios and Fee Structures",
+              "page": 7,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ],
+        "k_5": [
+          {
+            "rank": 1,
+            "score": 0.8502,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 0,
+            "text_snippet": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered...",
+            "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 0,
+              "section": "Password Management",
+              "page": 1,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 2,
+            "score": 0.7244,
+            "source": "auth-and-access-guide.md",
+            "chunk_index": 1,
+            "text_snippet": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or...",
+            "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+            "metadata": {
+              "source": "auth-and-access-guide.md",
+              "document_id": "doc_sec_001",
+              "chunk_index": 1,
+              "section": "Account Recovery",
+              "page": 2,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 3,
+            "score": 0.686,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 2,
+            "text_snippet": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrativ...",
+            "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 2,
+              "section": "Expense Ratios and Fee Structures",
+              "page": 7,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 4,
+            "score": 0.6507,
+            "source": "compliance-disclosures-sebi.md",
+            "chunk_index": 0,
+            "text_snippet": "Regulatory compliance disclaimer: Past performance is not indicative of future returns. All investment decisions are sub...",
+            "text": "Regulatory compliance disclaimer: Past performance is not indicative of future returns. All investment decisions are subject to market risks, and clients must read scheme offer documents carefully before investing.",
+            "metadata": {
+              "source": "compliance-disclosures-sebi.md",
+              "document_id": "doc_comp_301",
+              "chunk_index": 0,
+              "section": "Mandatory Statutory Disclaimers",
+              "page": 1,
+              "approval_status": "approved",
+              "effective_date": "2026-01-01"
+            },
+            "embedding_model": "text-embedding-3-small"
+          },
+          {
+            "rank": 5,
+            "score": 0.6159,
+            "source": "mutual-fund-handbook.pdf",
+            "chunk_index": 0,
+            "text_snippet": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity ...",
+            "text": "Mutual funds pool money from multiple retail and institutional investors to construct a diversified portfolio of equity shares, government bonds, money market instruments, or precious metals managed by professional fund managers.",
+            "metadata": {
+              "source": "mutual-fund-handbook.pdf",
+              "document_id": "doc_mf_101",
+              "chunk_index": 0,
+              "section": "Fund Fundamentals",
+              "page": 3,
+              "approval_status": "approved",
+              "effective_date": "2026-01-15"
+            },
+            "embedding_model": "text-embedding-3-small"
+          }
+        ]
+      },
+      "comparison_summary": [
+        {
+          "k": 1,
+          "total_chunks_returned": 1,
+          "new_chunks_introduced": 1,
+          "min_score_at_k": 0.8502,
+          "max_score_at_k": 0.8502
+        },
+        {
+          "k": 3,
+          "total_chunks_returned": 3,
+          "new_chunks_introduced": 2,
+          "min_score_at_k": 0.686,
+          "max_score_at_k": 0.8502
+        },
+        {
+          "k": 5,
+          "total_chunks_returned": 5,
+          "new_chunks_introduced": 2,
+          "min_score_at_k": 0.6159,
+          "max_score_at_k": 0.8502
+        }
+      ]
+    }
+  ]
+}
