@@ -1,0 +1,477 @@
+{
+  "metadata": {
+    "embedding_model": "text-embedding-3-small",
+    "total_corpus_chunks": 7,
+    "vector_stores_evaluated": [
+      "InMemoryVectorStore",
+      "ChromaVectorStore"
+    ]
+  },
+  "scenarios": {
+    "scenario_1_password_reset": {
+      "query": "What are the password reset steps?",
+      "filter": {
+        "section": "Account access"
+      },
+      "keywords": [
+        "password",
+        "reset",
+        "otp",
+        "login"
+      ],
+      "k": 3,
+      "unfiltered_results": [
+        {
+          "rank": 1,
+          "score": 0.8444,
+          "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_auth_001",
+            "chunk_index": 1,
+            "section": "Account access",
+            "category": "account_management",
+            "department": "client_services",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "aec7a443-6f93-429c-a2ca-a5cf92e2ac30"
+        },
+        {
+          "rank": 2,
+          "score": 0.7511,
+          "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_auth_001",
+            "chunk_index": 0,
+            "section": "Account access",
+            "category": "account_management",
+            "department": "client_services",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "a5e7c088-9bda-4883-8e36-3d5acac22457"
+        },
+        {
+          "rank": 3,
+          "score": 0.6643,
+          "text": "Section 54 of the Income Tax Act provides capital gains tax exemption on long-term capital gains arising from the transfer of a residential house property, provided the net sale proceeds are reinvested in acquiring or constructing another residential house in India.",
+          "metadata": {
+            "source": "tax-planning-handbook-2026.pdf",
+            "document_id": "doc_tax_201",
+            "chunk_index": 1,
+            "section": "Capital Gains Exemptions",
+            "category": "taxation",
+            "department": "wealth_advisory",
+            "user_role": "retail_investor",
+            "effective_date": "2026-04-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "2a5927b8-dbdf-49c0-8e95-208e0272834d"
+        }
+      ],
+      "filtered_results": [
+        {
+          "rank": 1,
+          "score": 0.8444,
+          "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_auth_001",
+            "chunk_index": 1,
+            "section": "Account access",
+            "category": "account_management",
+            "department": "client_services",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "aec7a443-6f93-429c-a2ca-a5cf92e2ac30"
+        },
+        {
+          "rank": 2,
+          "score": 0.7511,
+          "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_auth_001",
+            "chunk_index": 0,
+            "section": "Account access",
+            "category": "account_management",
+            "department": "client_services",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "a5e7c088-9bda-4883-8e36-3d5acac22457"
+        }
+      ],
+      "hybrid_results": [
+        {
+          "rank": 1,
+          "score": 0.7511,
+          "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_auth_001",
+            "chunk_index": 0,
+            "section": "Account access",
+            "category": "account_management",
+            "department": "client_services",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "a5e7c088-9bda-4883-8e36-3d5acac22457",
+          "keyword_score": 4,
+          "hybrid_score": 1.4009
+        },
+        {
+          "rank": 2,
+          "score": 0.8444,
+          "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_auth_001",
+            "chunk_index": 1,
+            "section": "Account access",
+            "category": "account_management",
+            "department": "client_services",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "aec7a443-6f93-429c-a2ca-a5cf92e2ac30",
+          "keyword_score": 3,
+          "hybrid_score": 1.2755
+        }
+      ],
+      "metrics": {
+        "unfiltered_count": 3,
+        "filtered_count": 2,
+        "removed_irrelevant_chunks_count": 1,
+        "top_unfiltered_section": "Account access",
+        "top_filtered_section": "Account access",
+        "top_hybrid_score": 1.4009
+      }
+    },
+    "scenario_2_tax_deductions": {
+      "query": "What is the maximum investment limit for tax deduction?",
+      "filter": {
+        "category": "taxation",
+        "section": "Section 80C Deductions"
+      },
+      "keywords": [
+        "80c",
+        "deduction",
+        "1,50,000",
+        "elss",
+        "ppf"
+      ],
+      "k": 3,
+      "unfiltered_results": [
+        {
+          "rank": 1,
+          "score": 0.8754,
+          "text": "Section 54 of the Income Tax Act provides capital gains tax exemption on long-term capital gains arising from the transfer of a residential house property, provided the net sale proceeds are reinvested in acquiring or constructing another residential house in India.",
+          "metadata": {
+            "source": "tax-planning-handbook-2026.pdf",
+            "document_id": "doc_tax_201",
+            "chunk_index": 1,
+            "section": "Capital Gains Exemptions",
+            "category": "taxation",
+            "department": "wealth_advisory",
+            "user_role": "retail_investor",
+            "effective_date": "2026-04-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "2a5927b8-dbdf-49c0-8e95-208e0272834d"
+        },
+        {
+          "rank": 2,
+          "score": 0.8337,
+          "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_auth_001",
+            "chunk_index": 0,
+            "section": "Account access",
+            "category": "account_management",
+            "department": "client_services",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "a5e7c088-9bda-4883-8e36-3d5acac22457"
+        },
+        {
+          "rank": 3,
+          "score": 0.8106,
+          "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_auth_001",
+            "chunk_index": 1,
+            "section": "Account access",
+            "category": "account_management",
+            "department": "client_services",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "aec7a443-6f93-429c-a2ca-a5cf92e2ac30"
+        }
+      ],
+      "filtered_results": [
+        {
+          "rank": 1,
+          "score": 0.785,
+          "text": "Under Section 80C of the Income Tax Act, individual taxpayers can claim deductions up to Rs 1,50,000 per financial year for investments in Equity Linked Savings Schemes (ELSS), Public Provident Fund (PPF), National Savings Certificate (NSC), and life insurance premiums.",
+          "metadata": {
+            "source": "tax-planning-handbook-2026.pdf",
+            "document_id": "doc_tax_201",
+            "chunk_index": 0,
+            "section": "Section 80C Deductions",
+            "category": "taxation",
+            "department": "wealth_advisory",
+            "user_role": "retail_investor",
+            "effective_date": "2026-04-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "3b67cddd-d94b-4fae-8ae9-57cdcce16681"
+        }
+      ],
+      "hybrid_results": [
+        {
+          "rank": 1,
+          "score": 0.785,
+          "text": "Under Section 80C of the Income Tax Act, individual taxpayers can claim deductions up to Rs 1,50,000 per financial year for investments in Equity Linked Savings Schemes (ELSS), Public Provident Fund (PPF), National Savings Certificate (NSC), and life insurance premiums.",
+          "metadata": {
+            "source": "tax-planning-handbook-2026.pdf",
+            "document_id": "doc_tax_201",
+            "chunk_index": 0,
+            "section": "Section 80C Deductions",
+            "category": "taxation",
+            "department": "wealth_advisory",
+            "user_role": "retail_investor",
+            "effective_date": "2026-04-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "3b67cddd-d94b-4fae-8ae9-57cdcce16681",
+          "keyword_score": 5,
+          "hybrid_score": 1.628
+        }
+      ],
+      "metrics": {
+        "unfiltered_count": 3,
+        "filtered_count": 1,
+        "removed_irrelevant_chunks_count": 3,
+        "top_unfiltered_section": "Capital Gains Exemptions",
+        "top_filtered_section": "Section 80C Deductions",
+        "top_hybrid_score": 1.628
+      }
+    },
+    "scenario_3_regulatory_compliance": {
+      "query": "What are the client onboarding rules under SEBI-CIR-2026-42?",
+      "filter": {
+        "category": "regulatory_compliance"
+      },
+      "keywords": [
+        "sebi-cir-2026-42",
+        "e-kyc",
+        "v-cip",
+        "aadhaar",
+        "pms"
+      ],
+      "k": 3,
+      "unfiltered_results": [
+        {
+          "rank": 1,
+          "score": 0.5446,
+          "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_auth_001",
+            "chunk_index": 1,
+            "section": "Account access",
+            "category": "account_management",
+            "department": "client_services",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "aec7a443-6f93-429c-a2ca-a5cf92e2ac30"
+        },
+        {
+          "rank": 2,
+          "score": 0.5251,
+          "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+          "metadata": {
+            "source": "auth-and-access-guide.md",
+            "document_id": "doc_auth_001",
+            "chunk_index": 0,
+            "section": "Account access",
+            "category": "account_management",
+            "department": "client_services",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "a5e7c088-9bda-4883-8e36-3d5acac22457"
+        },
+        {
+          "rank": 3,
+          "score": 0.4961,
+          "text": "Section 54 of the Income Tax Act provides capital gains tax exemption on long-term capital gains arising from the transfer of a residential house property, provided the net sale proceeds are reinvested in acquiring or constructing another residential house in India.",
+          "metadata": {
+            "source": "tax-planning-handbook-2026.pdf",
+            "document_id": "doc_tax_201",
+            "chunk_index": 1,
+            "section": "Capital Gains Exemptions",
+            "category": "taxation",
+            "department": "wealth_advisory",
+            "user_role": "retail_investor",
+            "effective_date": "2026-04-01"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "2a5927b8-dbdf-49c0-8e95-208e0272834d"
+        }
+      ],
+      "filtered_results": [
+        {
+          "rank": 1,
+          "score": 0.4804,
+          "text": "SEBI Circular SEBI/HO/MIRSD/DOS3/CIR/P/2026/42 mandates digital Aadhaar-based e-KYC and video customer identification process (V-CIP) for all high-net-worth client onboarding and portfolio management service (PMS) agreements.",
+          "metadata": {
+            "source": "sebi-compliance-compendium-2026.pdf",
+            "document_id": "doc_reg_301",
+            "chunk_index": 0,
+            "section": "KYC and Onboarding Compliance",
+            "category": "regulatory_compliance",
+            "department": "compliance_office",
+            "compliance_code": "SEBI-CIR-2026-42",
+            "user_role": "compliance_officer",
+            "effective_date": "2026-02-15"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "aa99b199-af56-47c5-a92d-dbd65df1cfb0"
+        }
+      ],
+      "hybrid_results": [
+        {
+          "rank": 1,
+          "score": 0.4804,
+          "text": "SEBI Circular SEBI/HO/MIRSD/DOS3/CIR/P/2026/42 mandates digital Aadhaar-based e-KYC and video customer identification process (V-CIP) for all high-net-worth client onboarding and portfolio management service (PMS) agreements.",
+          "metadata": {
+            "source": "sebi-compliance-compendium-2026.pdf",
+            "document_id": "doc_reg_301",
+            "chunk_index": 0,
+            "section": "KYC and Onboarding Compliance",
+            "category": "regulatory_compliance",
+            "department": "compliance_office",
+            "compliance_code": "SEBI-CIR-2026-42",
+            "user_role": "compliance_officer",
+            "effective_date": "2026-02-15"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "aa99b199-af56-47c5-a92d-dbd65df1cfb0",
+          "keyword_score": 4,
+          "hybrid_score": 1.1843
+        }
+      ],
+      "metrics": {
+        "unfiltered_count": 3,
+        "filtered_count": 1,
+        "removed_irrelevant_chunks_count": 3,
+        "top_unfiltered_section": "Account access",
+        "top_filtered_section": "KYC and Onboarding Compliance",
+        "top_hybrid_score": 1.1843
+      }
+    },
+    "scenario_4_chromadb_parity": {
+      "query": "What are the password reset steps?",
+      "filter": {
+        "section": "Account access"
+      },
+      "chroma_filtered_results": [
+        {
+          "rank": 1,
+          "score": 0.8444,
+          "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+          "metadata": {
+            "category": "account_management",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01",
+            "source": "auth-and-access-guide.md",
+            "section": "Account access",
+            "document_id": "doc_auth_001",
+            "department": "client_services",
+            "chunk_index": 1
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "c60c342c-86ef-40c6-b66f-ce82008458e4"
+        },
+        {
+          "rank": 2,
+          "score": 0.7511,
+          "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+          "metadata": {
+            "document_id": "doc_auth_001",
+            "source": "auth-and-access-guide.md",
+            "effective_date": "2026-01-01",
+            "department": "client_services",
+            "section": "Account access",
+            "chunk_index": 0,
+            "user_role": "retail_investor",
+            "category": "account_management"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "7a13ba69-7027-4ffe-8211-e5c202ca5fbe"
+        }
+      ],
+      "chroma_hybrid_results": [
+        {
+          "rank": 1,
+          "score": 0.7511,
+          "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
+          "metadata": {
+            "document_id": "doc_auth_001",
+            "source": "auth-and-access-guide.md",
+            "effective_date": "2026-01-01",
+            "department": "client_services",
+            "section": "Account access",
+            "chunk_index": 0,
+            "user_role": "retail_investor",
+            "category": "account_management"
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "7a13ba69-7027-4ffe-8211-e5c202ca5fbe",
+          "keyword_score": 4,
+          "hybrid_score": 1.4009
+        },
+        {
+          "rank": 2,
+          "score": 0.8444,
+          "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
+          "metadata": {
+            "category": "account_management",
+            "user_role": "retail_investor",
+            "effective_date": "2026-01-01",
+            "source": "auth-and-access-guide.md",
+            "section": "Account access",
+            "document_id": "doc_auth_001",
+            "department": "client_services",
+            "chunk_index": 1
+          },
+          "embedding_model": "text-embedding-3-small",
+          "id": "c60c342c-86ef-40c6-b66f-ce82008458e4",
+          "keyword_score": 3,
+          "hybrid_score": 1.2755
+        }
+      ]
+    }
+  }
+}

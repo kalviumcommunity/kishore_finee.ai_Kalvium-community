@@ -150,39 +150,54 @@ class InMemoryVectorStore:
 
     def search(
         self,
-        query_vector: Sequence[float],
+        query_vector: Optional[Sequence[float]] = None,
         top_k: int = 3,
         filter_metadata: Optional[Dict[str, Any]] = None,
         min_score: Optional[float] = None,
         include_embedding: bool = False,
+        *,
+        vector: Optional[Sequence[float]] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        metadata_filter: Optional[Dict[str, Any]] = None,
+        include: Optional[Sequence[str]] = None,
     ) -> List[Dict[str, Any]]:
         """Execute top-k cosine similarity search against indexed records.
 
         Args:
-            query_vector: Dense numerical embedding vector for the search query.
+            query_vector: Dense numerical embedding vector for search query.
             top_k: Number of highest scoring results to return.
             filter_metadata: Optional key-value constraints to filter candidates.
             min_score: Optional minimum cosine similarity threshold.
             include_embedding: Whether to include the raw embedding in result items.
+            vector: Alias for query_vector.
+            filter: Alias for filter_metadata.
+            metadata_filter: Alias for filter_metadata.
+            include: Optional list of fields to include in output.
 
         Returns:
             List of ranked result dictionaries with score, text, and metadata.
         """
+        effective_vector = vector if query_vector is None else query_vector
+        if effective_vector is None:
+            raise ValueError("A valid query vector must be provided.")
+
+        effective_filter = filter_metadata or metadata_filter or filter
+
         if not self._records:
             return []
 
         if top_k <= 0:
             return []
 
-        query_arr = np.asarray(query_vector, dtype=np.float64)
+        query_arr = np.asarray(effective_vector, dtype=np.float64)
         if len(query_arr) == 0:
             raise ValueError("Query vector cannot be empty.")
 
         candidates = self._records
-        if filter_metadata:
+        if effective_filter:
             candidates = [
                 r for r in candidates
-                if all(r.metadata.get(k) == v for k, v in filter_metadata.items())
+                if all(r.metadata.get(k) == v for k, v in effective_filter.items())
             ]
 
         scored_results: List[Dict[str, Any]] = []
@@ -197,7 +212,7 @@ class InMemoryVectorStore:
 
             result_item: Dict[str, Any] = {
                 "id": record.id,
-                "score": float(score),
+                "score": score,
                 "text": record.text,
                 "metadata": record.metadata,
                 "embedding_model": record.embedding_model,

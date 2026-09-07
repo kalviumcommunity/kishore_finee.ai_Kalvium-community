@@ -7,8 +7,13 @@ Top-K document chunk retrieval, sanity checking, and reranking with In-Memory an
 from src.retrieval.chroma_store import ChromaVectorStore
 from src.retrieval.retriever import (
     RetrievalResult,
+    compare_filtered_unfiltered,
     compare_k_retrieval,
+    hybrid_rank,
+    hybrid_retrieve,
+    keyword_score,
     retrieve,
+    show_results,
 )
 from src.retrieval.sanity_checker import (
     DimensionMismatchError,
@@ -33,6 +38,11 @@ __all__ = [
     "VectorRecord",
     "RetrievalResult",
     "retrieve",
+    "keyword_score",
+    "hybrid_rank",
+    "hybrid_retrieve",
+    "show_results",
+    "compare_filtered_unfiltered",
     "compare_k_retrieval",
     "DimensionMismatchError",
     "InvalidVectorError",

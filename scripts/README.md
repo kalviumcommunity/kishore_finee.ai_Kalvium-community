@@ -5,6 +5,10 @@ This directory houses administrative, maintenance, demonstration, and ingestion 
 ## Available Scripts
 
 ### Retrieval & Semantic Search
+- `demonstrate_filtered_hybrid_search.py`: Demonstrates metadata filtering, unfiltered vs filtered precision comparison, exact keyword lexical scoring, and weighted hybrid ranking. Exports to `outputs/evaluations/metadata_filtering_hybrid_search_results.json` and `outputs/evaluations/filtered_hybrid_search_demo.json`.
+  ```bash
+  python scripts/demonstrate_filtered_hybrid_search.py
+  ```
 - `demonstrate_retrieval.py`: Demonstrates Top-K similarity search, same-model query embedding, score and metadata inspection, changing-k context comparison (k=1, 3, 5), and export to `outputs/evaluations/similarity_search_retrieval_results.json` and `outputs/evaluations/top_k_retrieval_demo.json`.
   ```bash
   python scripts/demonstrate_retrieval.py

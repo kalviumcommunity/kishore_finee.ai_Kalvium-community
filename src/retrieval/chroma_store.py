@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence, Union
+from typing import Any, Dict, List, Optional, Sequence, Union, cast
 import uuid
 
 import chromadb
@@ -111,8 +111,8 @@ class ChromaVectorStore:
 
         self.collection.add(
             ids=ids,
-            embeddings=embeddings,
-            metadatas=metadatas,
+            embeddings=cast(Any, embeddings),
+            metadatas=cast(Any, metadatas),
             documents=documents,
         )
         return len(ids)
@@ -161,10 +161,15 @@ class ChromaVectorStore:
 
     def search(
         self,
-        query_vector: Sequence[float],
+        query_vector: Optional[Sequence[float]] = None,
         top_k: int = 3,
         filter_metadata: Optional[Dict[str, Any]] = None,
         min_score: Optional[float] = None,
+        *,
+        vector: Optional[Sequence[float]] = None,
+        filter: Optional[Dict[str, Any]] = None,
+        metadata_filter: Optional[Dict[str, Any]] = None,
+        include: Optional[Sequence[str]] = None,
     ) -> List[Dict[str, Any]]:
         """Query ChromaDB collection for top-k similar chunks.
 
@@ -173,27 +178,37 @@ class ChromaVectorStore:
             top_k: Number of highest-scoring matches to return.
             filter_metadata: Metadata dictionary to filter candidates.
             min_score: Minimum similarity score threshold.
+            vector: Alias for query_vector.
+            filter: Alias for filter_metadata.
+            metadata_filter: Alias for filter_metadata.
+            include: Optional list of fields to include.
 
         Returns:
             List of ranked result dictionaries with score, text, and metadata.
         """
+        effective_vector = vector if query_vector is None else query_vector
+        if effective_vector is None:
+            raise ValueError("A valid query vector must be provided.")
+
+        effective_filter = filter_metadata or metadata_filter or filter
+
         if self.count() == 0 or top_k <= 0:
             return []
 
         effective_k = min(top_k, self.count())
 
         where_clause: Optional[Dict[str, Any]] = None
-        if filter_metadata:
-            clean_filter = _sanitize_metadata_for_chroma(filter_metadata)
+        if effective_filter:
+            clean_filter = _sanitize_metadata_for_chroma(effective_filter)
             if len(clean_filter) == 1:
                 where_clause = clean_filter
             elif len(clean_filter) > 1:
                 where_clause = {"$and": [{k: v} for k, v in clean_filter.items()]}
 
         response = self.collection.query(
-            query_embeddings=[list(query_vector)],
+            query_embeddings=cast(Any, [list(effective_vector)]),
             n_results=effective_k,
-            where=where_clause,
+            where=cast(Any, where_clause),
             include=["documents", "metadatas", "distances"],
         )
 
