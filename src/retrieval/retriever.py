@@ -56,6 +56,8 @@ def retrieve(
     embedding_service: Optional[EmbeddingService] = None,
     filter_metadata: Optional[Dict[str, Any]] = None,
     min_score: Optional[float] = None,
+    *,
+    metadata_filter: Optional[Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
     """Retrieve top-k document chunks most similar to a user query.
 
@@ -72,6 +74,7 @@ def retrieve(
         embedding_service: EmbeddingService to generate query vectors.
         filter_metadata: Optional key-value constraints on chunk metadata.
         min_score: Optional minimum similarity threshold.
+        metadata_filter: Alias for filter_metadata.
 
     Returns:
         List of dictionaries with score, text, metadata, rank, and model attribution.
@@ -88,6 +91,8 @@ def retrieve(
     if collection is None:
         raise ValueError("A valid VectorStore collection must be provided for retrieval.")
 
+    effective_filter = filter_metadata or metadata_filter
+
     # 1. Obtain embedding service and enforce same-model query embedding
     service = embedding_service or get_embedding_service()
 
@@ -98,7 +103,7 @@ def retrieve(
     search_results = collection.search(
         query_vector=query_vector,
         top_k=k,
-        filter_metadata=filter_metadata,
+        filter_metadata=effective_filter,
         min_score=min_score,
     )
 
@@ -115,6 +120,218 @@ def retrieve(
         })
 
     return retrieved_items
+
+
+def keyword_score(text: str, keywords: Sequence[str]) -> int:
+    """Compute lexical keyword occurrence count in text.
+
+    Args:
+        text: Document chunk string.
+        keywords: List of target words/phrases to match.
+
+    Returns:
+        Integer count of matched keywords in the text (case-insensitive).
+    """
+    if not text or not keywords:
+        return 0
+    lowered = text.lower()
+    return sum(1 for word in keywords if word.lower() in lowered)
+
+
+def hybrid_rank(
+    vector_results: Sequence[Dict[str, Any]],
+    keywords: Sequence[str],
+    vector_weight: float = 0.8,
+    keyword_weight: float = 0.2,
+) -> List[Dict[str, Any]]:
+    """Combine vector semantic similarity and lexical keyword scoring.
+
+    Formula:
+        hybrid_score = (vector_weight * vector_score) + (keyword_weight * keyword_score)
+
+    Args:
+        vector_results: List of retrieval result dictionaries (containing 'score' and 'text').
+        keywords: Sequence of target keyword terms to reward.
+        vector_weight: Weight assigned to semantic vector similarity (default: 0.8).
+        keyword_weight: Weight assigned to lexical keyword score (default: 0.2).
+
+    Returns:
+        Sorted list of ranked results descending by hybrid_score, with rank,
+        keyword_score, and hybrid_score annotated.
+    """
+    ranked: List[Dict[str, Any]] = []
+    for item in vector_results:
+        lexical = keyword_score(item.get("text", ""), keywords)
+        vec_score = float(item.get("score", 0.0))
+        combined = (vector_weight * vec_score) + (keyword_weight * lexical)
+        result_entry = dict(item)
+        result_entry["keyword_score"] = lexical
+        result_entry["hybrid_score"] = round(combined, 4)
+        ranked.append(result_entry)
+
+    # Sort descending by hybrid_score, breaking ties with vector similarity
+    ranked.sort(key=lambda item: (item["hybrid_score"], item.get("score", 0.0)), reverse=True)
+
+    for rank_idx, item in enumerate(ranked, start=1):
+        item["rank"] = rank_idx
+
+    return ranked
+
+
+def hybrid_retrieve(
+    query: str,
+    keywords: Optional[Sequence[str]] = None,
+    k: int = 3,
+    collection: Optional[Union[InMemoryVectorStore, Any]] = None,
+    embedding_service: Optional[EmbeddingService] = None,
+    filter_metadata: Optional[Dict[str, Any]] = None,
+    vector_weight: float = 0.8,
+    keyword_weight: float = 0.2,
+    min_score: Optional[float] = None,
+    *,
+    metadata_filter: Optional[Dict[str, Any]] = None,
+) -> List[Dict[str, Any]]:
+    """Execute end-to-end vector retrieval with metadata filtering and keyword hybrid ranking.
+
+    Args:
+        query: User search query.
+        keywords: Optional list of exact keyword tokens to match (defaults to query words).
+        k: Top-k candidates to retrieve.
+        collection: Vector store collection.
+        embedding_service: Optional EmbeddingService.
+        filter_metadata: Optional metadata filter dict.
+        vector_weight: Weight for dense similarity.
+        keyword_weight: Weight for keyword frequency.
+        min_score: Minimum vector similarity threshold.
+        metadata_filter: Alias for filter_metadata.
+
+    Returns:
+        List of reranked hybrid search result items.
+    """
+    effective_filter = filter_metadata or metadata_filter
+    base_results = retrieve(
+        query=query,
+        k=k,
+        collection=collection,
+        embedding_service=embedding_service,
+        filter_metadata=effective_filter,
+        min_score=min_score,
+    )
+
+    effective_keywords = (
+        keywords
+        if keywords is not None
+        else [w.strip() for w in query.split() if len(w.strip()) > 2]
+    )
+    if not effective_keywords:
+        return base_results
+
+    return hybrid_rank(
+        vector_results=base_results,
+        keywords=effective_keywords,
+        vector_weight=vector_weight,
+        keyword_weight=keyword_weight,
+    )
+
+
+def show_results(label: str, results: Sequence[Dict[str, Any]], max_chars: int = 120) -> None:
+    """Print formatted search results for easy comparison in terminal demonstrations.
+
+    Args:
+        label: Header label (e.g. 'unfiltered', 'filtered', 'hybrid filtered').
+        results: Sequence of result dictionaries.
+        max_chars: Maximum characters of text snippet to show.
+    """
+    print(f"\n=== {label.upper()} (Count: {len(results)}) ===")
+    for item in results:
+        score_val = item.get("score")
+        score_str = f"{score_val:.4f}" if isinstance(score_val, (int, float)) else "N/A"
+        print("score:", score_str)
+        if "hybrid_score" in item:
+            print("hybrid_score:", f"{item['hybrid_score']:.4f}")
+        if "keyword_score" in item:
+            print("keyword_score:", item["keyword_score"])
+        meta = item.get("metadata", {})
+        print("source:", meta.get("source", "unknown"))
+        print("section:", meta.get("section"))
+        txt = item.get("text", "")
+        print("text:", txt[:max_chars].strip())
+        print("-" * 40)
+
+
+def compare_filtered_unfiltered(
+    query: str,
+    filter_metadata: Dict[str, Any],
+    keywords: Optional[Sequence[str]] = None,
+    k: int = 3,
+    collection: Optional[Union[InMemoryVectorStore, Any]] = None,
+    embedding_service: Optional[EmbeddingService] = None,
+    vector_weight: float = 0.8,
+    keyword_weight: float = 0.2,
+) -> Dict[str, Any]:
+    """Execute and compare unfiltered, filtered, and hybrid-filtered retrieval for a query.
+
+    Args:
+        query: User search query.
+        filter_metadata: Filter dictionary to constrain document metadata.
+        keywords: Optional keywords for hybrid scoring.
+        k: Top-k items to retrieve.
+        collection: Vector store instance.
+        embedding_service: EmbeddingService instance.
+        vector_weight: Hybrid vector weight.
+        keyword_weight: Hybrid keyword weight.
+
+    Returns:
+        Structured dictionary comparing unfiltered, filtered, and hybrid results with precision metrics.
+    """
+    unfiltered = retrieve(
+        query=query,
+        k=k,
+        collection=collection,
+        embedding_service=embedding_service,
+        filter_metadata=None,
+    )
+
+    filtered = retrieve(
+        query=query,
+        k=k,
+        collection=collection,
+        embedding_service=embedding_service,
+        filter_metadata=filter_metadata,
+    )
+
+    effective_kw = keywords or [w.strip() for w in query.split() if len(w.strip()) > 2]
+    hybrid_filtered = hybrid_rank(
+        vector_results=filtered,
+        keywords=effective_kw,
+        vector_weight=vector_weight,
+        keyword_weight=keyword_weight,
+    )
+
+    filtered_ids = {item.get("id") or item.get("text") for item in filtered}
+
+    removed_distractors = [
+        item for item in unfiltered
+        if (item.get("id") or item.get("text")) not in filtered_ids
+    ]
+
+    return {
+        "query": query,
+        "filter": filter_metadata,
+        "keywords": list(effective_kw),
+        "k": k,
+        "unfiltered_results": unfiltered,
+        "filtered_results": filtered,
+        "hybrid_results": hybrid_filtered,
+        "metrics": {
+            "unfiltered_count": len(unfiltered),
+            "filtered_count": len(filtered),
+            "removed_irrelevant_chunks_count": len(removed_distractors),
+            "top_unfiltered_section": unfiltered[0]["metadata"].get("section") if unfiltered else None,
+            "top_filtered_section": filtered[0]["metadata"].get("section") if filtered else None,
+            "top_hybrid_score": hybrid_filtered[0]["hybrid_score"] if hybrid_filtered else None,
+        },
+    }
 
 
 def compare_k_retrieval(
