@@ -1,21 +1,26 @@
 {
   "include": [
+    "src",
+    "tests",
+    "scripts",
+    "prompts"
+  ],
+  "extraPaths": [
     ".",
     "src",
     "scripts",
     "prompts",
     "tests"
   ],
-  "extraPaths": [
-    ".",
-    "src"
-  ],
   "executionEnvironments": [
     {
       "root": ".",
       "extraPaths": [
         ".",
-        "src"
+        "src",
+        "scripts",
+        "prompts",
+        "tests"
       ]
     }
   ]

@@ -14,7 +14,14 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "pydantic-settings>=2.2.1",
     "tiktoken>=0.7.0",
+    "numpy>=2.0.0",
+    "langchain>=0.3.0",
+    "langchain-core>=0.3.0",
+    "langchain-openai>=0.2.0",
+    "langchain-community>=0.3.0",
+    "chromadb>=0.4.0",
 ]
+
 
 [project.optional-dependencies]
 dev = [
@@ -30,7 +37,4 @@ python_functions = "test_*"
 
 [tool.pyright]
 extraPaths = [".", "src"]
-
-[tool.pyrefly]
-search-paths = [".", "src"]
 
