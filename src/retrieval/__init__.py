@@ -1,9 +1,10 @@
 """Retrieval engine module for finee.ai.
 
 Responsible for semantic similarity search, compliance metadata filtering,
-Top-K document chunk retrieval, and reranking.
+Top-K document chunk retrieval, and reranking with In-Memory and ChromaDB stores.
 """
 
+from src.retrieval.chroma_store import ChromaVectorStore
 from src.retrieval.retriever import (
     RetrievalResult,
     compare_k_retrieval,
@@ -16,6 +17,7 @@ from src.retrieval.vector_store import (
 
 __all__ = [
     "InMemoryVectorStore",
+    "ChromaVectorStore",
     "VectorRecord",
     "RetrievalResult",
     "retrieve",

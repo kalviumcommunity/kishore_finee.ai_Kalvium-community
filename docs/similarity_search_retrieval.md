@@ -110,7 +110,27 @@ Each retrieved chunk preserves complete provenance:
 
 ---
 
-## 6. CLI Demonstration & Outputs
+## 6. Supported Vector Databases
+
+The retrieval engine provides unified interfaces across multiple vector database backends:
+
+1. **`InMemoryVectorStore`**: Lightweight, pure Python & NumPy-based vector store calculating exact cosine similarity with zero external background process dependencies.
+2. **`ChromaVectorStore` (`chromadb`)**: Production-ready vector database backend supporting HNSW index cosine distance querying, metadata filtering (`where` clauses), and persistent/ephemeral collections.
+
+```python
+from src.retrieval import ChromaVectorStore, retrieve
+
+# Initialize ChromaDB vector store
+chroma_store = ChromaVectorStore(collection_name="finee_financial_corpus")
+chroma_store.add_chunks(corpus_chunks)
+
+# Retrieve top-3 chunks
+results = retrieve("How can a learner reset their password?", k=3, collection=chroma_store)
+```
+
+---
+
+## 7. CLI Demonstration & Outputs
 
 To execute the top-$k$ similarity search demonstration script:
 

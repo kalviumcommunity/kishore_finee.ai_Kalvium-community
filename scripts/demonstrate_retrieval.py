@@ -23,6 +23,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.core.config import settings
 from src.embeddings.embedding_service import EmbeddingService, get_embedding_service
+from src.retrieval.chroma_store import ChromaVectorStore
 from src.retrieval.retriever import _embed_query_safe, compare_k_retrieval, retrieve
 from src.retrieval.vector_store import InMemoryVectorStore
 
@@ -242,6 +243,26 @@ def run_retrieval_demonstration() -> Dict[str, Any]:
         )
 
     # -------------------------------------------------------------
+    # ChromaDB Vector Database Demonstration
+    # -------------------------------------------------------------
+    print("\n[ChromaDB Integration] - CHROMADB TOP-K RETRIEVAL")
+    print("-" * 75)
+    chroma_store = ChromaVectorStore(collection_name="finee_demo_chroma")
+    chroma_store.clear()
+    chroma_store.add_chunks(CORPUS_CHUNKS, embedding_service=service)
+    print(f"ChromaDB Collection : {chroma_store.collection_name}")
+    print(f"ChromaDB Chunks Count: {chroma_store.count()}")
+
+    chroma_k3_results = retrieve(
+        query=sample_query,
+        k=3,
+        collection=chroma_store,  # type: ignore[arg-type]
+        embedding_service=service,
+    )
+    for r in chroma_k3_results:
+        print(f"  [Chroma Rank {r['rank']}] Score: {r['score']:.4f} | Source: {r['metadata'].get('source')} | Text: {r['text'][:80]}...")
+
+    # -------------------------------------------------------------
     # Task 5: Execute and Commit Multiple Sample Query Results
     # -------------------------------------------------------------
     print("\n[Task 5] - SAMPLE QUERIES EXECUTION & JSON EXPORT")
@@ -274,6 +295,7 @@ def run_retrieval_demonstration() -> Dict[str, Any]:
         "total_corpus_chunks": store.count(),
         "primary_demonstration_query": sample_query,
         "sample_retrieval_k3": results_k3,
+        "chromadb_retrieval_k3": chroma_k3_results,
         "k_tradeoff_demonstration": k_comparison,
         "all_queries_evaluated": query_results_payload,
     }

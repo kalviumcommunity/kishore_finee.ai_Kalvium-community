@@ -312,3 +312,52 @@ class TestDemonstrationScriptExecution:
 
         assert OUTPUT_FILE_PRIMARY.exists()
         assert OUTPUT_FILE_DEMO.exists()
+
+
+class TestChromaVectorStoreIntegration:
+    """Tests for ChromaDB vector store integration."""
+
+    def test_chroma_store_add_and_search(self, sample_vector_records: List[VectorRecord]) -> None:
+        """Verify ChromaVectorStore indexing and cosine search."""
+        from src.retrieval.chroma_store import ChromaVectorStore
+
+        chroma_store = ChromaVectorStore(collection_name="test_chroma_unit")
+        chroma_store.clear()
+
+        added = chroma_store.add_records(sample_vector_records)
+        assert added == 4
+        assert chroma_store.count() == 4
+
+        # Search top-2
+        query_vector = [0.95, 0.85, 0.15, 0.0]
+        results = chroma_store.search(query_vector=query_vector, top_k=2)
+
+        assert len(results) == 2
+        assert results[0]["id"] == "vec_001"
+        assert results[0]["rank"] == 1
+        assert results[0]["metadata"]["source"] == "auth-guide.md"
+
+        # Metadata filtering in Chroma
+        filtered = chroma_store.search(
+            query_vector=query_vector,
+            top_k=4,
+            filter_metadata={"approval_status": "approved"},
+        )
+        assert len(filtered) == 3
+        assert all(r["metadata"]["approval_status"] == "approved" for r in filtered)
+
+        # End-to-end retrieve function with Chroma store
+        mock_service = MagicMock(spec=EmbeddingService)
+        mock_service.model = "text-embedding-3-small"
+        mock_service.embed_query.return_value = query_vector
+
+        retrieved_items = retrieve(
+            query="Reset password",
+            k=2,
+            collection=chroma_store,  # type: ignore[arg-type]
+            embedding_service=mock_service,
+        )
+        assert len(retrieved_items) == 2
+        assert retrieved_items[0]["rank"] == 1
+        assert "score" in retrieved_items[0]
+
