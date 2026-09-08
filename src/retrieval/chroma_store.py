@@ -12,9 +12,16 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Union, cast
 import uuid
 
-import chromadb
-from chromadb.api import ClientAPI
-from chromadb.api.models.Collection import Collection
+try:
+    import chromadb
+    from chromadb.api import ClientAPI
+    from chromadb.api.models.Collection import Collection
+    HAS_CHROMADB = True
+except (ImportError, ModuleNotFoundError):  # pragma: no cover
+    chromadb = None  # type: ignore
+    ClientAPI = Any  # type: ignore
+    Collection = Any  # type: ignore
+    HAS_CHROMADB = False
 
 from src.embeddings.embedding_service import EmbeddingService, get_embedding_service
 from src.retrieval.vector_store import VectorRecord
@@ -51,6 +58,13 @@ class ChromaVectorStore:
             persist_directory: Optional directory path for on-disk persistence.
             client: Optional pre-configured chromadb client.
         """
+        if not HAS_CHROMADB:
+            raise ImportError(
+                "chromadb is not installed in the active Python environment. "
+                "Please activate the virtual environment (`source .venv/bin/activate`) "
+                "or install it with `pip install chromadb`."
+            )
+
         self.collection_name = collection_name
         self.persist_directory = str(persist_directory) if persist_directory else None
 
