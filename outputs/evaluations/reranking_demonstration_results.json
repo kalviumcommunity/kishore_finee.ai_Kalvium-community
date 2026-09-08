@@ -1,0 +1,190 @@
+{
+  "status": "success",
+  "query": "What evidence supports the advisory fee charged to the client?",
+  "candidate_k": 10,
+  "final_k": 3,
+  "initial_candidates": [
+    {
+      "rank": 1,
+      "score": 0.9989,
+      "text": "Client Advisory Billing Evidence: Advisory fee of $1,250.00 for Q3 wealth advisory services was charged to Marcus on 20 August 2026, confirmed via invoice #INV-2026-08.",
+      "metadata": {
+        "source": "client-billing-records.pdf",
+        "document_id": "doc_billing_01",
+        "chunk_index": 1,
+        "section": "Invoice Verification",
+        "approval_status": "approved"
+      },
+      "id": "doc_billing_01:1"
+    },
+    {
+      "rank": 2,
+      "score": 0.9967,
+      "text": "General Wealth Advisory Commentary: Financial advisory clients like Marcus receive quarterly market outlook updates and wealth management advice.",
+      "metadata": {
+        "source": "general-wealth-guide.md",
+        "document_id": "doc_general_01",
+        "chunk_index": 0,
+        "section": "General Overview",
+        "approval_status": "approved"
+      },
+      "id": "doc_general_01:0"
+    },
+    {
+      "rank": 3,
+      "score": 0.9924,
+      "text": "Advisory Agreement Terms: Clients agree to electronic fee debiting from their linked primary settlement account upon invoice issuance.",
+      "metadata": {
+        "source": "advisory-agreement.pdf",
+        "document_id": "doc_advisory_contract",
+        "chunk_index": 0,
+        "section": "Billing Consent",
+        "approval_status": "approved"
+      },
+      "id": "doc_advisory_contract:0"
+    },
+    {
+      "rank": 4,
+      "score": 0.9916,
+      "text": "Standard Fee Schedule: The annual advisory fee is 0.75% of assets under management, calculated and deducted on a quarterly basis in arrears.",
+      "metadata": {
+        "source": "fee-schedule.pdf",
+        "document_id": "doc_fee_01",
+        "chunk_index": 0,
+        "section": "Fee Schedule",
+        "approval_status": "approved"
+      },
+      "id": "doc_fee_01:0"
+    },
+    {
+      "rank": 5,
+      "score": 0.9887,
+      "text": "Client Portal User Guide: Clients can view payment history and download signed fee receipts through the online portal.",
+      "metadata": {
+        "source": "client-portal.md",
+        "document_id": "doc_portal_01",
+        "chunk_index": 0,
+        "section": "Portal Usage",
+        "approval_status": "approved"
+      },
+      "id": "doc_portal_01:0"
+    },
+    {
+      "rank": 6,
+      "score": 0.9857,
+      "text": "Annual Tax Reporting: Year-end statements compile all advisory fees and realized capital gains for tax deduction purposes.",
+      "metadata": {
+        "source": "tax-guide.pdf",
+        "document_id": "doc_tax_01",
+        "chunk_index": 0,
+        "section": "Tax Disclosures",
+        "approval_status": "approved"
+      },
+      "id": "doc_tax_01:0"
+    },
+    {
+      "rank": 7,
+      "score": 0.6856,
+      "text": "Balanced Bond Fund Factsheet: The bond portfolio matures on 31 December 2030 with an annual distribution yield of 4.2%.",
+      "metadata": {
+        "source": "fund-factsheet.pdf",
+        "document_id": "doc_fund_01",
+        "chunk_index": 0,
+        "section": "Bond Yields",
+        "approval_status": "approved"
+      },
+      "id": "doc_fund_01:0"
+    },
+    {
+      "rank": 8,
+      "score": 0.4665,
+      "text": "Customer Due Diligence: Identity verification requires a government-issued photo ID and proof of residence under KYC regulations.",
+      "metadata": {
+        "source": "compliance-policy.pdf",
+        "document_id": "doc_kyc_01",
+        "chunk_index": 0,
+        "section": "KYC Identity",
+        "approval_status": "approved"
+      },
+      "id": "doc_kyc_01:0"
+    },
+    {
+      "rank": 9,
+      "score": 0.3934,
+      "text": "Account Security Policy: Password resets require mandatory two-factor authentication (2FA) and a 12-character passphrase.",
+      "metadata": {
+        "source": "account-security.pdf",
+        "document_id": "doc_sec_01",
+        "chunk_index": 0,
+        "section": "Security Controls",
+        "approval_status": "approved"
+      },
+      "id": "doc_sec_01:0"
+    },
+    {
+      "rank": 10,
+      "score": 0.3112,
+      "text": "Term Deposit Agreement: Early withdrawal before the 12-month fixed term forfeits 3 months of accrued interest.",
+      "metadata": {
+        "source": "deposit-agreement.pdf",
+        "document_id": "doc_deposit_01",
+        "chunk_index": 0,
+        "section": "Withdrawal Rules",
+        "approval_status": "approved"
+      },
+      "id": "doc_deposit_01:0"
+    }
+  ],
+  "reranked_results": [
+    {
+      "rank": 1,
+      "score": 0.9989,
+      "text": "Client Advisory Billing Evidence: Advisory fee of $1,250.00 for Q3 wealth advisory services was charged to Marcus on 20 August 2026, confirmed via invoice #INV-2026-08.",
+      "metadata": {
+        "source": "client-billing-records.pdf",
+        "document_id": "doc_billing_01",
+        "chunk_index": 1,
+        "section": "Invoice Verification",
+        "approval_status": "approved"
+      },
+      "id": "doc_billing_01:1",
+      "rerank_score": 1.0
+    },
+    {
+      "rank": 2,
+      "score": 0.9967,
+      "text": "General Wealth Advisory Commentary: Financial advisory clients like Marcus receive quarterly market outlook updates and wealth management advice.",
+      "metadata": {
+        "source": "general-wealth-guide.md",
+        "document_id": "doc_general_01",
+        "chunk_index": 0,
+        "section": "General Overview",
+        "approval_status": "approved"
+      },
+      "id": "doc_general_01:0",
+      "rerank_score": 1.0
+    },
+    {
+      "rank": 3,
+      "score": 0.9924,
+      "text": "Advisory Agreement Terms: Clients agree to electronic fee debiting from their linked primary settlement account upon invoice issuance.",
+      "metadata": {
+        "source": "advisory-agreement.pdf",
+        "document_id": "doc_advisory_contract",
+        "chunk_index": 0,
+        "section": "Billing Consent",
+        "approval_status": "approved"
+      },
+      "id": "doc_advisory_contract:0",
+      "rerank_score": 1.0
+    }
+  ],
+  "metrics": {
+    "candidate_count": 10,
+    "final_count": 3,
+    "retrieval_latency_seconds": 0.0001,
+    "rerank_latency_seconds": 2.542,
+    "total_latency_seconds": 2.5421,
+    "rerank_calls": 10
+  }
+}

@@ -1,10 +1,20 @@
 """Retrieval engine module for finee.ai.
 
 Responsible for semantic similarity search, compliance metadata filtering,
-Top-K document chunk retrieval, sanity checking, and reranking with In-Memory and ChromaDB stores.
+Top-K document chunk retrieval, sanity checking, vector stores, and candidate re-ranking.
 """
 
 from src.retrieval.chroma_store import ChromaVectorStore
+from src.retrieval.reranker import (
+    RerankConfigurationError,
+    RerankError,
+    RerankScoringError,
+    format_rerank_comparison,
+    parse_rerank_score,
+    rerank,
+    retrieve_and_rerank,
+    score_relevance,
+)
 from src.retrieval.retriever import (
     RetrievalResult,
     compare_filtered_unfiltered,
@@ -44,6 +54,14 @@ __all__ = [
     "show_results",
     "compare_filtered_unfiltered",
     "compare_k_retrieval",
+    "rerank",
+    "retrieve_and_rerank",
+    "format_rerank_comparison",
+    "score_relevance",
+    "parse_rerank_score",
+    "RerankError",
+    "RerankConfigurationError",
+    "RerankScoringError",
     "DimensionMismatchError",
     "InvalidVectorError",
     "ModelMismatchError",
