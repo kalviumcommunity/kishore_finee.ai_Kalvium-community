@@ -136,10 +136,33 @@ class Settings(BaseSettings):
     )
     LLM_STOP_SEQUENCES: Optional[str] = Field(
         default=None,
-        description="Comma-separated stop sequences for the LLM",
+        description="Optional comma-separated list of stop sequences",
+    )
+
+    # Re-ranking Retrieval Settings
+    RERANK_ENABLED: bool = Field(
+        default=True,
+        description="Toggle to enable or bypass re-ranking of retrieved candidates",
+    )
+    RERANK_CANDIDATE_K: int = Field(
+        default=10,
+        description="Number of initial candidates to retrieve from vector store before re-ranking",
+    )
+    RERANK_FINAL_K: int = Field(
+        default=3,
+        description="Number of final top-k candidates to return after re-ranking",
+    )
+    RERANK_MODEL: Optional[str] = Field(
+        default=None,
+        description="Model identifier used for re-ranking scoring (defaults to CHAT_MODEL)",
+    )
+    RERANK_TIMEOUT_SECONDS: float = Field(
+        default=5.0,
+        description="Timeout in seconds for re-ranking scoring calls",
     )
 
     # Observability & Logging
+
     LOG_LEVEL: str = Field(
         default="INFO",
         description="Global application logging level",
