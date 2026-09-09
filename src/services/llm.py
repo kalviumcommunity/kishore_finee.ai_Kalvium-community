@@ -110,3 +110,69 @@ async def generate_answer(
         raise LLMServiceError(f"HTTP request to LLM API failed: {exc}")
     except (KeyError, IndexError, TypeError) as exc:
         raise LLMServiceError(f"Unexpected response format from LLM API: {exc}")
+
+
+async def generate_grounded_answer(
+    question: str,
+    retrieved_chunks: Sequence[Union[Dict[str, Any], Any]],
+    system_instruction: Optional[str] = None,
+    max_context_tokens: Optional[int] = None,
+    temperature: Optional[float] = None,
+    max_tokens: Optional[int] = None,
+    top_p: Optional[float] = None,
+    stop_sequences: Optional[List[str]] = None,
+) -> Dict[str, Any]:
+    """Execute end-to-end context injection, prompt augmentation, and grounded LLM answer generation.
+
+    Connects:
+      Question + Retrieved Chunks -> Context Assembly -> Augmented Prompt -> LLM API -> Grounded Answer + Citation Sources
+
+    Args:
+        question: User financial question.
+        retrieved_chunks: Ordered list of candidate chunks from retrieval or re-ranking.
+        system_instruction: Optional system instruction override.
+        max_context_tokens: Optional token ceiling for context.
+        temperature: Optional temperature override.
+        max_tokens: Optional max output tokens override.
+        top_p: Optional top-p override.
+        stop_sequences: Optional stop sequences.
+
+    Returns:
+        Dictionary containing:
+          - "answer": Grounded response string from LLM
+          - "prompt_info": Full structured prompt metadata from build_prompt
+          - "context": Assembled context string
+          - "context_tokens": Number of tokens used for context
+          - "selected_chunks": Chunks selected within token budget
+          - "sources_used": Source metadata preserved for citations
+          - "source_markers": List of source markers (e.g., ["[1]", "[2]"])
+    """
+    from src.services.context_injection import build_prompt
+
+    prompt_info = build_prompt(
+        question=question,
+        retrieved_chunks=retrieved_chunks,
+        system_instruction=system_instruction,
+        max_context_tokens=max_context_tokens,
+    )
+
+    answer = await generate_answer(
+        question=question,
+        context=prompt_info["context"],
+        system_instruction=prompt_info["system_instruction"],
+        temperature=temperature,
+        max_tokens=max_tokens,
+        top_p=top_p,
+        stop_sequences=stop_sequences,
+    )
+
+    return {
+        "answer": answer,
+        "prompt_info": prompt_info,
+        "context": prompt_info["context"],
+        "context_tokens": prompt_info["context_tokens"],
+        "selected_chunks": prompt_info["selected_chunks"],
+        "sources_used": prompt_info["sources_used"],
+        "source_markers": prompt_info["source_markers"],
+    }
+

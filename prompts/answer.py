@@ -38,10 +38,24 @@ EVALUATION_TEMPLATE = PromptTemplate(
     name="evaluation_template",
 )
 
+# Context Injection & Prompt Augmentation templates
+CONTEXT_AUGMENTED_PROMPT_TEMPLATE = PromptTemplate(
+    template=(
+        "{system_instruction}\n\n"
+        "Context:\n"
+        "{context}\n\n"
+        "Question:\n"
+        "{question}"
+    ),
+    name="context_augmented_prompt_template",
+)
+
 __all__ = [
     "ANSWER",
     "FINANCIAL_RAG_USER_TEMPLATE",
     "CITATION_ANSWER_TEMPLATE",
     "EVALUATION_TEMPLATE",
+    "CONTEXT_AUGMENTED_PROMPT_TEMPLATE",
     "render",
 ]
+

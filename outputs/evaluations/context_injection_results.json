@@ -1,0 +1,86 @@
+{
+  "budget_allocation": {
+    "max_model_tokens": 8192,
+    "reserved_answer_tokens": 1500,
+    "reserved_instruction_tokens": 800,
+    "max_context_tokens": 5000,
+    "effective_budget": 5000
+  },
+  "query_demonstration": {
+    "question": "What evidence supports the advisory fee charged to Marcus and what is the fee rate?",
+    "context_tokens": 161,
+    "source_markers": [
+      "[1]",
+      "[2]",
+      "[3]",
+      "[4]"
+    ],
+    "sources_used": [
+      {
+        "marker": "[1]",
+        "source": "client-billing-records.pdf",
+        "chunk_index": 1,
+        "metadata": {
+          "source": "client-billing-records.pdf",
+          "document_id": "doc_billing_01",
+          "chunk_index": 1,
+          "section": "Invoice Verification",
+          "approval_status": "approved"
+        },
+        "id": "doc_billing_01:1"
+      },
+      {
+        "marker": "[2]",
+        "source": "fee-schedule.pdf",
+        "chunk_index": 0,
+        "metadata": {
+          "source": "fee-schedule.pdf",
+          "document_id": "doc_fee_01",
+          "chunk_index": 0,
+          "section": "Fee Terms",
+          "approval_status": "approved"
+        },
+        "id": "doc_fee_01:0"
+      },
+      {
+        "marker": "[3]",
+        "source": "advisory-agreement.md",
+        "chunk_index": null,
+        "metadata": {
+          "source": "advisory-agreement.md",
+          "document_id": "doc_agreement_01",
+          "section": "Dispute Terms",
+          "approval_status": "approved"
+        },
+        "id": "doc_agreement_01:terms"
+      },
+      {
+        "marker": "[4]",
+        "source": "client-portal.md",
+        "chunk_index": 3,
+        "metadata": {
+          "source": "client-portal.md",
+          "document_id": "doc_portal_01",
+          "chunk_index": 3,
+          "section": "Portal Usage",
+          "approval_status": "approved"
+        },
+        "id": "doc_portal_01:3"
+      }
+    ],
+    "selected_chunks_count": 4,
+    "augmented_prompt_sample": "You are a compliance-grounded financial advisory assistant.\nAnswer only using the provided context.\nDo not use outside knowledge.\nIf the context does not contain enough information, say:\n\"I don't have enough information in the provided context.\"\nDo not invent facts, values, dates, identities, policies, or recommendations.\nCite supporting evidence using source markers such as [1] or [2].\nIf sources conflict, clearly identify the conflict and do not choose a value without sufficient evidence.\n\nContext:\n[1] client-billing-records.pdf#1\nClient Advisory Billing Evidence: Advisory fee of $1,250.00 for Q3 wealth advisory services was charged to Marcus on 20 August 2026, confirmed via invoice #INV-2026-08.\n\n---\n\n[2] fee-schedule.pdf#0\nStandard Fee Schedule: The annual advisory fee is 0.75% of assets under management, calculated and deducted on a quarterly basis in arrears.\n\n---\n\n[3] advisory-agreement.md\nAdvisory Agreement Terms: Clients agree to electronic fee deduction upon quarterly statement issuance with 14 days notice for dispute submission.\n\n---\n\n[4] client-portal.md#3\nClient Portal Access: Clients can download official PDF receipts and historical fee summaries from the documents tab.\n\nQuestion:\nWhat evidence supports the advisory fee charged to Marcus and what is the fee rate?"
+  },
+  "budget_enforcement_demonstration": {
+    "standard_selected_count": 4,
+    "standard_tokens": 161,
+    "constrained_selected_count": 1,
+    "constrained_tokens": 41
+  },
+  "empty_context_fallback": {
+    "question": "What is the penalty for early withdrawal from the fixed deposit?",
+    "context_tokens": 0,
+    "selected_chunks_count": 0,
+    "user_prompt": "Context:\n[No relevant context found in database.]\n\nQuestion:\nWhat is the penalty for early withdrawal from the fixed deposit?"
+  }
+}

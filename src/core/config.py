@@ -161,6 +161,24 @@ class Settings(BaseSettings):
         description="Timeout in seconds for re-ranking scoring calls",
     )
 
+    # Context Injection & Token Budget Settings
+    MAX_MODEL_CONTEXT_TOKENS: int = Field(
+        default=8192,
+        description="Total context window limit of the model (e.g., 8192, 128000)",
+    )
+    MAX_CONTEXT_TOKENS: int = Field(
+        default=5000,
+        description="Maximum tokens allocated for injected retrieved context",
+    )
+    RESERVED_ANSWER_TOKENS: int = Field(
+        default=1500,
+        description="Reserved token budget for model answer completion",
+    )
+    RESERVED_INSTRUCTION_TOKENS: int = Field(
+        default=800,
+        description="Reserved token budget for system instructions and user question",
+    )
+
     # Observability & Logging
 
     LOG_LEVEL: str = Field(
