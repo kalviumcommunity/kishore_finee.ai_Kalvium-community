@@ -14,6 +14,14 @@ from .context_injection import (
     format_chunk,
     format_prompt_overview,
 )
+from .conversational_rag import (
+    ConversationSession,
+    conversational_answer,
+    format_conversation_history,
+    rewrite_followup,
+    trim_conversation_history,
+    validate_rewritten_query,
+)
 from .guardrails import (
     evaluate_retrieval_strength,
     format_guardrail_report,
@@ -41,6 +49,13 @@ __all__ = [
     "guarded_answer",
     "get_chunk_score",
     "format_guardrail_report",
+    "rewrite_followup",
+    "conversational_answer",
+    "format_conversation_history",
+    "trim_conversation_history",
+    "validate_rewritten_query",
+    "ConversationSession",
 ]
+
 
 

@@ -70,3 +70,22 @@ GROUNDED_AUGMENTED_SYSTEM_PROMPT = (
     "If sources conflict, clearly identify the conflict and do not choose a value without sufficient evidence."
 )
 
+# Follow-up query rewriting system prompt
+QUERY_REWRITE_SYSTEM_PROMPT = (
+    "Rewrite the latest user question as a standalone search query.\n"
+    "Use the conversation history only to resolve references.\n"
+    "Do not answer the question.\n"
+    "Do not invent missing information.\n"
+    "Preserve the original meaning.\n"
+    "If the question is already standalone, return it unchanged."
+)
+
+QUERY_REWRITE_USER_TEMPLATE = (
+    "Conversation History:\n"
+    "{history}\n\n"
+    "Latest User Question:\n"
+    "{question}\n\n"
+    "Standalone Search Query:"
+)
+
+

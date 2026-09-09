@@ -197,6 +197,20 @@ class Settings(BaseSettings):
         description="Standardized compliance refusal text returned when retrieval evidence is insufficient",
     )
 
+    # Conversational RAG & Query Rewriting Settings
+    MAX_CONVERSATION_TURNS: int = Field(
+        default=5,
+        description="Maximum recent conversation turns (user/assistant pairs) retained in rolling history",
+    )
+    MAX_HISTORY_TOKENS: int = Field(
+        default=1000,
+        description="Maximum token budget allocated for conversation history in query rewriting prompt",
+    )
+    QUERY_REWRITE_MODEL: Optional[str] = Field(
+        default=None,
+        description="Model override for follow-up query rewriting (defaults to CHAT_MODEL)",
+    )
+
     # Observability & Logging
 
     LOG_LEVEL: str = Field(
