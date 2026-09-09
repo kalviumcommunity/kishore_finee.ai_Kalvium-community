@@ -261,3 +261,36 @@ class ChromaVectorStore:
             item["rank"] = rank_idx
 
         return results
+
+
+# Global singleton ChromaVectorStore instance
+_default_chroma_store: Optional[ChromaVectorStore] = None
+
+
+def get_chroma_store(
+    collection_name: Optional[str] = None,
+    persist_directory: Optional[Union[str, Path]] = None,
+    reset: bool = False,
+) -> ChromaVectorStore:
+    """Retrieve or initialize the global default ChromaVectorStore instance.
+
+    Args:
+        collection_name: Optional collection name override (defaults to settings.VECTOR_COLLECTION_NAME).
+        persist_directory: Optional persist directory override (defaults to settings.VECTOR_DB_PATH).
+        reset: If True, forces re-instantiation of the default instance.
+
+    Returns:
+        ChromaVectorStore instance.
+    """
+    global _default_chroma_store
+    from src.core.config import settings
+
+    target_name = collection_name or getattr(settings, "VECTOR_COLLECTION_NAME", "finee_financial_corpus")
+    target_path = persist_directory or getattr(settings, "VECTOR_DB_PATH", "./data/vector_db")
+
+    if _default_chroma_store is None or reset:
+        _default_chroma_store = ChromaVectorStore(
+            collection_name=target_name,
+            persist_directory=target_path,
+        )
+    return _default_chroma_store

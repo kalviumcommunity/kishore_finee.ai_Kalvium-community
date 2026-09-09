@@ -4,6 +4,8 @@ Compliance-Grounded Financial Advisory RAG Platform.
 """
 
 from fastapi import FastAPI
+from src.api.routes.documents import router as documents_router
+from src.api.routes.query import router as query_router
 from src.core.config import settings
 
 app = FastAPI(
@@ -11,6 +13,10 @@ app = FastAPI(
     description="Backend API for Compliance-Grounded Financial Advisory RAG Platform (FInee.ai)",
     version="0.1.0",
 )
+
+# Register sub-routers
+app.include_router(documents_router)
+app.include_router(query_router)
 
 
 @app.get("/", summary="Root Endpoint")

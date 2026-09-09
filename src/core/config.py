@@ -211,6 +211,20 @@ class Settings(BaseSettings):
         description="Model override for follow-up query rewriting (defaults to CHAT_MODEL)",
     )
 
+    # Document Upload & Dynamic Indexing Settings
+    UPLOAD_DIR: str = Field(
+        default="./data/uploads",
+        description="Local filesystem directory for safely storing runtime uploaded documents",
+    )
+    MAX_UPLOAD_SIZE_BYTES: int = Field(
+        default=10 * 1024 * 1024,
+        description="Maximum allowed file size for document upload in bytes (default: 10MB)",
+    )
+    SUPPORTED_UPLOAD_EXTENSIONS: list[str] = Field(
+        default=[".txt", ".md", ".pdf", ".html", ".htm"],
+        description="List of supported file extensions for runtime document ingestion",
+    )
+
     # Observability & Logging
 
     LOG_LEVEL: str = Field(

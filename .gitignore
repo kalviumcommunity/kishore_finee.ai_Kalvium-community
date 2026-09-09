@@ -33,6 +33,8 @@ data/processed/*
 !data/processed/.gitkeep
 data/vector_db/*
 !data/vector_db/.gitkeep
+data/uploads/*
+!data/uploads/.gitkeep
 
 
 # Output directories (exclude contents, keep structure)
