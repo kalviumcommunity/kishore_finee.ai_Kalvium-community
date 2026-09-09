@@ -179,6 +179,24 @@ class Settings(BaseSettings):
         description="Reserved token budget for system instructions and user question",
     )
 
+    # Retrieval Guardrails & Safe Refusal Settings
+    MIN_TOP_SCORE: float = Field(
+        default=0.72,
+        description="Minimum relevance/similarity score required for top retrieved chunk",
+    )
+    MIN_SUPPORTING_CHUNKS: int = Field(
+        default=1,
+        description="Minimum number of retrieved chunks meeting the MIN_TOP_SCORE threshold",
+    )
+    RETRIEVAL_TOP_K: int = Field(
+        default=4,
+        description="Default number of chunks retrieved for guardrail evaluation",
+    )
+    SAFE_REFUSAL_MESSAGE: str = Field(
+        default="I don't have enough reliable evidence in the approved knowledge base to answer that question.",
+        description="Standardized compliance refusal text returned when retrieval evidence is insufficient",
+    )
+
     # Observability & Logging
 
     LOG_LEVEL: str = Field(

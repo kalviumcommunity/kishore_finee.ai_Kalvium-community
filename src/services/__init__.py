@@ -14,6 +14,13 @@ from .context_injection import (
     format_chunk,
     format_prompt_overview,
 )
+from .guardrails import (
+    evaluate_retrieval_strength,
+    format_guardrail_report,
+    get_chunk_score,
+    guarded_answer,
+    retrieval_is_strong,
+)
 from .llm import LLMConfigurationError, LLMServiceError, generate_answer, generate_grounded_answer
 
 __all__ = [
@@ -29,5 +36,11 @@ __all__ = [
     "format_prompt_overview",
     "ContextInjectionError",
     "TokenBudgetExceededError",
+    "retrieval_is_strong",
+    "evaluate_retrieval_strength",
+    "guarded_answer",
+    "get_chunk_score",
+    "format_guardrail_report",
 ]
+
 
