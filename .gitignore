@@ -69,4 +69,13 @@ build/
 
 data/chroma_db/
 
+# Node & Next.js
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+
+
 

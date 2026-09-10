@@ -4,6 +4,9 @@ Compliance-Grounded Financial Advisory RAG Platform.
 """
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from src.api.routes.admin import router as admin_router
 from src.api.routes.documents import router as documents_router
 from src.api.routes.query import router as query_router
 from src.core.config import settings
@@ -14,9 +17,25 @@ app = FastAPI(
     version="0.1.0",
 )
 
+# Enable CORS for frontend Next.js application
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3001",
+        "*",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Register sub-routers
 app.include_router(documents_router)
 app.include_router(query_router)
+app.include_router(admin_router)
 
 
 @app.get("/", summary="Root Endpoint")
@@ -31,6 +50,7 @@ async def health_check() -> dict[str, str]:
     return {
         "status": "healthy",
         "environment": settings.APP_ENV,
+        "platform": "FINEE.ai Knowledge Control",
     }
 
 

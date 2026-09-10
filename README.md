@@ -1,316 +1,145 @@
-# FInee.ai — Compliance-Grounded Financial Advisory RAG Platform
+# FINEE.ai — Knowledge Control System & Grounded Advisory RAG Platform
 
-## 1. Project Title
-**FInee.ai** (Compliance-Grounded Financial Advisory RAG Platform)
-
----
-
-## 2. Problem Statement
-Financial advisory firms maintain an extensive library of market research reports, fund factsheets, regulatory disclosures, and client portfolio documentation. Financial advisors face significant compliance risks when answering client queries because they cannot easily verify answers against the latest approved documents in real-time, risking outdated or non-compliant guidance.
+Enterprise-grade, compliance-grounded Retrieval-Augmented Generation (RAG) platform and Knowledge Control Center for wealth management, financial advisory, and regulatory compliance.
 
 ---
 
-## 3. Project Objective
-Build a production-grade, secure, compliance-grounded Retrieval-Augmented Generation (RAG) platform that:
-- Ingests and processes approved financial documents into semantic chunks and vector embeddings.
-- Stores vector representations and compliance metadata in a robust vector database.
-- Retrieves high-confidence, approved evidence for advisor questions through semantic search and reranking.
-- Generates answers strictly grounded in retrieved evidence with exact source citations.
+## 1. Executive Summary
+
+**FINEE.ai** transforms static compliance policies, regulatory disclosures, fee schedules, and advisory guidelines into an interactive, verifiable, and observable intelligence engine.
+
+- **100% Policy Grounding**: Answers are synthesized strictly from approved vector chunks with exact numeric source citations (`[1]`, `[2]`).
+- **Retrieval Guardrails & Safe Refusal**: Pre-LLM relevance scoring rejects insufficient or out-of-domain context with 0 hallucination.
+- **Conflicting Evidence Resolution**: Side-by-side comparison of contrasting policy versions (Source A vs Source B) with formal compliance review escalation.
+- **Conversational Follow-up Rewriting**: Resolves ambiguous references and pronouns into standalone vector queries while preserving dialogue history.
+- **Enterprise Observability**: End-to-end token consumption tracking, cost accounting, advisor monitoring, and cryptographic audit trails.
 
 ---
 
-## 4. Current Development Phase
-**Phase 1: Foundation & Project Workspace**
-- Development environment and scalable workspace setup.
-- Configuration management with zero hardcoded secrets.
-- Minimal FastAPI application with root (`/`) and health check (`/health`) endpoints.
-- Isolated modular architecture ready for future ingestion, embedding, retrieval, and chat components.
-
----
-
-## 5. Technology Stack
-- **Language**: Python 3.11+
-- **API Framework**: [FastAPI](https://fastapi.tiangolo.com/)
-- **ASGI Server**: [Uvicorn](https://www.uvicorn.org/)
-- **Configuration & Validation**: [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) & [python-dotenv](https://github.com/theskumar/python-dotenv)
-- **Testing**: [pytest](https://docs.pytest.org/) & [httpx](https://www.python-httpx.org/)
-- **Future Integration Targets**: OpenAI-compatible LLMs & Embeddings, PostgreSQL with pgvector.
-
----
-
-## 6. Project Structure
+## 2. Platform Architecture
 
 ```text
-financial-rag-platform/
-├── src/
-│   ├── __init__.py          # Root package marker
-│   ├── api/                 # API routers and endpoints
-│   │   ├── __init__.py
-│   │   └── routes/          # Modular route definitions
-│   │       └── __init__.py
-│   ├── core/                # Central config, settings, and infrastructure
-│   │   ├── __init__.py
-│   │   └── config.py
-│   ├── ingestion/           # Document extraction, cleaning, chunking
-│   │   └── __init__.py
-│   ├── embeddings/          # Vector embedding model integrations
-│   │   └── __init__.py
-│   ├── retrieval/           # Search, metadata filtering, Top-K, reranking
-│   │   └── __init__.py
-│   ├── services/            # Business logic connecting modules
-│   │   └── __init__.py
-│   ├── models/              # Pydantic schemas and data models
-│   │   └── __init__.py
-│   └── main.py              # FastAPI application entry point
-├── data/
-│   ├── raw/                 # Original source documents (ignored by git)
-│   ├── processed/           # Cleaned/chunked intermediate data (ignored)
-│   └── sample/              # Sanitized sample documents for testing
-│       └── README.md
-├── prompts/                 # System prompts, guardrails, and templates
-│   └── README.md
-├── outputs/
-│   ├── logs/                # Application runtime logs (ignored by git)
-│   ├── answers/             # Test answer outputs (ignored by git)
-│   └── evaluations/         # Evaluation benchmarks and metrics (ignored)
-├── tests/                   # Automated pytest suite
-│   ├── __init__.py
-│   ├── test_config.py       # Configuration loading tests
-│   └── test_main.py         # API endpoint tests
-├── scripts/                 # Development and maintenance utilities
-│   └── README.md
-├── docs/                    # Architectural and technical documentation
-│   └── architecture.md
-├── .env                     # Local environment variables (ignored by git)
-├── .env.example             # Environment variable template (tracked)
-├── .gitignore               # Git exclusion rules
-├── requirements.txt         # Pinned project dependencies
-├── pyproject.toml           # Build system and tool configuration
-└── README.md                # Project documentation
+                                  ┌───────────────────────────────┐
+                                  │   FINEE.ai Next.js Frontend   │
+                                  │    (Dark Enterprise Theme)    │
+                                  └───────────────┬───────────────┘
+                                                  │ HTTP / JSON (CORS Enabled)
+                                                  ▼
+                                  ┌───────────────────────────────┐
+                                  │   FastAPI Backend Server      │
+                                  │       (src.main:app)          │
+                                  └───┬───────────┬───────────┬───┘
+                                      │           │           │
+                     ┌────────────────┴─┐         │         ┌─┴────────────────┐
+                     ▼                  ▼         │         ▼                  ▼
+             ┌───────────────┐  ┌───────────────┐ │ ┌───────────────┐  ┌───────────────┐
+             │  Query Router │  │ Documents API │ │ │  Admin Router │  │ActivityTracker│
+             │ (/query)      │  │ (/documents)  │ │ │ (/admin/*)    │  │ (Observability)
+             └───────┬───────┘  └───────┬───────┘ │ └───────┬───────┘  └───────┬───────┘
+                     │                  │         │         │                  │
+                     ▼                  ▼         ▼         ▼                  ▼
+    ┌──────────────────────────────────────────────────────────────────────────────────┐
+    │                      Ingestion & Core RAG Pipeline Engine                        │
+    ├──────────────────────────────────────────────────────────────────────────────────┤
+    │ 1. Text Extraction & Cleaning   (src.ingestion.loader & cleaner)                 │
+    │ 2. Recursive Semantic Chunking  (src.ingestion.chunking & chunk_metadata)        │
+    │ 3. Dense Vector Embeddings      (src.embeddings.embedding_service)               │
+    │ 4. ChromaDB Vector Store        (src.retrieval.chroma_store - Cosine HNSW)       │
+    │ 5. Candidate Re-ranking         (src.retrieval.reranker)                         │
+    │ 6. Retrieval Strength Guardrail (src.services.guardrails)                        │
+    │ 7. Query Rewriter & History     (src.services.conversational_rag)                │
+    │ 8. Grounded LLM Synthesis       (src.services.llm & context_injection)           │
+    └──────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 7. Folder Responsibilities
+## 3. UI Experience & Features
 
-| Folder | Purpose |
-| :--- | :--- |
-| `src/api/` | Future API endpoints and route handlers. |
-| `src/core/` | Application configuration, environment settings, and shared utilities. |
-| `src/ingestion/` | Document upload, text extraction, cleaning, chunking, and metadata parsing. |
-| `src/embeddings/` | Embedding model clients and vectorization operations. |
-| `src/retrieval/` | Semantic search, compliance filtering, Top-K retrieval, and reranking. |
-| `src/services/` | Business logic orchestrating ingestion, retrieval, and LLM generation. |
-| `src/models/` | Domain entities, request/response schemas, and data models. |
-| `data/raw/` | Raw financial documents (PDFs, filings, factsheets). |
-| `data/processed/` | Processed, extracted, or chunked document datasets. |
-| `data/sample/` | Non-confidential sample documents for development and CI testing. |
-| `prompts/` | System prompts, compliance instructions, and citation format templates. |
-| `outputs/logs/` | Runtime application and ingestion logs. |
-| `outputs/answers/` | Generated answer outputs for manual evaluation. |
-| `outputs/evaluations/` | Retrieval accuracy metrics and evaluation benchmarks. |
-| `tests/` | Automated unit, integration, and regression test suites. |
-| `scripts/` | Data migration, bulk ingestion, and maintenance scripts. |
-| `docs/` | Architectural diagrams, design documents, and technical guides. |
+### 1. Analysis Session & Advisory (`/chatask`)
+- **Client Context Panel**: Switch active entity profiles (Marcus Vance Portfolio, Acme Holdings, Tier 1 Discretionary).
+- **Grounded Answer Card**: Direct, synthesized answers with embedded superscript citations.
+- **Evidence Used List**: Interactive source cards with relevance scores and click-to-inspect drawers.
+- **Conflict Banner & Modal**: Side-by-side Source A vs Source B comparison for divergent provisions.
+- **Safe Refusal Banner**: Zero-hallucination refusal state when retrieval confidence is below `0.720`.
+- **Right Inspector Panel**: Switch between Ranked Snippets, RAG Pipeline Execution Trace, and Query Audit Trail.
+
+### 2. Knowledge Control Center Overview (`/admin`)
+- **KPI Metrics**: Approved Policies (28), Processing (1), Pending Review (3), Archived (2).
+- **Ingestion Lifecycle Graphic**: Visual 4-stage pipeline (Raw Ingest -> Chunking -> Embeddings -> ChromaDB).
+- **Recent Tracked Documents**: Quick inspection and status overview.
+- **Live Audit Trail**: Chronological event stream of system and advisor actions.
+
+### 3. Document Management (`/admin/documents`)
+- **Upload Modal**: Drag-and-drop document upload (`.pdf`, `.md`, `.txt`, `.html`) with dynamic indexing.
+- **Search & Filters**: Filter by status (`approved`, `processing`, `uploaded`, `review_requested`, `archived`).
+- **Document Detail Inspector (`/admin/documents/[id]`)**: Chunk boundary overlays (`Chunk #0`, `Chunk #1`), metadata inspector, lifecycle actions (`Approve`, `Request Review`, `Archive`).
+
+### 4. Knowledge Base Infrastructure (`/admin/knowledge-base`)
+- **Telemetry Cards**: Total Policies, Vector Chunks, Cosine Index Health, Retrieval Readiness %.
+- **Interactive Test Retrieval Console**: Dry-run queries, adjust Top-K sliders, toggle re-ranking, and inspect real-time candidate scores.
+- **Explore Knowledge**: Searchable database of all vector chunks stored in ChromaDB.
+
+### 5. User Monitoring & Token Observability (`/admin/users`)
+- **Monitored Personnel**: Advisor profiles with query counts, prompt/completion tokens, cost tracking, and refusal counts.
+- **Drill-Down Modal**: Detailed per-user query history and token consumption.
+
+### 6. Audit Trail (`/admin/activity`) & System Settings (`/admin/settings`)
+- Filterable system-wide compliance ledger.
+- Live view of guardrail parameters (`MIN_TOP_SCORE`, `MIN_SUPPORTING_CHUNKS`, `RETRIEVAL_TOP_K`, models, paths).
 
 ---
 
-## 8. Environment Setup Instructions
+## 4. API Endpoints Reference
 
-### Step 1: Create Virtual Environment
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/query` | Guarded similarity search, conversational rewrite, citations, and grounded answer |
+| `POST` | `/documents` | Upload, validate, chunk, embed, and dynamically index a compliance document |
+| `GET` | `/documents` | List all tracked documents and processing statuses |
+| `GET` | `/documents/{id}` | Full document detail with chunk boundary overlays and lifecycle timeline |
+| `POST` | `/documents/{id}/approve` | Approve document for production RAG retrieval |
+| `POST` | `/documents/{id}/review` | Request formal compliance review for a document |
+| `POST` | `/documents/{id}/archive` | Archive document and deprecate from active vector search |
+| `GET` | `/admin/overview` | KPI summary statistics, recent documents, and live activity stream |
+| `GET` | `/admin/knowledge-base` | Vector infrastructure metrics, pipeline health, and chunk explorer |
+| `POST` | `/admin/test-retrieval` | Dry-run retrieval search console with score diagnostics |
+| `GET` | `/admin/activity` | System audit trail events log |
+| `GET` | `/admin/users` | Monitored users list with token usage and cost accounting |
+| `GET` | `/admin/users/{id}/activity` | Granular query history and token breakdown per user |
+| `GET` | `/admin/token-usage` | Aggregate token analytics and model distributions |
+| `GET` | `/admin/settings` | Active system parameters, guardrail thresholds, and models |
 
+---
+
+## 5. Quick Start & Running Instructions
+
+### Backend Setup & Execution
 ```bash
-# Using Python 3.11+
-python3 -m venv .venv
-```
-
-### Step 2: Activate Virtual Environment
-
-**macOS / Linux:**
-```bash
+# 1. Activate virtual environment
 source .venv/bin/activate
-```
 
-**Windows (Command Prompt):**
-```cmd
-.venv\Scripts\activate.bat
-```
+# 2. Run backend test suite (273 tests)
+pytest
 
-**Windows (PowerShell):**
-```powershell
-.venv\Scripts\Activate.ps1
-```
+# 3. Run full integration verification demo
+PYTHONPATH=. python scripts/demonstrate_full_frontend_integration.py
 
-### Step 3: Install Dependencies
-
-```bash
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-### Step 4: Configure Environment Variables
-
-Create your local `.env` file from `.env.example`:
-
-**macOS / Linux:**
-```bash
-cp .env.example .env
-```
-
-**Windows:**
-```cmd
-copy .env.example .env
-```
-
----
-
-## 9. Running the FastAPI Application
-
-Start the development server with live reload:
-
-```bash
+# 4. Start FastAPI server on port 8000
 uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-Or run directly via python:
+### Frontend Setup & Execution
 ```bash
-python -m src.main
+# 1. Navigate to frontend directory
+cd frontend
+
+# 2. Install dependencies
+npm install
+
+# 3. Start Next.js development server
+npm run dev
+
+# 4. Open in browser
+http://localhost:3000
 ```
-
-The API will be available at:
-- **Base URL**: `http://localhost:8000`
-- **Interactive OpenAPI Docs**: `http://localhost:8000/docs`
-- **ReDoc Documentation**: `http://localhost:8000/redoc`
-
----
-
-## 10. API Endpoints
-
-### 1. Root Endpoint
-- **Method**: `GET`
-- **Path**: `/`
-- **Description**: Returns baseline service running status.
-- **Example Response**:
-  ```json
-  {
-    "message": "Financial Advisory RAG Platform API is running"
-  }
-  ```
-
-### 2. Health Check
-- **Method**: `GET`
-- **Path**: `/health`
-- **Description**: Verifies service availability and reports deployment environment.
-- **Example Response**:
-  ```json
-  {
-    "status": "healthy",
-    "environment": "development"
-  }
-  ```
-
----
-
-## 11. Testing & Reproducibility
-
-Run the test suite with pytest:
-
-```bash
-pytest -v
-```
-
-Execute tests with coverage:
-```bash
-pytest -v --tb=short
-```
-
----
-
-## 12. Token Counting & Cost Estimation
-
-The token utility uses `tiktoken` with the `cl100k_base` encoding. It counts prompt,
-answer, and document tokens, then estimates input and output cost separately using
-provider prices per 1,000 tokens. Prices are examples only and should be updated from
-the selected provider's current pricing page.
-
-Run the Python-only file estimator:
-
-```bash
-python -m scripts.token_cost_estimator prompt.txt answer.txt \
-  --input-price 0.0005 --output-price 0.0015
-```
-
-It prints JSON containing input tokens, output tokens, each cost, and total cost. The
-same functions can be imported from `src.services.token_usage` for RAG cost planning.
-
-Run the three-sample project demonstration and save its results:
-
-```bash
-python -m scripts.token_count_demo --output outputs/evaluations/token_count_results.json
-```
-
-The demonstration measures a short question, a financial paragraph, and the full
-project README. It reports characters, words, tokens, separate input/output costs, and
-the combined estimate. The checked-in output is available at
-`outputs/evaluations/token_count_results.json`.
-
-### Short Explanation
-
-1. `count_tokens` measures text with the model-compatible tokenizer; tokens are not
-  the same as words or characters.
-2. `estimate_cost` counts input and output independently because providers bill them
-  at different rates.
-3. `count_documents` totals a corpus so chunking and retrieval choices can be checked
-  before processing thousands of documents.
-
-### Mentor Questions
-
-- Why can token count differ from word count, especially for code or other languages?
-- Why should input and output prices be configured separately?
-- How do system instructions, retrieved chunks, and chat history affect context limits?
-- Why is measuring retrieved context important for both cost and answer quality?
-- How would you compare this estimate with the provider's reported usage fields?
-- What changes when the provider uses a tokenizer different from `cl100k_base`?
-
----
-
-## 13. Prompt Templates & Reusable Prompt Design
-
-FInee.ai utilizes centralized prompt templates stored in `prompts/` to decouple prompt definitions, compliance guardrails, and citation rules from application logic.
-
-### Key Benefits
-1. **Single Source of Truth**: Grounding rules and citation requirements are edited once and immediately propagate across chat endpoints, batch evaluators, and CLI tools.
-2. **Dynamic Runtime Injection**: Named placeholders (`{context}`, `{question}`, etc.) are injected safely at runtime with automatic placeholder validation via `render()`.
-3. **Structured & Type-Safe**: Supports both straightforward string templates and `PromptTemplate` objects with explicit variable parsing and error handling.
-
-### Running the Prompt Template Demonstration
-
-```bash
-python -m scripts.prompt_template_demo
-```
-
-## 13. Token-Aware Chunk Sizing & Overlap
-
-The document ingestion pipeline implements token-aware chunking using `tiktoken` (`cl100k_base` encoding) with sliding token overlap.
-
-### Why Token-Based Sizing & Overlap?
-1. **Model Budget Adherence**: LLM context windows and vector embedding limits measure tokens, not characters. Token-based sizing prevents budget overruns on dense text.
-2. **Boundary Context Preservation**: Hard splits slice financial conditions and regulatory disclosures across chunk edges. Controlled overlap (default: 60 tokens / 15%) repeats boundary tokens so ideas appear intact in at least one chunk.
-
-### Recommended Settings for FInee.ai:
-- **Chunk Size**: `400` tokens (~300 words / 2–3 dense financial paragraphs)
-- **Chunk Overlap**: `60` tokens (15% overlap)
-- **Top-K Budget**: `5` chunks × `400` tokens = `2,000` tokens of context, well within the 8k context window limit.
-
-### Run the Demonstration:
-```bash
-python -m scripts.demonstrate_token_chunking --output outputs/evaluations/token_chunking_results.json
-```
-
-### Run Tests:
-```bash
-pytest -v tests/test_token_chunking.py
-```
-
-Detailed architectural explanation and trade-off analyses are documented in [`docs/token_chunking.md`](docs/token_chunking.md).
-
