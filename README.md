@@ -137,9 +137,9 @@ cd frontend
 # 2. Install dependencies
 npm install
 
-# 3. Start Next.js development server
+# 3. Start Next.js development server (runs on port 3005 by default)
 npm run dev
 
 # 4. Open in browser
-http://localhost:3000
+http://localhost:3005
 ```
