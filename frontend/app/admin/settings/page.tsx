@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import {
-  Settings,
+  Settings as SettingsIcon,
   Shield,
   ShieldCheck,
   Cpu,
@@ -17,7 +17,7 @@ import { Topbar } from "@/components/Topbar";
 import { ragApi } from "@/services/ragApi";
 
 export default function SystemSettingsPage() {
-  const [settings, setSettings] = useState<any | null>(null);
+  const [config, setConfig] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function SystemSettingsPage() {
       try {
         setLoading(true);
         const s = await ragApi.getSystemSettings();
-        setSettings(s);
+        setConfig(s);
       } catch (err) {
         console.error("Failed to load settings:", err);
       } finally {
@@ -72,7 +72,7 @@ export default function SystemSettingsPage() {
             <div className="p-4 rounded-xl bg-surface-raised border border-surface-border space-y-1">
               <span className="text-[10px] text-gray-400 font-mono block">MIN_TOP_SCORE</span>
               <span className="text-lg font-bold font-mono text-emerald-400">
-                {settings?.MIN_TOP_SCORE ?? 0.72}
+                {config?.MIN_TOP_SCORE ?? 0.72}
               </span>
               <p className="text-[11px] text-gray-400 leading-tight">
                 Minimum cosine similarity score required for top candidate chunk.
@@ -82,7 +82,7 @@ export default function SystemSettingsPage() {
             <div className="p-4 rounded-xl bg-surface-raised border border-surface-border space-y-1">
               <span className="text-[10px] text-gray-400 font-mono block">MIN_SUPPORTING_CHUNKS</span>
               <span className="text-lg font-bold font-mono text-white">
-                {settings?.MIN_SUPPORTING_CHUNKS ?? 1}
+                {config?.MIN_SUPPORTING_CHUNKS ?? 1}
               </span>
               <p className="text-[11px] text-gray-400 leading-tight">
                 Minimum chunks that must exceed the score threshold.
@@ -92,7 +92,7 @@ export default function SystemSettingsPage() {
             <div className="p-4 rounded-xl bg-surface-raised border border-surface-border space-y-1">
               <span className="text-[10px] text-gray-400 font-mono block">RETRIEVAL_TOP_K</span>
               <span className="text-lg font-bold font-mono text-white">
-                {settings?.RETRIEVAL_TOP_K ?? 4}
+                {config?.RETRIEVAL_TOP_K ?? 4}
               </span>
               <p className="text-[11px] text-gray-400 leading-tight">
                 Default candidates retrieved before re-ranking and guardrail evaluation.
@@ -114,7 +114,7 @@ export default function SystemSettingsPage() {
               </p>
             </div>
             <span className="text-xs font-mono text-gray-400 bg-surface-raised px-2.5 py-1 rounded border border-surface-border">
-              Environment: {settings?.APP_ENV || "development"}
+              Environment: {config?.APP_ENV || "development"}
             </span>
           </div>
 
@@ -125,7 +125,7 @@ export default function SystemSettingsPage() {
                 <p className="text-gray-400 font-mono text-[11px]">Dense vector representation engine</p>
               </div>
               <span className="font-mono text-emerald-400 font-bold bg-emerald-950/40 px-2.5 py-1 rounded border border-emerald-800/40">
-                {settings?.EMBEDDING_MODEL || "text-embedding-3-small (1536d)"}
+                {config?.EMBEDDING_MODEL || "text-embedding-3-small (1536d)"}
               </span>
             </div>
 
@@ -135,7 +135,7 @@ export default function SystemSettingsPage() {
                 <p className="text-gray-400 font-mono text-[11px]">Compliance grounded synthesizer</p>
               </div>
               <span className="font-mono text-gray-200 bg-surface-raised px-2.5 py-1 rounded border border-surface-border">
-                {settings?.CHAT_MODEL || "gpt-4o-mini / llama-3.3-70b"}
+                {config?.CHAT_MODEL || "gpt-4o-mini / llama-3.3-70b"}
               </span>
             </div>
 
@@ -171,7 +171,7 @@ export default function SystemSettingsPage() {
             Returned verbatim when guardrails detect insufficient evidence
           </p>
           <div className="p-3.5 rounded-lg bg-surface-raised border border-surface-border text-xs text-gray-300 font-sans border-l-2 border-l-amber-500">
-            "{settings?.SAFE_REFUSAL_MESSAGE || "I don't have enough reliable evidence in the approved knowledge base to answer that question."}"
+            "{config?.SAFE_REFUSAL_MESSAGE || "I don't have enough reliable evidence in the approved knowledge base to answer that question."}"
           </div>
         </div>
       </main>
