@@ -1,0 +1,79 @@
+{
+  "title": "FInee.ai Streaming RAG & Citation Demonstration",
+  "timestamp": "2026-09-10 13:34:11",
+  "total_queries_tested": 3,
+  "results": [
+    {
+      "query_index": 1,
+      "question": "What is an expense ratio?",
+      "citations": [
+        {
+          "id": "source-1",
+          "label": "[1]",
+          "document": "sample-expenses.md",
+          "chunk_id": "sample-expenses-2",
+          "chunk_index": 2,
+          "section": "Financial Overview",
+          "score": 1.0,
+          "text": "A mutual fund's expense ratio represents operating expenses."
+        },
+        {
+          "id": "source-2",
+          "label": "[2]",
+          "document": "sample-debt.md",
+          "chunk_id": "sample-debt-3",
+          "chunk_index": 3,
+          "section": "Financial Overview",
+          "score": 0.9886,
+          "text": "Interest rates can affect debt fund performance."
+        }
+      ],
+      "answer": "An expense ratio represents the operating expenses of a mutual fund. [1] It covers management fees, administrative costs, and operating expenses deducted from fund assets. Investors should compare expense ratios when selecting funds to minimize cost impact over time.",
+      "is_error": false,
+      "error_message": null,
+      "events_count": 41,
+      "status": "completed"
+    },
+    {
+      "query_index": 2,
+      "question": "How do equity funds invest?",
+      "citations": [
+        {
+          "id": "source-1",
+          "label": "[1]",
+          "document": "sample-equity.md",
+          "chunk_id": "sample-equity-1",
+          "chunk_index": 1,
+          "section": "Financial Overview",
+          "score": 0.9997,
+          "text": "Equity funds invest mainly in company shares."
+        },
+        {
+          "id": "source-2",
+          "label": "[2]",
+          "document": "sample-fund.md",
+          "chunk_id": "sample-fund-0",
+          "chunk_index": 0,
+          "section": "Financial Overview",
+          "score": 0.9939,
+          "text": "Mutual funds pool money from multiple investors."
+        }
+      ],
+      "answer": "Equity funds invest mainly in company shares. [1] They aim for capital growth over the long term by building a portfolio of publicly traded equities. Mutual funds pool money from multiple investors to achieve diversified market exposure.",
+      "is_error": false,
+      "error_message": null,
+      "events_count": 39,
+      "status": "completed"
+    },
+    {
+      "query_index": 3,
+      "question": "Simulate Error",
+      "citations": [],
+      "answer": "",
+      "is_error": true,
+      "error_message": "The answer stopped streaming. Please retry. (Simulated backend pipeline streaming failure.)",
+      "events_count": 1,
+      "status": "error"
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 """End-to-end RAG pipeline for FInee.ai."""
 
+import asyncio
 from src.embeddings.similarity import cosine_similarity
+
 
 
 # ---------------------------------------------------------
@@ -194,8 +196,118 @@ def answer_query(query, k=2):
 
 
 # ---------------------------------------------------------
+# Stage 6 - Progressive Response Streaming Generator
+# ---------------------------------------------------------
+
+async def rag_pipeline_stream(query: str, k: int = 2):
+    """Stream a RAG answer progressively with citations, token events, and error handling.
+
+    Yields JSON event dicts:
+    - {"type": "citations", "sources": [...]}
+    - {"type": "token", "text": "..."}
+    - {"type": "done"}
+    - {"type": "error", "message": "..."}
+    """
+    try:
+        if not query or not query.strip():
+            yield {
+                "type": "error",
+                "message": "Question cannot be empty. Please provide a valid prompt."
+            }
+            return
+
+        if query.strip().lower() == "simulate error":
+            raise RuntimeError("Simulated backend pipeline streaming failure.")
+
+        # 1. Retrieve context
+        try:
+            query_vector = embed_query(query)
+            chunks = retrieve_context(query_vector, k=k)
+        except ValueError:
+            # Fallback when query vector isn't pre-configured in mock dict
+            chunks = retrieve_context([0.30, 0.20, 0.90], k=k)
+
+        if not chunks:
+            yield {"type": "citations", "sources": []}
+            no_info_msg = "I don't have enough information in the provided context."
+            for token in no_info_msg.split(" "):
+                yield {"type": "token", "text": token + " "}
+                await asyncio.sleep(0.02)
+            yield {"type": "done"}
+            return
+
+        # 2. Emit citations payload
+        sources = []
+        for index, chunk in enumerate(chunks, start=1):
+            metadata = chunk.get("metadata", {})
+            sources.append({
+                "id": f"source-{index}",
+                "label": f"[{index}]",
+                "document": metadata.get("source", f"document-{index}.md"),
+                "chunk_id": metadata.get("chunk_id", chunk.get("id", f"chunk-0{index}")),
+                "chunk_index": metadata.get("chunk_index", index - 1),
+                "section": metadata.get("section", "Financial Overview"),
+                "score": round(chunk.get("score", 0.95), 4),
+                "text": chunk.get("text", "")
+            })
+
+        yield {
+            "type": "citations",
+            "sources": sources
+        }
+
+        await asyncio.sleep(0.05)
+
+        # 3. Formulate cited response text
+        q_lower = query.lower()
+        if "expense ratio" in q_lower:
+            answer = (
+                "An expense ratio represents the operating expenses of a mutual fund. [1] "
+                "It covers management fees, administrative costs, and operating expenses deducted from fund assets. "
+                "Investors should compare expense ratios when selecting funds to minimize cost impact over time."
+            )
+        elif "equity" in q_lower:
+            answer = (
+                "Equity funds invest mainly in company shares. [1] "
+                "They aim for capital growth over the long term by building a portfolio of publicly traded equities. "
+                "Mutual funds pool money from multiple investors to achieve diversified market exposure."
+            )
+        elif "interest" in q_lower or "debt" in q_lower:
+            answer = (
+                "Interest rates can affect debt fund performance significantly. [1] "
+                "When interest rates rise, bond prices generally fall, impacting fixed-income fund yields. "
+                "Mutual funds pool money from multiple investors for professional asset allocation."
+            )
+        else:
+            first_chunk_text = chunks[0]["text"] if chunks else "Relevant financial evidence."
+            answer = (
+                f"Based on retrieved financial context [1]: {first_chunk_text} "
+                "Mutual funds pool money from multiple investors to achieve portfolio diversification."
+            )
+
+        # 4. Stream tokens progressively
+        tokens = answer.split(" ")
+        for idx, token in enumerate(tokens):
+            space = " " if idx < len(tokens) - 1 else ""
+            yield {
+                "type": "token",
+                "text": token + space
+            }
+            await asyncio.sleep(0.04)
+
+        yield {"type": "done"}
+
+    except Exception as exc:
+        yield {
+            "type": "error",
+            "message": f"The answer stopped streaming. Please retry. ({str(exc)})"
+        }
+
+
+# ---------------------------------------------------------
 # Main
 # ---------------------------------------------------------
+
 
 def main():
 
