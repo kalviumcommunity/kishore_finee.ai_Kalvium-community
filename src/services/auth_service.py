@@ -310,6 +310,8 @@ class AuthService:
             user.name = name
             user.last_active = datetime.now(timezone.utc).isoformat()
 
+        self.tracker.register_user(user)
+
         token = create_access_token(
             user_id=user.user_id,
             email=user.email,

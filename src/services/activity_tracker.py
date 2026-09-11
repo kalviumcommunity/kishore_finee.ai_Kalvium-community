@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 import math
+from pathlib import Path
 import threading
 from typing import Any, Dict, List, Optional
 import uuid
@@ -82,12 +83,44 @@ class ActivityTracker:
     PROMPT_COST_PER_TOKEN = 0.00000015
     COMPLETION_COST_PER_TOKEN = 0.00000060
 
-    def __init__(self) -> None:
+    def __init__(self, storage_path: str = "./data/activity_ledger.json") -> None:
         self._lock = threading.Lock()
+        self._storage_path = Path(storage_path)
         self._queries: List[QueryLogEntry] = []
         self._audit_events: List[AuditEvent] = []
         self._users: Dict[str, UserProfile] = {}
         self._seed_initial_data()
+        self._load_from_disk()
+
+    def _save_to_disk(self) -> None:
+        """Persist user profiles, query logs, and audit trail to disk."""
+        try:
+            self._storage_path.parent.mkdir(parents=True, exist_ok=True)
+            import json
+            payload = {
+                "users": {u_id: u.model_dump() for u_id, u in self._users.items()},
+                "queries": [q.model_dump() for q in self._queries[:200]],
+                "audit_events": [a.model_dump() for a in self._audit_events[:200]],
+            }
+            self._storage_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        except Exception as exc:
+            logger.warning("Failed to persist activity ledger to %s: %s", self._storage_path, exc)
+
+    def _load_from_disk(self) -> None:
+        """Load activity ledger from disk if available."""
+        if not self._storage_path.exists():
+            return
+        try:
+            import json
+            raw_text = self._storage_path.read_text(encoding="utf-8")
+            if raw_text.strip():
+                data = json.loads(raw_text)
+                for u_id, u_data in data.get("users", {}).items():
+                    self._users[u_id] = UserProfile(**u_data)
+                self._queries = [QueryLogEntry(**q) for q in data.get("queries", [])]
+                self._audit_events = [AuditEvent(**a) for a in data.get("audit_events", [])]
+        except Exception as exc:
+            logger.warning("Failed to load activity ledger from %s: %s", self._storage_path, exc)
 
     def _seed_initial_data(self) -> None:
         """Seed initial real administrator profile and system startup audit event."""
@@ -291,6 +324,13 @@ class ActivityTracker:
             if event_type:
                 results = [e for e in results if e.event_type == event_type]
             return results[:limit]
+
+    def register_user(self, user: UserProfile) -> UserProfile:
+        """Register or update an authenticated user profile in the persistent registry."""
+        with self._lock:
+            self._users[user.user_id] = user
+            self._save_to_disk()
+            return user
 
     def get_users(self) -> List[UserProfile]:
         """Retrieve all monitored users."""

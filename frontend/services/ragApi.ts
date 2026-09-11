@@ -121,6 +121,35 @@ export const ragApi = {
   },
 
   /**
+   * Batch upload multiple compliance documents.
+   */
+  async uploadBatchDocuments(files: File[]): Promise<any> {
+    const formData = new FormData();
+    for (const file of files) {
+      formData.append("files", file);
+    }
+
+    const token = getAuthToken();
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${API_BASE}/documents/batch`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ detail: "Batch upload failed" }));
+      throw new Error(err.detail || "Failed to batch upload documents");
+    }
+
+    return response.json();
+  },
+
+  /**
    * List all tracked documents in the system.
    */
   async getDocuments(): Promise<DocumentRecord[]> {

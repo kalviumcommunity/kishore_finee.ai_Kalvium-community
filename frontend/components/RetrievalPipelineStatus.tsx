@@ -9,27 +9,27 @@ interface RetrievalPipelineStatusProps {
 
 export const RetrievalPipelineStatus: React.FC<RetrievalPipelineStatusProps> = ({
   metrics,
-  latencyMs = 145,
+  latencyMs = 0,
 }) => {
   const steps = [
     {
       id: 1,
       name: "Approved Sources Filtered",
-      detail: `${metrics?.approved_sources_filtered || 34} compliant policies active`,
+      detail: `${metrics?.approved_sources_filtered ?? 0} compliant policies active`,
       icon: ShieldCheck,
       status: "complete",
     },
     {
       id: 2,
       name: "Candidate Evidence Retrieval",
-      detail: `${metrics?.candidates_retrieved || 4} chunks retrieved (Score: ${metrics?.top_score ? metrics.top_score.toFixed(3) : "0.884"})`,
+      detail: `${metrics?.candidates_retrieved ?? 0} chunks retrieved (Score: ${metrics?.top_score ? metrics.top_score.toFixed(3) : "0.000"})`,
       icon: Database,
       status: "complete",
     },
     {
       id: 3,
       name: "Context Synthesis & Citations",
-      detail: `${metrics?.chunks_synthesized || 2} verified citations selected (${latencyMs}ms)`,
+      detail: `${metrics?.chunks_synthesized ?? 0} verified citations selected (${latencyMs}ms)`,
       icon: Cpu,
       status: metrics?.guardrail_status === "REFUSED" ? "refused" : "complete",
     },

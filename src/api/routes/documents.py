@@ -124,6 +124,71 @@ async def upload_document(
         )
 
 
+@router.post(
+    "/batch",
+    summary="Batch Upload and Index Multiple Documents",
+    status_code=status.HTTP_201_CREATED,
+)
+async def upload_documents_batch(
+    files: List[UploadFile] = File(..., description="Multiple document files to upload"),
+) -> Dict[str, Any]:
+    """Upload and process multiple PDF/document files in a batch. Each document is processed independently."""
+    if not files:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No files provided for batch upload.")
+
+    results: List[Dict[str, Any]] = []
+    success_count = 0
+    failure_count = 0
+
+    for file in files:
+        if not file or not file.filename:
+            continue
+        orig_name = file.filename
+        try:
+            storage_meta = await store_upload(file)
+            indexing_res = await process_uploaded_document(
+                path=storage_meta["stored_path"],
+                document_id=storage_meta["document_id"],
+                original_filename=storage_meta["original_filename"],
+            )
+            get_activity_tracker().record_audit_event(
+                actor="Authorized Advisor",
+                event_type="DOCUMENT_UPLOADED",
+                description=f"Uploaded and indexed '{storage_meta['original_filename']}' ({indexing_res['summary']['chunks_indexed']} chunks).",
+                status="SUCCESS",
+                metadata={"document_id": storage_meta["document_id"], "filename": storage_meta["original_filename"]},
+            )
+            results.append({
+                "filename": orig_name,
+                "document_id": storage_meta["document_id"],
+                "status": "success",
+                "chunks_indexed": indexing_res["summary"]["chunks_indexed"],
+            })
+            success_count += 1
+        except Exception as exc:
+            logger.warning("Batch upload failure for '%s': %s", orig_name, exc)
+            get_activity_tracker().record_audit_event(
+                actor="System Ingestion",
+                event_type="DOCUMENT_PROCESSING_FAILED",
+                description=f"Failed to process '{orig_name}': {str(exc)}",
+                status="ERROR",
+                metadata={"filename": orig_name, "error": str(exc)},
+            )
+            results.append({
+                "filename": orig_name,
+                "status": "failed",
+                "error": str(exc),
+            })
+            failure_count += 1
+
+    return {
+        "total_submitted": len(files),
+        "successful": success_count,
+        "failed": failure_count,
+        "results": results,
+    }
+
+
 @router.get(
     "",
     summary="List Tracked Documents",

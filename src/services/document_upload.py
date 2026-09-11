@@ -151,16 +151,56 @@ class DocumentRecord(BaseModel):
 
 
 class DocumentStatusTracker:
-    """Thread-safe in-memory document status and processing registry."""
+    """Thread-safe document status registry with JSON disk persistence."""
 
-    def __init__(self) -> None:
+    def __init__(self, storage_path: str = "./data/document_registry.json") -> None:
         self._records: Dict[str, DocumentRecord] = {}
         self._lock = threading.Lock()
+        self._storage_path = Path(storage_path)
+        self._load_from_disk()
+
+    def _save_to_disk(self) -> None:
+        """Persist current records to disk safely."""
+        try:
+            self._storage_path.parent.mkdir(parents=True, exist_ok=True)
+            data = {doc_id: rec.to_dict() for doc_id, rec in self._records.items()}
+            import json
+            self._storage_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        except Exception as exc:
+            logger.warning("Failed to persist document registry to %s: %s", self._storage_path, exc)
+
+    def _load_from_disk(self) -> None:
+        """Load tracked document records from disk if available."""
+        if not self._storage_path.exists():
+            return
+        try:
+            import json
+            raw_text = self._storage_path.read_text(encoding="utf-8")
+            if raw_text.strip():
+                data = json.loads(raw_text)
+                for doc_id, item in data.items():
+                    self._records[doc_id] = DocumentRecord(
+                        document_id=item["document_id"],
+                        original_filename=item["original_filename"],
+                        stored_filename=item["stored_filename"],
+                        upload_timestamp=item.get("upload_timestamp", datetime.now(timezone.utc).isoformat()),
+                        status=DocumentStatus(item.get("status", "uploaded")),
+                        error_message=item.get("error_message"),
+                        chunks_created=item.get("chunks_created", 0),
+                        chunks_indexed=item.get("chunks_indexed", 0),
+                        file_size_bytes=item.get("file_size_bytes", 0),
+                        content_type=item.get("content_type"),
+                        completed_at=item.get("completed_at"),
+                        metadata=item.get("metadata", {}),
+                    )
+        except Exception as exc:
+            logger.warning("Failed to load document registry from %s: %s", self._storage_path, exc)
 
     def register(self, record: DocumentRecord) -> DocumentRecord:
         """Register a new document record in the tracker."""
         with self._lock:
             self._records[record.document_id] = record
+            self._save_to_disk()
             return record
 
     def update(
@@ -205,6 +245,7 @@ class DocumentStatusTracker:
                 else:
                     rec.metadata[k] = v
 
+            self._save_to_disk()
             return rec
 
     def get(self, document_id: str) -> Optional[DocumentRecord]:
@@ -221,6 +262,7 @@ class DocumentStatusTracker:
         """Clear all tracked records (useful for test teardown)."""
         with self._lock:
             self._records.clear()
+            self._save_to_disk()
 
 
 # Global status tracker singleton

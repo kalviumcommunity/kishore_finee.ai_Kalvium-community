@@ -31,7 +31,7 @@ export default function KnowledgeBaseInfrastructurePage() {
   const [searchChunkQuery, setSearchChunkQuery] = useState("");
 
   // Test Retrieval Console State
-  const [testQuery, setTestQuery] = useState("advisory fee cap for discretionary portfolio");
+  const [testQuery, setTestQuery] = useState("");
   const [topK, setTopK] = useState(4);
   const [useReranker, setUseReranker] = useState(true);
   const [testLoading, setTestLoading] = useState(false);
@@ -87,29 +87,29 @@ export default function KnowledgeBaseInfrastructurePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             label="Total Policies"
-            value={metrics?.total_documents ?? 34}
+            value={metrics?.total_documents ?? 0}
             subtext="Compliance grounded"
             icon={<FileText className="w-4 h-4 text-emerald-400" />}
             accentColor="emerald"
-            badge="100% Validated"
+            badge="Live"
           />
           <StatCard
             label="Vector Chunks"
-            value={metrics?.total_chunks ?? 37}
+            value={metrics?.total_chunks ?? 0}
             subtext="ChromaDB HNSW space"
             icon={<Database className="w-4 h-4 text-blue-400" />}
             accentColor="blue"
           />
           <StatCard
             label="Retrieval Readiness"
-            value={`${health?.readiness_pct ?? 98.6}%`}
+            value={`${health?.readiness_pct ?? 0}%`}
             subtext="Cosine Guardrail Enforced"
             icon={<ShieldCheck className="w-4 h-4 text-emerald-400" />}
             accentColor="emerald"
           />
           <StatCard
             label="Index Storage"
-            value={`${metrics?.storage_size_kb ?? 88.8} KB`}
+            value={`${metrics?.storage_size_kb ?? 0} KB`}
             subtext="text-embedding-3-small (1536d)"
             icon={<Cpu className="w-4 h-4 text-purple-400" />}
             accentColor="purple"

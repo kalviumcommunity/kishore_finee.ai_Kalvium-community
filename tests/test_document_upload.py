@@ -410,3 +410,48 @@ def test_api_query_empty_bad_request(client: TestClient):
     """Verify POST /query returns HTTP 400 when query string is empty."""
     response = client.post("/query", json={"query": "   "})
     assert response.status_code == 400
+
+
+def test_batch_upload_multiple_documents(client: TestClient):
+    """Verify batch uploading multiple documents processes each document independently."""
+    doc1 = ("doc1.txt", b"First institutional compliance guideline content.", "text/plain")
+    doc2 = ("doc2.txt", b"Second fiduciary portfolio management policy.", "text/plain")
+    
+    files = [
+        ("files", doc1),
+        ("files", doc2),
+    ]
+
+    response = client.post("/documents/batch", files=files)
+    assert response.status_code == 201
+    data = response.json()
+    assert data["total_submitted"] == 2
+    assert data["successful"] == 2
+    assert data["failed"] == 0
+    assert len(data["results"]) == 2
+
+
+def test_document_tracker_disk_persistence(tmp_path: Path):
+    """Verify DocumentStatusTracker saves and loads records from JSON storage."""
+    registry_file = tmp_path / "test_registry.json"
+    tracker1 = DocumentStatusTracker(storage_path=str(registry_file))
+    
+    rec = DocumentRecord(
+        document_id="doc_test_100",
+        original_filename="institutional_aml.pdf",
+        stored_filename="doc_test_100_institutional_aml.pdf",
+        status=DocumentStatus.INDEXED,
+        chunks_indexed=5,
+        file_size_bytes=10240,
+    )
+    tracker1.register(rec)
+    assert len(tracker1.list_all()) == 1
+
+    # Initialize a new tracker pointing to the same file
+    tracker2 = DocumentStatusTracker(storage_path=str(registry_file))
+    assert len(tracker2.list_all()) == 1
+    loaded_rec = tracker2.get("doc_test_100")
+    assert loaded_rec is not None
+    assert loaded_rec.original_filename == "institutional_aml.pdf"
+    assert loaded_rec.chunks_indexed == 5
+
