@@ -19,7 +19,7 @@
         "effective_date": "2026-01-01"
       },
       "embedding_model": "text-embedding-3-small",
-      "id": "5d73e660-8dcd-451b-b3a4-9f4c49827dc5"
+      "id": "43a11ce9-5d3a-4227-b890-da7ced6b6234"
     },
     {
       "rank": 2,
@@ -35,7 +35,7 @@
         "effective_date": "2026-01-01"
       },
       "embedding_model": "text-embedding-3-small",
-      "id": "f6b62914-0926-4a43-9889-fb25aa388042"
+      "id": "1c365491-f618-4a5d-9bb0-1936a7e4780e"
     },
     {
       "rank": 3,
@@ -51,7 +51,7 @@
         "effective_date": "2026-01-15"
       },
       "embedding_model": "text-embedding-3-small",
-      "id": "e8de344a-e0e3-4758-9af0-9fc5af1d5c83"
+      "id": "acc5c908-759c-4076-b5ff-6c3058d0b672"
     }
   ],
   "chromadb_retrieval_k3": [
@@ -60,48 +60,48 @@
       "score": 0.9164,
       "text": "If a learner or client forgets their login credentials, they can reset their password through the self-service portal or contact support desk with their verified two-factor authentication (2FA) device for immediate account recovery.",
       "metadata": {
-        "source": "auth-and-access-guide.md",
-        "approval_status": "approved",
-        "effective_date": "2026-01-01",
         "section": "Account Recovery",
-        "chunk_index": 1,
+        "approval_status": "approved",
         "page": 2,
-        "document_id": "doc_sec_001"
+        "chunk_index": 1,
+        "effective_date": "2026-01-01",
+        "document_id": "doc_sec_001",
+        "source": "auth-and-access-guide.md"
       },
       "embedding_model": "text-embedding-3-small",
-      "id": "d2bb8ac0-f741-4904-8415-740fabc3baa1"
+      "id": "619e3f2b-2874-4457-9508-ac7a3738db8d"
     },
     {
       "rank": 2,
       "score": 0.8587,
       "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
       "metadata": {
-        "chunk_index": 0,
         "page": 1,
-        "approval_status": "approved",
         "effective_date": "2026-01-01",
-        "source": "auth-and-access-guide.md",
         "document_id": "doc_sec_001",
-        "section": "Password Management"
+        "section": "Password Management",
+        "chunk_index": 0,
+        "approval_status": "approved",
+        "source": "auth-and-access-guide.md"
       },
       "embedding_model": "text-embedding-3-small",
-      "id": "c7dfac76-5d88-4253-b026-e8dc1445cfaf"
+      "id": "4f1376af-f1af-4505-a959-23c9756891ad"
     },
     {
       "rank": 3,
       "score": 0.7701,
       "text": "A mutual fund's Total Expense Ratio (TER) represents the annual operating cost, including management fees, administrative expenses, and distribution commissions expressed as an annualized percentage of the fund's daily net assets.",
       "metadata": {
-        "approval_status": "approved",
-        "chunk_index": 2,
-        "section": "Expense Ratios and Fee Structures",
-        "effective_date": "2026-01-15",
-        "source": "mutual-fund-handbook.pdf",
         "page": 7,
-        "document_id": "doc_mf_101"
+        "source": "mutual-fund-handbook.pdf",
+        "effective_date": "2026-01-15",
+        "approval_status": "approved",
+        "document_id": "doc_mf_101",
+        "chunk_index": 2,
+        "section": "Expense Ratios and Fee Structures"
       },
       "embedding_model": "text-embedding-3-small",
-      "id": "e6ab08ad-df57-4b64-a5cb-447aafba55af"
+      "id": "4a6c3366-d456-4bf1-890a-7d5e3fb05ae9"
     }
   ],
   "k_tradeoff_demonstration": {

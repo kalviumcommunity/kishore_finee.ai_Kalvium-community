@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import {
@@ -13,6 +14,7 @@ import {
   X,
   AlertCircle,
   Sparkles,
+  ArrowLeft,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
@@ -37,7 +39,9 @@ export default function LoginPage() {
   const [adminError, setAdminError] = useState<string | null>(null);
 
   const googleBtnContainerRef = useRef<HTMLDivElement>(null);
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "116946628146-1lsdqfh2ircjnkbg3nt2i5fkh48km7gm.apps.googleusercontent.com";
+  const googleClientId =
+    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+    "116946628146-1lsdqfh2ircjnkbg3nt2i5fkh48km7gm.apps.googleusercontent.com";
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -45,7 +49,7 @@ export default function LoginPage() {
       if (isAdmin) {
         router.replace("/admin");
       } else {
-        router.replace("/chatask");
+        router.replace("/dashboard");
       }
     }
   }, [isAuthenticated, isAdmin, router]);
@@ -77,7 +81,7 @@ export default function LoginPage() {
       if (loggedUser.role === "ADMIN") {
         router.push("/admin");
       } else {
-        router.push("/chatask");
+        router.push("/dashboard");
       }
     } catch (err: any) {
       console.error("Google Auth failed:", err);
@@ -126,7 +130,7 @@ export default function LoginPage() {
                 if (user.role === "ADMIN") {
                   router.push("/admin");
                 } else {
-                  router.push("/chatask");
+                  router.push("/dashboard");
                 }
               })
               .catch(() => {
@@ -141,7 +145,7 @@ export default function LoginPage() {
             if (user.role === "ADMIN") {
               router.push("/admin");
             } else {
-              router.push("/chatask");
+              router.push("/dashboard");
             }
           })
           .catch(() => {
@@ -155,7 +159,7 @@ export default function LoginPage() {
           if (user.role === "ADMIN") {
             router.push("/admin");
           } else {
-            router.push("/chatask");
+            router.push("/dashboard");
           }
         })
         .catch(() => {
@@ -198,7 +202,18 @@ export default function LoginPage() {
         onLoad={initGoogleGsi}
       />
 
-      <div className="min-h-screen bg-background flex flex-col justify-center items-center p-4 relative overflow-hidden select-none">
+      <div className="min-h-screen bg-[#06090e] flex flex-col justify-center items-center p-4 relative overflow-hidden select-none">
+        {/* Top Return to Home Link */}
+        <div className="absolute top-6 left-6 z-20">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-xs font-mono text-gray-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg bg-surface/60 border border-surface-border hover:bg-surface"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Homepage</span>
+          </Link>
+        </div>
+
         {/* Background Glow Accents */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-80 h-80 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -207,15 +222,15 @@ export default function LoginPage() {
         <div className="w-full max-w-md bg-surface border border-surface-border rounded-2xl p-8 shadow-2xl z-10 space-y-7 relative">
           {/* Brand Header */}
           <div className="text-center space-y-3">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mb-1 shadow-inner">
+            <Link href="/" className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mb-1 shadow-inner hover:scale-105 transition-transform">
               <ShieldCheck className="w-8 h-8" />
-            </div>
+            </Link>
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-white flex items-center justify-center gap-1 font-sans">
                 FINEE<span className="text-emerald-400">.ai</span>
               </h1>
               <p className="text-sm font-medium text-emerald-300/90 mt-1">
-                Secure Financial Knowledge & Advisory Intelligence
+                Secure Financial Knowledge &amp; Advisory Intelligence
               </p>
               <p className="text-xs text-gray-400 mt-2 font-sans max-w-xs mx-auto">
                 Sign in securely to access your advisory workspace.
@@ -263,6 +278,14 @@ export default function LoginPage() {
               </svg>
               <span>{loading ? "Connecting with Google..." : "Continue with Google"}</span>
             </button>
+          </div>
+
+          {/* Switch to Sign Up */}
+          <div className="text-center text-xs text-gray-400">
+            <span>Don&apos;t have an advisory account? </span>
+            <Link href="/signup" className="text-emerald-400 hover:underline font-semibold">
+              Create account
+            </Link>
           </div>
 
           {/* Enterprise Compliance Badges */}

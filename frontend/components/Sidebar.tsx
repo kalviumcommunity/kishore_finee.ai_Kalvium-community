@@ -80,6 +80,16 @@ export const Sidebar: React.FC = () => {
       icon: MessageSquare,
       badge: "RAG",
     },
+    {
+      name: "Approved Sources",
+      href: "/sources",
+      icon: FileText,
+    },
+    {
+      name: "My Profile",
+      href: "/profile",
+      icon: Users,
+    },
   ];
 
   const currentNavItems = isAdmin ? adminNavItems : userNavItems;

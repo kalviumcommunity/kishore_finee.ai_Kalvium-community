@@ -11,7 +11,7 @@
       "completion_tokens": 138,
       "total_tokens": 1046,
       "cost_estimate_usd": 0.000219,
-      "last_active": "2026-09-11T09:09:47.494657+00:00",
+      "last_active": "2026-09-11T11:00:00.180316+00:00",
       "refusal_count": 1,
       "conflict_count": 0,
       "status": "active"
@@ -27,7 +27,7 @@
       "completion_tokens": 0,
       "total_tokens": 0,
       "cost_estimate_usd": 0.0,
-      "last_active": "2026-09-11T09:09:47.492757+00:00",
+      "last_active": "2026-09-11T11:00:00.178237+00:00",
       "refusal_count": 0,
       "conflict_count": 0,
       "status": "active"
@@ -38,13 +38,13 @@
       "role": "Wealth Advisor",
       "department": "Advisory Services",
       "email": "usr_marcus_vance@finee.ai",
-      "queries_count": 12,
-      "prompt_tokens": 1776,
-      "completion_tokens": 186,
-      "total_tokens": 1962,
-      "cost_estimate_usd": 0.000381,
-      "last_active": "2026-09-11T09:09:47.439519+00:00",
-      "refusal_count": 3,
+      "queries_count": 2,
+      "prompt_tokens": 236,
+      "completion_tokens": 32,
+      "total_tokens": 268,
+      "cost_estimate_usd": 5.5e-05,
+      "last_active": "2026-09-11T11:00:00.130080+00:00",
+      "refusal_count": 1,
       "conflict_count": 0,
       "status": "active"
     },
@@ -54,12 +54,12 @@
       "role": "USER",
       "department": "Private Wealth Advisory",
       "email": "kishorevarma2205@gmail.com",
-      "queries_count": 0,
-      "prompt_tokens": 0,
-      "completion_tokens": 0,
-      "total_tokens": 0,
-      "cost_estimate_usd": 0.0,
-      "last_active": "2026-09-11T08:42:04.230332+00:00",
+      "queries_count": 2,
+      "prompt_tokens": 918,
+      "completion_tokens": 148,
+      "total_tokens": 1066,
+      "cost_estimate_usd": 0.000226,
+      "last_active": "2026-09-11T09:14:47.320249+00:00",
       "refusal_count": 0,
       "conflict_count": 0,
       "status": "active"
@@ -67,8 +67,8 @@
   },
   "queries": [
     {
-      "id": "qry_8c8f8ebd39",
-      "timestamp": "2026-09-11T09:09:47.439485+00:00",
+      "id": "qry_255870e1c9",
+      "timestamp": "2026-09-11T11:00:00.130050+00:00",
       "session_id": null,
       "user_id": "usr_marcus_vance",
       "user_name": "Financial Advisor",
@@ -81,7 +81,7 @@
       "supporting_chunks_count": 0,
       "retrieved_chunks_count": 0,
       "sources": [],
-      "latency_ms": 38.43,
+      "latency_ms": 34.06,
       "prompt_tokens": 58,
       "completion_tokens": 17,
       "total_tokens": 75,
@@ -95,394 +95,156 @@
       "conflict_details": null
     },
     {
-      "id": "qry_7329c83c88",
-      "timestamp": "2026-09-11T09:09:14.486957+00:00",
+      "id": "qry_57749a5ed7",
+      "timestamp": "2026-09-11T08:42:23.061851+00:00",
       "session_id": null,
-      "user_id": "usr_marcus_vance",
-      "user_name": "Financial Advisor",
-      "question": "What is the policy on client suitability?",
-      "rewritten_query": null,
-      "answer": "I don't have enough reliable evidence in the approved knowledge base to answer that question.",
-      "status": "refused_weak_context",
-      "refusal_reason": "Top relevance score (1.00/10) is below minimum threshold (5.00/10).",
-      "top_score": 0.7297,
-      "supporting_chunks_count": 0,
-      "retrieved_chunks_count": 0,
-      "sources": [],
-      "latency_ms": 27.39,
-      "prompt_tokens": 58,
-      "completion_tokens": 17,
-      "total_tokens": 75,
-      "cost_estimate_usd": 1.9e-05,
-      "client_context": {
-        "entity_name": "Apex Wealth Fund",
-        "entity_id": "APX-901",
-        "risk_tier": "Tier 1"
-      },
-      "has_conflict": false,
-      "conflict_details": null
-    },
-    {
-      "id": "qry_cccf51522f",
-      "timestamp": "2026-09-11T09:08:43.482319+00:00",
-      "session_id": null,
-      "user_id": "usr_marcus_vance",
-      "user_name": "Financial Advisor",
-      "question": "What is the policy on client suitability?",
-      "rewritten_query": null,
-      "answer": "I don't have enough reliable evidence in the approved knowledge base to answer that question.",
-      "status": "refused_empty_context",
-      "refusal_reason": "No relevant chunks retrieved from knowledge base.",
-      "top_score": 0.0,
-      "supporting_chunks_count": 0,
-      "retrieved_chunks_count": 0,
-      "sources": [],
-      "latency_ms": 0.65,
-      "prompt_tokens": 58,
-      "completion_tokens": 17,
-      "total_tokens": 75,
-      "cost_estimate_usd": 1.9e-05,
-      "client_context": {
-        "entity_name": "Apex Wealth Fund",
-        "entity_id": "APX-901",
-        "risk_tier": "Tier 1"
-      },
-      "has_conflict": false,
-      "conflict_details": null
-    },
-    {
-      "id": "qry_91d16fd42c",
-      "timestamp": "2026-09-11T09:07:28.757284+00:00",
-      "session_id": null,
-      "user_id": "usr_marcus_vance",
-      "user_name": "Financial Advisor",
-      "question": "What is the policy on client suitability?",
-      "rewritten_query": null,
-      "answer": "The client suitability policy mandates risk profiling prior to executing discretionary trades [1].",
+      "user_id": "usr_kishorevarma2205",
+      "user_name": "Kishore Varma",
+      "question": ". What is the investment objective of Alpha Large Cap Equity Fund?",
+      "rewritten_query": ". What is the investment objective of Alpha Large Cap Equity Fund?",
+      "answer": "Based on verified compliance documentation [1]: [1] alpha_large_cap_fund_factsheet.pdf#1 It is not legal, regulatory or investment advice and must not be treated as an actual SEBI/AMC/RBI publication. Fund Overview Alpha Large Cap Equity Fund is a synthetic fund created for FInee.ai retrieval testing. The stated objective is to provide",
       "status": "answered",
       "refusal_reason": null,
-      "top_score": 0.8867,
-      "supporting_chunks_count": 1,
-      "retrieved_chunks_count": 1,
-      "sources": [
-        {
-          "marker": "[1]",
-          "source": "suitability-policy.md",
-          "document_id": "suitability-policy.md",
-          "section": "Section 2.1",
-          "page": 1,
-          "approval_status": "approved",
-          "effective_date": "2026-01-01",
-          "version": "2.4",
-          "text": "The client suitability policy mandates risk profiling.",
-          "relevance_score": 0.92,
-          "is_direct_evidence": true
-        }
-      ],
-      "latency_ms": 36.26,
-      "prompt_tokens": 178,
-      "completion_tokens": 15,
-      "total_tokens": 193,
-      "cost_estimate_usd": 3.6e-05,
-      "client_context": {
-        "entity_name": "Apex Wealth Fund",
-        "entity_id": "APX-901",
-        "risk_tier": "Tier 1"
-      },
-      "has_conflict": false,
-      "conflict_details": null
-    },
-    {
-      "id": "qry_9648376f4b",
-      "timestamp": "2026-09-11T09:06:26.266058+00:00",
-      "session_id": null,
-      "user_id": "usr_marcus_vance",
-      "user_name": "Financial Advisor",
-      "question": "What is the policy on client suitability?",
-      "rewritten_query": null,
-      "answer": "The client suitability policy mandates risk profiling prior to executing discretionary trades [1].",
-      "status": "answered",
-      "refusal_reason": null,
-      "top_score": 0.8867,
-      "supporting_chunks_count": 1,
-      "retrieved_chunks_count": 1,
-      "sources": [
-        {
-          "marker": "[1]",
-          "source": "suitability-policy.md",
-          "document_id": "suitability-policy.md",
-          "section": "Section 2.1",
-          "page": 1,
-          "approval_status": "approved",
-          "effective_date": "2026-01-01",
-          "version": "2.4",
-          "text": "The client suitability policy mandates risk profiling.",
-          "relevance_score": 0.92,
-          "is_direct_evidence": true
-        }
-      ],
-      "latency_ms": 33.62,
-      "prompt_tokens": 178,
-      "completion_tokens": 15,
-      "total_tokens": 193,
-      "cost_estimate_usd": 3.6e-05,
-      "client_context": {
-        "entity_name": "Apex Wealth Fund",
-        "entity_id": "APX-901",
-        "risk_tier": "Tier 1"
-      },
-      "has_conflict": false,
-      "conflict_details": null
-    },
-    {
-      "id": "qry_abccd7aff7",
-      "timestamp": "2026-09-11T09:05:12.091307+00:00",
-      "session_id": null,
-      "user_id": "usr_marcus_vance",
-      "user_name": "Financial Advisor",
-      "question": "What is the policy on client suitability?",
-      "rewritten_query": null,
-      "answer": "The client suitability policy mandates risk profiling prior to executing discretionary trades [1].",
-      "status": "answered",
-      "refusal_reason": null,
-      "top_score": 0.88,
-      "supporting_chunks_count": 1,
-      "retrieved_chunks_count": 1,
-      "sources": [
-        {
-          "marker": "[1]",
-          "source": "suitability-policy.md",
-          "document_id": "suitability-policy.md",
-          "section": "Section 2.1",
-          "page": 1,
-          "approval_status": "approved",
-          "effective_date": "2026-01-01",
-          "version": "2.4",
-          "text": "The client suitability policy mandates risk profiling.",
-          "relevance_score": 0.92,
-          "is_direct_evidence": true
-        }
-      ],
-      "latency_ms": 35.48,
-      "prompt_tokens": 178,
-      "completion_tokens": 15,
-      "total_tokens": 193,
-      "cost_estimate_usd": 3.6e-05,
-      "client_context": {
-        "entity_name": "Apex Wealth Fund",
-        "entity_id": "APX-901",
-        "risk_tier": "Tier 1"
-      },
-      "has_conflict": false,
-      "conflict_details": null
-    },
-    {
-      "id": "qry_3a27a231b5",
-      "timestamp": "2026-09-11T08:48:22.863054+00:00",
-      "session_id": null,
-      "user_id": "usr_marcus_vance",
-      "user_name": "Financial Advisor",
-      "question": "What is the policy on client suitability?",
-      "rewritten_query": null,
-      "answer": "The client suitability policy mandates risk profiling prior to executing discretionary trades [1].",
-      "status": "answered",
-      "refusal_reason": null,
-      "top_score": 0.8867,
+      "top_score": 0.8772,
       "supporting_chunks_count": 4,
-      "retrieved_chunks_count": 1,
+      "retrieved_chunks_count": 4,
       "sources": [
         {
           "marker": "[1]",
-          "source": "suitability-policy.md",
-          "document_id": "suitability-policy.md",
-          "section": "Section 2.1",
+          "source": "alpha_large_cap_fund_factsheet.pdf",
+          "document_id": "doc_5c460fa57336",
+          "section": "Section 1.0",
           "page": 1,
           "approval_status": "approved",
-          "effective_date": "2026-01-01",
-          "version": "2.4",
-          "text": "The client suitability policy mandates risk profiling.",
-          "relevance_score": 0.92,
+          "effective_date": "2026-09-11",
+          "version": "1.0",
+          "text": "",
+          "relevance_score": 0.8772,
           "is_direct_evidence": true
+        },
+        {
+          "marker": "[2]",
+          "source": "bharat_flexi_cap_fund_factsheet.pdf",
+          "document_id": "doc_7b7ee8a1733c",
+          "section": "Section 2.0",
+          "page": 1,
+          "approval_status": "approved",
+          "effective_date": "2026-09-11",
+          "version": "1.0",
+          "text": "",
+          "relevance_score": 0.8772,
+          "is_direct_evidence": false
+        },
+        {
+          "marker": "[3]",
+          "source": "gold_savings_fund_factsheet.pdf",
+          "document_id": "doc_b53ddd1667fd",
+          "section": "Section 3.0",
+          "page": 1,
+          "approval_status": "approved",
+          "effective_date": "2026-09-11",
+          "version": "1.0",
+          "text": "",
+          "relevance_score": 0.8772,
+          "is_direct_evidence": false
+        },
+        {
+          "marker": "[4]",
+          "source": "balanced_advantage_fund_factsheet.pdf",
+          "document_id": "doc_88696e53be4e",
+          "section": "Section 4.0",
+          "page": 1,
+          "approval_status": "approved",
+          "effective_date": "2026-09-11",
+          "version": "1.0",
+          "text": "",
+          "relevance_score": 0.8772,
+          "is_direct_evidence": false
         }
       ],
-      "latency_ms": 15.84,
-      "prompt_tokens": 178,
-      "completion_tokens": 15,
-      "total_tokens": 193,
-      "cost_estimate_usd": 3.6e-05,
-      "client_context": {
-        "entity_name": "Apex Wealth Fund",
-        "entity_id": "APX-901",
-        "risk_tier": "Tier 1"
-      },
+      "latency_ms": 54.0,
+      "prompt_tokens": 459,
+      "completion_tokens": 74,
+      "total_tokens": 533,
+      "cost_estimate_usd": 0.000113,
+      "client_context": null,
       "has_conflict": false,
       "conflict_details": null
     },
     {
-      "id": "qry_7b03d3aea8",
-      "timestamp": "2026-09-11T08:46:43.035137+00:00",
+      "id": "qry_4c3b53008e",
+      "timestamp": "2026-09-11T08:42:17.576128+00:00",
       "session_id": null,
-      "user_id": "usr_marcus_vance",
-      "user_name": "Financial Advisor",
-      "question": "What is the policy on client suitability?",
+      "user_id": "usr_kishorevarma2205",
+      "user_name": "Kishore Varma",
+      "question": ". What is the investment objective of Alpha Large Cap Equity Fund?",
       "rewritten_query": null,
-      "answer": "The client suitability policy mandates risk profiling prior to executing discretionary trades [1].",
+      "answer": "Based on verified compliance documentation [1]: [1] alpha_large_cap_fund_factsheet.pdf#1 It is not legal, regulatory or investment advice and must not be treated as an actual SEBI/AMC/RBI publication. Fund Overview Alpha Large Cap Equity Fund is a synthetic fund created for FInee.ai retrieval testing. The stated objective is to provide",
       "status": "answered",
       "refusal_reason": null,
-      "top_score": 0.8867,
+      "top_score": 0.8772,
       "supporting_chunks_count": 4,
-      "retrieved_chunks_count": 1,
+      "retrieved_chunks_count": 4,
       "sources": [
         {
           "marker": "[1]",
-          "source": "suitability-policy.md",
-          "document_id": "suitability-policy.md",
-          "section": "Section 2.1",
+          "source": "alpha_large_cap_fund_factsheet.pdf",
+          "document_id": "doc_5c460fa57336",
+          "section": "Section 1.0",
           "page": 1,
           "approval_status": "approved",
-          "effective_date": "2026-01-01",
-          "version": "2.4",
-          "text": "The client suitability policy mandates risk profiling.",
-          "relevance_score": 0.92,
+          "effective_date": "2026-09-11",
+          "version": "1.0",
+          "text": "",
+          "relevance_score": 0.8772,
           "is_direct_evidence": true
-        }
-      ],
-      "latency_ms": 21.26,
-      "prompt_tokens": 178,
-      "completion_tokens": 15,
-      "total_tokens": 193,
-      "cost_estimate_usd": 3.6e-05,
-      "client_context": {
-        "entity_name": "Apex Wealth Fund",
-        "entity_id": "APX-901",
-        "risk_tier": "Tier 1"
-      },
-      "has_conflict": false,
-      "conflict_details": null
-    },
-    {
-      "id": "qry_e81591102c",
-      "timestamp": "2026-09-11T08:43:28.279238+00:00",
-      "session_id": null,
-      "user_id": "usr_marcus_vance",
-      "user_name": "Financial Advisor",
-      "question": "What is the policy on client suitability?",
-      "rewritten_query": null,
-      "answer": "The client suitability policy mandates risk profiling prior to executing discretionary trades [1].",
-      "status": "answered",
-      "refusal_reason": null,
-      "top_score": 0.8867,
-      "supporting_chunks_count": 4,
-      "retrieved_chunks_count": 1,
-      "sources": [
+        },
         {
-          "marker": "[1]",
-          "source": "suitability-policy.md",
-          "document_id": "suitability-policy.md",
-          "section": "Section 2.1",
+          "marker": "[2]",
+          "source": "bharat_flexi_cap_fund_factsheet.pdf",
+          "document_id": "doc_7b7ee8a1733c",
+          "section": "Section 2.0",
           "page": 1,
           "approval_status": "approved",
-          "effective_date": "2026-01-01",
-          "version": "2.4",
-          "text": "The client suitability policy mandates risk profiling.",
-          "relevance_score": 0.92,
-          "is_direct_evidence": true
-        }
-      ],
-      "latency_ms": 16.25,
-      "prompt_tokens": 178,
-      "completion_tokens": 15,
-      "total_tokens": 193,
-      "cost_estimate_usd": 3.6e-05,
-      "client_context": {
-        "entity_name": "Apex Wealth Fund",
-        "entity_id": "APX-901",
-        "risk_tier": "Tier 1"
-      },
-      "has_conflict": false,
-      "conflict_details": null
-    },
-    {
-      "id": "qry_2241fe6d06",
-      "timestamp": "2026-09-11T08:43:01.422370+00:00",
-      "session_id": null,
-      "user_id": "usr_marcus_vance",
-      "user_name": "Financial Advisor",
-      "question": "What is the policy on client suitability?",
-      "rewritten_query": null,
-      "answer": "The client suitability policy mandates risk profiling prior to executing discretionary trades [1].",
-      "status": "answered",
-      "refusal_reason": null,
-      "top_score": 0.8867,
-      "supporting_chunks_count": 4,
-      "retrieved_chunks_count": 1,
-      "sources": [
+          "effective_date": "2026-09-11",
+          "version": "1.0",
+          "text": "",
+          "relevance_score": 0.8772,
+          "is_direct_evidence": false
+        },
         {
-          "marker": "[1]",
-          "source": "suitability-policy.md",
-          "document_id": "suitability-policy.md",
-          "section": "Section 2.1",
+          "marker": "[3]",
+          "source": "gold_savings_fund_factsheet.pdf",
+          "document_id": "doc_b53ddd1667fd",
+          "section": "Section 3.0",
           "page": 1,
           "approval_status": "approved",
-          "effective_date": "2026-01-01",
-          "version": "2.4",
-          "text": "The client suitability policy mandates risk profiling.",
-          "relevance_score": 0.92,
-          "is_direct_evidence": true
-        }
-      ],
-      "latency_ms": 16.54,
-      "prompt_tokens": 178,
-      "completion_tokens": 15,
-      "total_tokens": 193,
-      "cost_estimate_usd": 3.6e-05,
-      "client_context": {
-        "entity_name": "Apex Wealth Fund",
-        "entity_id": "APX-901",
-        "risk_tier": "Tier 1"
-      },
-      "has_conflict": false,
-      "conflict_details": null
-    },
-    {
-      "id": "qry_71d4e7ff4e",
-      "timestamp": "2026-09-11T08:42:49.571853+00:00",
-      "session_id": null,
-      "user_id": "usr_marcus_vance",
-      "user_name": "Financial Advisor",
-      "question": "What is the policy on client suitability?",
-      "rewritten_query": null,
-      "answer": "The client suitability policy mandates risk profiling prior to executing discretionary trades [1].",
-      "status": "answered",
-      "refusal_reason": null,
-      "top_score": 0.8867,
-      "supporting_chunks_count": 4,
-      "retrieved_chunks_count": 1,
-      "sources": [
+          "effective_date": "2026-09-11",
+          "version": "1.0",
+          "text": "",
+          "relevance_score": 0.8772,
+          "is_direct_evidence": false
+        },
         {
-          "marker": "[1]",
-          "source": "suitability-policy.md",
-          "document_id": "suitability-policy.md",
-          "section": "Section 2.1",
+          "marker": "[4]",
+          "source": "balanced_advantage_fund_factsheet.pdf",
+          "document_id": "doc_88696e53be4e",
+          "section": "Section 4.0",
           "page": 1,
           "approval_status": "approved",
-          "effective_date": "2026-01-01",
-          "version": "2.4",
-          "text": "The client suitability policy mandates risk profiling.",
-          "relevance_score": 0.92,
-          "is_direct_evidence": true
+          "effective_date": "2026-09-11",
+          "version": "1.0",
+          "text": "",
+          "relevance_score": 0.8772,
+          "is_direct_evidence": false
         }
       ],
-      "latency_ms": 16.36,
-      "prompt_tokens": 178,
-      "completion_tokens": 15,
-      "total_tokens": 193,
-      "cost_estimate_usd": 3.6e-05,
-      "client_context": {
-        "entity_name": "Apex Wealth Fund",
-        "entity_id": "APX-901",
-        "risk_tier": "Tier 1"
-      },
+      "latency_ms": 48.55,
+      "prompt_tokens": 459,
+      "completion_tokens": 74,
+      "total_tokens": 533,
+      "cost_estimate_usd": 0.000113,
+      "client_context": null,
       "has_conflict": false,
       "conflict_details": null
     },
@@ -709,8 +471,8 @@
   ],
   "audit_events": [
     {
-      "id": "aud_5b2ccf046c",
-      "timestamp": "2026-09-11T09:09:47.493480+00:00",
+      "id": "aud_52ff15deba",
+      "timestamp": "2026-09-11T11:00:00.179077+00:00",
       "actor": "John Doe",
       "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
       "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
@@ -721,8 +483,8 @@
       }
     },
     {
-      "id": "aud_e5b03362d8",
-      "timestamp": "2026-09-11T09:09:47.491658+00:00",
+      "id": "aud_dfbe3d8814",
+      "timestamp": "2026-09-11T11:00:00.177203+00:00",
       "actor": "intruder@unknown-domain.com",
       "event_type": "ADMIN_LOGIN_FAILED",
       "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
@@ -730,8 +492,8 @@
       "metadata": {}
     },
     {
-      "id": "aud_406bedac35",
-      "timestamp": "2026-09-11T09:09:47.490501+00:00",
+      "id": "aud_3f008e4e8a",
+      "timestamp": "2026-09-11T11:00:00.176196+00:00",
       "actor": "pallempativaishnavi@gmail.com",
       "event_type": "ADMIN_LOGIN_FAILED",
       "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
@@ -739,8 +501,8 @@
       "metadata": {}
     },
     {
-      "id": "aud_9051bcf721",
-      "timestamp": "2026-09-11T09:09:47.489231+00:00",
+      "id": "aud_e0f96de15c",
+      "timestamp": "2026-09-11T11:00:00.175045+00:00",
       "actor": "Vaishnavi Pallempati",
       "event_type": "ADMIN_LOGIN_SUCCESS",
       "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
@@ -751,23 +513,23 @@
       }
     },
     {
-      "id": "aud_170ede52d2",
-      "timestamp": "2026-09-11T09:09:47.439531+00:00",
+      "id": "aud_a53a9b70cb",
+      "timestamp": "2026-09-11T11:00:00.130090+00:00",
       "actor": "Financial Advisor",
       "event_type": "GUARDRAIL_TRIGGERED",
       "description": "Safe refusal triggered: Top relevance score (1.00/10) is below minimum threshold (5.00/10).",
       "status": "WARNING",
       "metadata": {
-        "query_id": "qry_8c8f8ebd39",
+        "query_id": "qry_255870e1c9",
         "status": "refused_weak_context",
         "top_score": 0.8066,
-        "latency_ms": 38.427541963756084,
+        "latency_ms": 34.05962511897087,
         "tokens": 75
       }
     },
     {
-      "id": "aud_200789c343",
-      "timestamp": "2026-09-11T09:09:47.322090+00:00",
+      "id": "aud_28cd8859b1",
+      "timestamp": "2026-09-11T11:00:00.029780+00:00",
       "actor": "Elena Rostova (Compliance)",
       "event_type": "DOCUMENT_ARCHIVED",
       "description": "Archived document 'fatca-notice.txt'.",
@@ -778,8 +540,8 @@
       }
     },
     {
-      "id": "aud_e843abb4eb",
-      "timestamp": "2026-09-11T09:09:47.320064+00:00",
+      "id": "aud_35cb465c5d",
+      "timestamp": "2026-09-11T11:00:00.028530+00:00",
       "actor": "Advisor",
       "event_type": "DOCUMENT_REVIEW_REQUESTED",
       "description": "Review requested for document 'fatca-notice.txt'.",
@@ -790,8 +552,8 @@
       }
     },
     {
-      "id": "aud_d891c19870",
-      "timestamp": "2026-09-11T09:09:47.318704+00:00",
+      "id": "aud_ec59053e46",
+      "timestamp": "2026-09-11T11:00:00.027466+00:00",
       "actor": "Compliance Officer",
       "event_type": "DOCUMENT_APPROVED",
       "description": "Approved policy document: 'fatca-notice.txt'.",
@@ -802,38 +564,17 @@
       }
     },
     {
-      "id": "aud_367c224394",
-      "timestamp": "2026-09-11T09:09:14.535932+00:00",
-      "actor": "John Doe",
-      "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
-      "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
+      "id": "aud_62822e721c",
+      "timestamp": "2026-09-11T09:14:40.680967+00:00",
+      "actor": "Vaishnavi Pallempati",
+      "event_type": "LOGOUT_SUCCESS",
+      "description": "User 'pallempativaishnavi@gmail.com' logged out.",
       "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_advisor_john",
-        "role": "USER"
-      }
-    },
-    {
-      "id": "aud_dd40f6d1ce",
-      "timestamp": "2026-09-11T09:09:14.533803+00:00",
-      "actor": "intruder@unknown-domain.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
-      "status": "WARNING",
       "metadata": {}
     },
     {
-      "id": "aud_b0ed8d62cf",
-      "timestamp": "2026-09-11T09:09:14.532594+00:00",
-      "actor": "pallempativaishnavi@gmail.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_fac8241206",
-      "timestamp": "2026-09-11T09:09:14.531387+00:00",
+      "id": "aud_5883b35fe9",
+      "timestamp": "2026-09-11T09:14:24.721980+00:00",
       "actor": "Vaishnavi Pallempati",
       "event_type": "ADMIN_LOGIN_SUCCESS",
       "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
@@ -844,891 +585,75 @@
       }
     },
     {
-      "id": "aud_4bf3bf4ab2",
-      "timestamp": "2026-09-11T09:09:14.486999+00:00",
-      "actor": "Financial Advisor",
-      "event_type": "GUARDRAIL_TRIGGERED",
-      "description": "Safe refusal triggered: Top relevance score (1.00/10) is below minimum threshold (5.00/10).",
-      "status": "WARNING",
-      "metadata": {
-        "query_id": "qry_7329c83c88",
-        "status": "refused_weak_context",
-        "top_score": 0.7297,
-        "latency_ms": 27.394500095397234,
-        "tokens": 75
-      }
-    },
-    {
-      "id": "aud_fa9551585f",
-      "timestamp": "2026-09-11T09:09:14.397748+00:00",
-      "actor": "Elena Rostova (Compliance)",
-      "event_type": "DOCUMENT_ARCHIVED",
-      "description": "Archived document 'fatca-notice.txt'.",
-      "status": "INFO",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_d8ac8dd42f",
-      "timestamp": "2026-09-11T09:09:14.396470+00:00",
-      "actor": "Advisor",
-      "event_type": "DOCUMENT_REVIEW_REQUESTED",
-      "description": "Review requested for document 'fatca-notice.txt'.",
-      "status": "WARNING",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_6f3c46c66f",
-      "timestamp": "2026-09-11T09:09:14.395380+00:00",
-      "actor": "Compliance Officer",
-      "event_type": "DOCUMENT_APPROVED",
-      "description": "Approved policy document: 'fatca-notice.txt'.",
+      "id": "aud_381fd4275a",
+      "timestamp": "2026-09-11T09:14:10.961292+00:00",
+      "actor": "Kishore Varma",
+      "event_type": "LOGOUT_SUCCESS",
+      "description": "User 'kishorevarma2205@gmail.com' logged out.",
       "status": "SUCCESS",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
+      "metadata": {}
     },
     {
-      "id": "aud_bbb8e12d58",
-      "timestamp": "2026-09-11T09:08:43.535705+00:00",
-      "actor": "John Doe",
+      "id": "aud_01987adf9a",
+      "timestamp": "2026-09-11T09:13:06.231164+00:00",
+      "actor": "Kishore Varma",
       "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
-      "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
+      "description": "User 'kishorevarma2205@gmail.com' logged in via Google OAuth with role USER.",
       "status": "SUCCESS",
       "metadata": {
-        "user_id": "usr_advisor_john",
+        "user_id": "usr_kishorevarma2205",
         "role": "USER"
       }
     },
     {
-      "id": "aud_e70f21e5d5",
-      "timestamp": "2026-09-11T09:08:43.533724+00:00",
-      "actor": "intruder@unknown-domain.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
-      "status": "WARNING",
+      "id": "aud_728924d596",
+      "timestamp": "2026-09-11T09:12:53.350991+00:00",
+      "actor": "Kishore Varma",
+      "event_type": "LOGOUT_SUCCESS",
+      "description": "User 'kishorevarma2205@gmail.com' logged out.",
+      "status": "SUCCESS",
       "metadata": {}
     },
     {
-      "id": "aud_501bc831d7",
-      "timestamp": "2026-09-11T09:08:43.532673+00:00",
-      "actor": "pallempativaishnavi@gmail.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_23c9bcea8f",
-      "timestamp": "2026-09-11T09:08:43.531494+00:00",
-      "actor": "Vaishnavi Pallempati",
-      "event_type": "ADMIN_LOGIN_SUCCESS",
-      "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_admin_vaishnavi",
-        "role": "ADMIN"
-      }
-    },
-    {
-      "id": "aud_639f445fe2",
-      "timestamp": "2026-09-11T09:08:43.482365+00:00",
-      "actor": "Financial Advisor",
-      "event_type": "GUARDRAIL_TRIGGERED",
-      "description": "Safe refusal triggered: No relevant chunks retrieved from knowledge base.",
-      "status": "WARNING",
-      "metadata": {
-        "query_id": "qry_cccf51522f",
-        "status": "refused_empty_context",
-        "top_score": 0.0,
-        "latency_ms": 0.6465420592576265,
-        "tokens": 75
-      }
-    },
-    {
-      "id": "aud_701087e33b",
-      "timestamp": "2026-09-11T09:08:43.414728+00:00",
-      "actor": "Elena Rostova (Compliance)",
-      "event_type": "DOCUMENT_ARCHIVED",
-      "description": "Archived document 'project-submission-rubric.txt'.",
-      "status": "INFO",
-      "metadata": {
-        "document_id": "doc_38f9bcaf6031",
-        "filename": "project-submission-rubric.txt"
-      }
-    },
-    {
-      "id": "aud_64cd3f722b",
-      "timestamp": "2026-09-11T09:08:43.413989+00:00",
-      "actor": "Advisor",
-      "event_type": "DOCUMENT_REVIEW_REQUESTED",
-      "description": "Review requested for document 'project-submission-rubric.txt'.",
-      "status": "WARNING",
-      "metadata": {
-        "document_id": "doc_38f9bcaf6031",
-        "filename": "project-submission-rubric.txt"
-      }
-    },
-    {
-      "id": "aud_fc21fedd0c",
-      "timestamp": "2026-09-11T09:08:43.413158+00:00",
-      "actor": "Compliance Officer",
-      "event_type": "DOCUMENT_APPROVED",
-      "description": "Approved policy document: 'project-submission-rubric.txt'.",
-      "status": "SUCCESS",
-      "metadata": {
-        "document_id": "doc_38f9bcaf6031",
-        "filename": "project-submission-rubric.txt"
-      }
-    },
-    {
-      "id": "aud_661605b7f6",
-      "timestamp": "2026-09-11T09:07:28.806104+00:00",
-      "actor": "John Doe",
-      "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
-      "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_advisor_john",
-        "role": "USER"
-      }
-    },
-    {
-      "id": "aud_acc75be2a1",
-      "timestamp": "2026-09-11T09:07:28.804400+00:00",
-      "actor": "intruder@unknown-domain.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_555dfe8bdc",
-      "timestamp": "2026-09-11T09:07:28.803324+00:00",
-      "actor": "pallempativaishnavi@gmail.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_262d66f649",
-      "timestamp": "2026-09-11T09:07:28.802224+00:00",
-      "actor": "Vaishnavi Pallempati",
-      "event_type": "ADMIN_LOGIN_SUCCESS",
-      "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_admin_vaishnavi",
-        "role": "ADMIN"
-      }
-    },
-    {
-      "id": "aud_8ae4c3856c",
-      "timestamp": "2026-09-11T09:07:28.757325+00:00",
-      "actor": "Financial Advisor",
+      "id": "aud_f93782a198",
+      "timestamp": "2026-09-11T08:42:23.061895+00:00",
+      "actor": "Kishore Varma",
       "event_type": "QUERY_EXECUTED",
-      "description": "Query answered with 1 verified citations (Top Score: 0.887)",
+      "description": "Query answered with 4 verified citations (Top Score: 0.877)",
       "status": "SUCCESS",
       "metadata": {
-        "query_id": "qry_91d16fd42c",
+        "query_id": "qry_57749a5ed7",
         "status": "answered",
-        "top_score": 0.8867,
-        "latency_ms": 36.2567079719156,
-        "tokens": 193
+        "top_score": 0.8772,
+        "latency_ms": 53.99679206311703,
+        "tokens": 533
       }
     },
     {
-      "id": "aud_b228479e89",
-      "timestamp": "2026-09-11T09:07:28.658476+00:00",
-      "actor": "Elena Rostova (Compliance)",
-      "event_type": "DOCUMENT_ARCHIVED",
-      "description": "Archived document 'fatca-notice.txt'.",
-      "status": "INFO",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_dadf3cc1fd",
-      "timestamp": "2026-09-11T09:07:28.657333+00:00",
-      "actor": "Advisor",
-      "event_type": "DOCUMENT_REVIEW_REQUESTED",
-      "description": "Review requested for document 'fatca-notice.txt'.",
-      "status": "WARNING",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_81dc6ec233",
-      "timestamp": "2026-09-11T09:07:28.656160+00:00",
-      "actor": "Compliance Officer",
-      "event_type": "DOCUMENT_APPROVED",
-      "description": "Approved policy document: 'fatca-notice.txt'.",
-      "status": "SUCCESS",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_f6706c5d72",
-      "timestamp": "2026-09-11T09:06:26.313920+00:00",
-      "actor": "John Doe",
-      "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
-      "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_advisor_john",
-        "role": "USER"
-      }
-    },
-    {
-      "id": "aud_bbfe0d0c32",
-      "timestamp": "2026-09-11T09:06:26.312296+00:00",
-      "actor": "intruder@unknown-domain.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_1163ad5c3c",
-      "timestamp": "2026-09-11T09:06:26.311254+00:00",
-      "actor": "pallempativaishnavi@gmail.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_5d9b07ea58",
-      "timestamp": "2026-09-11T09:06:26.310136+00:00",
-      "actor": "Vaishnavi Pallempati",
-      "event_type": "ADMIN_LOGIN_SUCCESS",
-      "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_admin_vaishnavi",
-        "role": "ADMIN"
-      }
-    },
-    {
-      "id": "aud_c484f8a657",
-      "timestamp": "2026-09-11T09:06:26.266101+00:00",
-      "actor": "Financial Advisor",
+      "id": "aud_8b615a67b5",
+      "timestamp": "2026-09-11T08:42:17.576171+00:00",
+      "actor": "Kishore Varma",
       "event_type": "QUERY_EXECUTED",
-      "description": "Query answered with 1 verified citations (Top Score: 0.887)",
+      "description": "Query answered with 4 verified citations (Top Score: 0.877)",
       "status": "SUCCESS",
       "metadata": {
-        "query_id": "qry_9648376f4b",
+        "query_id": "qry_4c3b53008e",
         "status": "answered",
-        "top_score": 0.8867,
-        "latency_ms": 33.619957976043224,
-        "tokens": 193
+        "top_score": 0.8772,
+        "latency_ms": 48.55358391068876,
+        "tokens": 533
       }
     },
     {
-      "id": "aud_bf08ef18f6",
-      "timestamp": "2026-09-11T09:06:26.171584+00:00",
-      "actor": "Elena Rostova (Compliance)",
-      "event_type": "DOCUMENT_ARCHIVED",
-      "description": "Archived document 'fatca-notice.txt'.",
-      "status": "INFO",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_475d7de07d",
-      "timestamp": "2026-09-11T09:06:26.170479+00:00",
-      "actor": "Advisor",
-      "event_type": "DOCUMENT_REVIEW_REQUESTED",
-      "description": "Review requested for document 'fatca-notice.txt'.",
-      "status": "WARNING",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_ed17d08591",
-      "timestamp": "2026-09-11T09:06:26.169292+00:00",
-      "actor": "Compliance Officer",
-      "event_type": "DOCUMENT_APPROVED",
-      "description": "Approved policy document: 'fatca-notice.txt'.",
-      "status": "SUCCESS",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_f8d13aae69",
-      "timestamp": "2026-09-11T09:05:12.142438+00:00",
-      "actor": "John Doe",
+      "id": "aud_dbf63ec369",
+      "timestamp": "2026-09-11T08:42:04.234536+00:00",
+      "actor": "Kishore Varma",
       "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
-      "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
+      "description": "User 'kishorevarma2205@gmail.com' logged in via Google OAuth with role USER.",
       "status": "SUCCESS",
       "metadata": {
-        "user_id": "usr_advisor_john",
+        "user_id": "usr_kishorevarma2205",
         "role": "USER"
-      }
-    },
-    {
-      "id": "aud_1eedd7a9c3",
-      "timestamp": "2026-09-11T09:05:12.140612+00:00",
-      "actor": "intruder@unknown-domain.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_db8bac1a4c",
-      "timestamp": "2026-09-11T09:05:12.139561+00:00",
-      "actor": "pallempativaishnavi@gmail.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_791642d0ca",
-      "timestamp": "2026-09-11T09:05:12.138397+00:00",
-      "actor": "Vaishnavi Pallempati",
-      "event_type": "ADMIN_LOGIN_SUCCESS",
-      "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_admin_vaishnavi",
-        "role": "ADMIN"
-      }
-    },
-    {
-      "id": "aud_28ca0374a0",
-      "timestamp": "2026-09-11T09:05:12.091352+00:00",
-      "actor": "Financial Advisor",
-      "event_type": "QUERY_EXECUTED",
-      "description": "Query answered with 1 verified citations (Top Score: 0.880)",
-      "status": "SUCCESS",
-      "metadata": {
-        "query_id": "qry_abccd7aff7",
-        "status": "answered",
-        "top_score": 0.88,
-        "latency_ms": 35.48195888288319,
-        "tokens": 193
-      }
-    },
-    {
-      "id": "aud_b8a12457bb",
-      "timestamp": "2026-09-11T09:05:11.995660+00:00",
-      "actor": "Elena Rostova (Compliance)",
-      "event_type": "DOCUMENT_ARCHIVED",
-      "description": "Archived document 'fatca-notice.txt'.",
-      "status": "INFO",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_24c6935ce3",
-      "timestamp": "2026-09-11T09:05:11.994562+00:00",
-      "actor": "Advisor",
-      "event_type": "DOCUMENT_REVIEW_REQUESTED",
-      "description": "Review requested for document 'fatca-notice.txt'.",
-      "status": "WARNING",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_e3c71205be",
-      "timestamp": "2026-09-11T09:05:11.993282+00:00",
-      "actor": "Compliance Officer",
-      "event_type": "DOCUMENT_APPROVED",
-      "description": "Approved policy document: 'fatca-notice.txt'.",
-      "status": "SUCCESS",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_0d406a5c39",
-      "timestamp": "2026-09-11T08:48:22.910925+00:00",
-      "actor": "John Doe",
-      "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
-      "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_advisor_john",
-        "role": "USER"
-      }
-    },
-    {
-      "id": "aud_153aaa821e",
-      "timestamp": "2026-09-11T08:48:22.909298+00:00",
-      "actor": "intruder@unknown-domain.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_75b8bec4b4",
-      "timestamp": "2026-09-11T08:48:22.908339+00:00",
-      "actor": "pallempativaishnavi@gmail.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_6e631e8227",
-      "timestamp": "2026-09-11T08:48:22.907165+00:00",
-      "actor": "Vaishnavi Pallempati",
-      "event_type": "ADMIN_LOGIN_SUCCESS",
-      "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_admin_vaishnavi",
-        "role": "ADMIN"
-      }
-    },
-    {
-      "id": "aud_6f56fa9a7a",
-      "timestamp": "2026-09-11T08:48:22.863096+00:00",
-      "actor": "Financial Advisor",
-      "event_type": "QUERY_EXECUTED",
-      "description": "Query answered with 1 verified citations (Top Score: 0.887)",
-      "status": "SUCCESS",
-      "metadata": {
-        "query_id": "qry_3a27a231b5",
-        "status": "answered",
-        "top_score": 0.8867,
-        "latency_ms": 15.840499894693494,
-        "tokens": 193
-      }
-    },
-    {
-      "id": "aud_277fb990d9",
-      "timestamp": "2026-09-11T08:48:22.779602+00:00",
-      "actor": "Elena Rostova (Compliance)",
-      "event_type": "DOCUMENT_ARCHIVED",
-      "description": "Archived document 'fatca-notice.txt'.",
-      "status": "INFO",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_deb9f4be2a",
-      "timestamp": "2026-09-11T08:48:22.778473+00:00",
-      "actor": "Advisor",
-      "event_type": "DOCUMENT_REVIEW_REQUESTED",
-      "description": "Review requested for document 'fatca-notice.txt'.",
-      "status": "WARNING",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_7ce813f4ca",
-      "timestamp": "2026-09-11T08:48:22.777295+00:00",
-      "actor": "Compliance Officer",
-      "event_type": "DOCUMENT_APPROVED",
-      "description": "Approved policy document: 'fatca-notice.txt'.",
-      "status": "SUCCESS",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_587ec246aa",
-      "timestamp": "2026-09-11T08:46:43.081802+00:00",
-      "actor": "John Doe",
-      "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
-      "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_advisor_john",
-        "role": "USER"
-      }
-    },
-    {
-      "id": "aud_2dc4dab080",
-      "timestamp": "2026-09-11T08:46:43.080380+00:00",
-      "actor": "intruder@unknown-domain.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_212c5ec22c",
-      "timestamp": "2026-09-11T08:46:43.079500+00:00",
-      "actor": "pallempativaishnavi@gmail.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_f630eb89f5",
-      "timestamp": "2026-09-11T08:46:43.078474+00:00",
-      "actor": "Vaishnavi Pallempati",
-      "event_type": "ADMIN_LOGIN_SUCCESS",
-      "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_admin_vaishnavi",
-        "role": "ADMIN"
-      }
-    },
-    {
-      "id": "aud_4ed7e318a7",
-      "timestamp": "2026-09-11T08:46:43.035179+00:00",
-      "actor": "Financial Advisor",
-      "event_type": "QUERY_EXECUTED",
-      "description": "Query answered with 1 verified citations (Top Score: 0.887)",
-      "status": "SUCCESS",
-      "metadata": {
-        "query_id": "qry_7b03d3aea8",
-        "status": "answered",
-        "top_score": 0.8867,
-        "latency_ms": 21.25820890069008,
-        "tokens": 193
-      }
-    },
-    {
-      "id": "aud_d3b4a5ff48",
-      "timestamp": "2026-09-11T08:46:42.952428+00:00",
-      "actor": "Elena Rostova (Compliance)",
-      "event_type": "DOCUMENT_ARCHIVED",
-      "description": "Archived document 'fatca-notice.txt'.",
-      "status": "INFO",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_8ac4dcdece",
-      "timestamp": "2026-09-11T08:46:42.951158+00:00",
-      "actor": "Advisor",
-      "event_type": "DOCUMENT_REVIEW_REQUESTED",
-      "description": "Review requested for document 'fatca-notice.txt'.",
-      "status": "WARNING",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_78e5e43238",
-      "timestamp": "2026-09-11T08:46:42.949862+00:00",
-      "actor": "Compliance Officer",
-      "event_type": "DOCUMENT_APPROVED",
-      "description": "Approved policy document: 'fatca-notice.txt'.",
-      "status": "SUCCESS",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_f41d39e3bc",
-      "timestamp": "2026-09-11T08:43:28.336340+00:00",
-      "actor": "John Doe",
-      "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
-      "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_advisor_john",
-        "role": "USER"
-      }
-    },
-    {
-      "id": "aud_44e879cd8f",
-      "timestamp": "2026-09-11T08:43:28.334544+00:00",
-      "actor": "intruder@unknown-domain.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_fb2fc34064",
-      "timestamp": "2026-09-11T08:43:28.329223+00:00",
-      "actor": "pallempativaishnavi@gmail.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_fc6b9fcdaf",
-      "timestamp": "2026-09-11T08:43:28.327994+00:00",
-      "actor": "Vaishnavi Pallempati",
-      "event_type": "ADMIN_LOGIN_SUCCESS",
-      "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_admin_vaishnavi",
-        "role": "ADMIN"
-      }
-    },
-    {
-      "id": "aud_391884f793",
-      "timestamp": "2026-09-11T08:43:28.279283+00:00",
-      "actor": "Financial Advisor",
-      "event_type": "QUERY_EXECUTED",
-      "description": "Query answered with 1 verified citations (Top Score: 0.887)",
-      "status": "SUCCESS",
-      "metadata": {
-        "query_id": "qry_e81591102c",
-        "status": "answered",
-        "top_score": 0.8867,
-        "latency_ms": 16.24912489205599,
-        "tokens": 193
-      }
-    },
-    {
-      "id": "aud_24eec2e959",
-      "timestamp": "2026-09-11T08:43:28.198843+00:00",
-      "actor": "Elena Rostova (Compliance)",
-      "event_type": "DOCUMENT_ARCHIVED",
-      "description": "Archived document 'fatca-notice.txt'.",
-      "status": "INFO",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_226256aa54",
-      "timestamp": "2026-09-11T08:43:28.197443+00:00",
-      "actor": "Advisor",
-      "event_type": "DOCUMENT_REVIEW_REQUESTED",
-      "description": "Review requested for document 'fatca-notice.txt'.",
-      "status": "WARNING",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_17c1939973",
-      "timestamp": "2026-09-11T08:43:28.196314+00:00",
-      "actor": "Compliance Officer",
-      "event_type": "DOCUMENT_APPROVED",
-      "description": "Approved policy document: 'fatca-notice.txt'.",
-      "status": "SUCCESS",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_d5d4fba3ca",
-      "timestamp": "2026-09-11T08:43:01.473480+00:00",
-      "actor": "John Doe",
-      "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
-      "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_advisor_john",
-        "role": "USER"
-      }
-    },
-    {
-      "id": "aud_fae0cfc09b",
-      "timestamp": "2026-09-11T08:43:01.472058+00:00",
-      "actor": "intruder@unknown-domain.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_ca27cec591",
-      "timestamp": "2026-09-11T08:43:01.471009+00:00",
-      "actor": "pallempativaishnavi@gmail.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_111924ba32",
-      "timestamp": "2026-09-11T08:43:01.469937+00:00",
-      "actor": "Vaishnavi Pallempati",
-      "event_type": "ADMIN_LOGIN_SUCCESS",
-      "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_admin_vaishnavi",
-        "role": "ADMIN"
-      }
-    },
-    {
-      "id": "aud_2fedd4c4b7",
-      "timestamp": "2026-09-11T08:43:01.422522+00:00",
-      "actor": "Financial Advisor",
-      "event_type": "QUERY_EXECUTED",
-      "description": "Query answered with 1 verified citations (Top Score: 0.887)",
-      "status": "SUCCESS",
-      "metadata": {
-        "query_id": "qry_2241fe6d06",
-        "status": "answered",
-        "top_score": 0.8867,
-        "latency_ms": 16.537667019292712,
-        "tokens": 193
-      }
-    },
-    {
-      "id": "aud_f74c7a6572",
-      "timestamp": "2026-09-11T08:43:01.337716+00:00",
-      "actor": "Elena Rostova (Compliance)",
-      "event_type": "DOCUMENT_ARCHIVED",
-      "description": "Archived document 'fatca-notice.txt'.",
-      "status": "INFO",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_359bf621fa",
-      "timestamp": "2026-09-11T08:43:01.336197+00:00",
-      "actor": "Advisor",
-      "event_type": "DOCUMENT_REVIEW_REQUESTED",
-      "description": "Review requested for document 'fatca-notice.txt'.",
-      "status": "WARNING",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_216957862f",
-      "timestamp": "2026-09-11T08:43:01.335098+00:00",
-      "actor": "Compliance Officer",
-      "event_type": "DOCUMENT_APPROVED",
-      "description": "Approved policy document: 'fatca-notice.txt'.",
-      "status": "SUCCESS",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_bf470e39c6",
-      "timestamp": "2026-09-11T08:42:49.620217+00:00",
-      "actor": "John Doe",
-      "event_type": "USER_GOOGLE_LOGIN_SUCCESS",
-      "description": "User 'advisor.john@apexwealth.com' logged in via Google OAuth with role USER.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_advisor_john",
-        "role": "USER"
-      }
-    },
-    {
-      "id": "aud_88235e3b17",
-      "timestamp": "2026-09-11T08:42:49.618831+00:00",
-      "actor": "intruder@unknown-domain.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'intruder@unknown-domain.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_e345bc16ff",
-      "timestamp": "2026-09-11T08:42:49.617958+00:00",
-      "actor": "pallempativaishnavi@gmail.com",
-      "event_type": "ADMIN_LOGIN_FAILED",
-      "description": "Failed admin authentication attempt for 'pallempativaishnavi@gmail.com'",
-      "status": "WARNING",
-      "metadata": {}
-    },
-    {
-      "id": "aud_4a4af33821",
-      "timestamp": "2026-09-11T08:42:49.616840+00:00",
-      "actor": "Vaishnavi Pallempati",
-      "event_type": "ADMIN_LOGIN_SUCCESS",
-      "description": "Administrator 'pallempativaishnavi@gmail.com' authenticated successfully.",
-      "status": "SUCCESS",
-      "metadata": {
-        "user_id": "usr_admin_vaishnavi",
-        "role": "ADMIN"
-      }
-    },
-    {
-      "id": "aud_12aa957cdc",
-      "timestamp": "2026-09-11T08:42:49.571912+00:00",
-      "actor": "Financial Advisor",
-      "event_type": "QUERY_EXECUTED",
-      "description": "Query answered with 1 verified citations (Top Score: 0.887)",
-      "status": "SUCCESS",
-      "metadata": {
-        "query_id": "qry_71d4e7ff4e",
-        "status": "answered",
-        "top_score": 0.8867,
-        "latency_ms": 16.358833061531186,
-        "tokens": 193
-      }
-    },
-    {
-      "id": "aud_d38bd68426",
-      "timestamp": "2026-09-11T08:42:49.486948+00:00",
-      "actor": "Elena Rostova (Compliance)",
-      "event_type": "DOCUMENT_ARCHIVED",
-      "description": "Archived document 'fatca-notice.txt'.",
-      "status": "INFO",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_bbb277bac3",
-      "timestamp": "2026-09-11T08:42:49.485837+00:00",
-      "actor": "Advisor",
-      "event_type": "DOCUMENT_REVIEW_REQUESTED",
-      "description": "Review requested for document 'fatca-notice.txt'.",
-      "status": "WARNING",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
-      }
-    },
-    {
-      "id": "aud_8925f7b97b",
-      "timestamp": "2026-09-11T08:42:49.484656+00:00",
-      "actor": "Compliance Officer",
-      "event_type": "DOCUMENT_APPROVED",
-      "description": "Approved policy document: 'fatca-notice.txt'.",
-      "status": "SUCCESS",
-      "metadata": {
-        "document_id": "doc_02492207b986",
-        "filename": "fatca-notice.txt"
       }
     },
     {
