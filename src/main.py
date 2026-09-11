@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.routes.admin import router as admin_router
 from src.api.routes.auth import router as auth_router
+from src.api.routes.conversations import router as conversations_router
 from src.api.routes.documents import router as documents_router
 from src.api.routes.query import router as query_router
 from src.core.config import settings
@@ -37,6 +38,7 @@ app.add_middleware(
 
 # Register sub-routers
 app.include_router(auth_router)
+app.include_router(conversations_router)
 app.include_router(documents_router)
 app.include_router(query_router)
 app.include_router(admin_router)

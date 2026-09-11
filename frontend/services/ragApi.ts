@@ -6,6 +6,9 @@
 
 import {
   AuditEvent,
+  ChatMessage,
+  Conversation,
+  ConversationSummary,
   DocumentDetail,
   DocumentRecord,
   KnowledgeBaseData,
@@ -296,5 +299,87 @@ export const ragApi = {
     } finally {
       setAuthToken(null);
     }
+  },
+
+  // ==========================================================================
+  // MongoDB Persistent Conversation Endpoints
+  // ==========================================================================
+
+  /**
+   * Fetch all conversations for current user, sorted pinned first then updated_at descending.
+   */
+  async getConversations(): Promise<ConversationSummary[]> {
+    return await fetchJson<ConversationSummary[]>("/conversations");
+  },
+
+  /**
+   * Fetch full conversation with complete message history, citations, and ranked snippets.
+   */
+  async getConversation(conversationId: string): Promise<Conversation> {
+    return await fetchJson<Conversation>(`/conversations/${conversationId}`);
+  },
+
+  /**
+   * Create a new persistent conversation in MongoDB.
+   */
+  async createConversation(payload: {
+    title?: string;
+    client_context?: Record<string, any>;
+    initial_message?: string;
+  } = {}): Promise<Conversation> {
+    return await fetchJson<Conversation>("/conversations", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Send a chat message in a conversation, running conversational RAG and persisting turn.
+   */
+  async sendMessage(
+    conversationId: string,
+    payload: {
+      message: string;
+      client_context?: Record<string, any>;
+      k?: number;
+      use_reranker?: boolean;
+    }
+  ): Promise<any> {
+    return await fetchJson<any>(`/conversations/${conversationId}/messages`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Toggle pinned status of a conversation.
+   */
+  async togglePinConversation(conversationId: string, isPinned?: boolean): Promise<Conversation> {
+    return await fetchJson<Conversation>(`/conversations/${conversationId}/pin`, {
+      method: "PATCH",
+      body: JSON.stringify(isPinned !== undefined ? { is_pinned: isPinned } : {}),
+    });
+  },
+
+  /**
+   * Update conversation title or metadata.
+   */
+  async updateConversation(
+    conversationId: string,
+    payload: { title?: string; is_pinned?: boolean }
+  ): Promise<Conversation> {
+    return await fetchJson<Conversation>(`/conversations/${conversationId}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * Delete conversation permanently from MongoDB.
+   */
+  async deleteConversation(conversationId: string): Promise<{ status: string; conversation_id: string }> {
+    return await fetchJson<{ status: string; conversation_id: string }>(`/conversations/${conversationId}`, {
+      method: "DELETE",
+    });
   },
 };

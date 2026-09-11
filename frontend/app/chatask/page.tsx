@@ -16,16 +16,26 @@ import {
   ExternalLink,
   MessageSquare,
   Plus,
-  HelpCircle,
-  RotateCcw,
+  Pin,
+  PinOff,
+  Trash2,
+  PanelLeftClose,
+  PanelLeft,
   ArrowRight,
 } from "lucide-react";
-import { Topbar } from "@/components/Topbar";
 import { ragApi } from "@/services/ragApi";
 import { useAuth } from "@/context/AuthContext";
-import { CitationSource, ConflictDetails, MessageHistory, QueryResponse, RankedSnippet } from "@/types";
+import {
+  CitationSource,
+  ConflictDetails,
+  ConversationSummary,
+  Conversation,
+  ChatMessage as ApiChatMessage,
+  RankedSnippet,
+  QueryResponse,
+} from "@/types";
 
-interface ChatMessage {
+interface DisplayMessage {
   id: string;
   role: "user" | "assistant";
   content: string;
@@ -39,7 +49,15 @@ interface ChatMessage {
 
 export default function ChatAskPage() {
   const { user } = useAuth();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  // Conversation Sidebar State
+  const [conversations, setConversations] = useState<ConversationSummary[]>([]);
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [loadingConversations, setLoadingConversations] = useState(true);
+
+  // Chat State
+  const [messages, setMessages] = useState<DisplayMessage[]>([]);
   const [inputQuery, setInputQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +77,101 @@ export default function ChatAskPage() {
     scrollToBottom();
   }, [messages, loading]);
 
-  // Handle Form Submission
+  // Load conversations from MongoDB on mount
+  const loadConversations = async () => {
+    try {
+      setLoadingConversations(true);
+      const list = await ragApi.getConversations();
+      setConversations(list || []);
+    } catch (err) {
+      console.warn("Could not load conversations:", err);
+      setConversations([]);
+    } finally {
+      setLoadingConversations(false);
+    }
+  };
+
+  useEffect(() => {
+    loadConversations();
+  }, [user]);
+
+  // Select and load a specific conversation
+  const handleSelectConversation = async (convId: string) => {
+    if (activeConversationId === convId) return;
+    try {
+      setLoading(true);
+      setError(null);
+      setActiveConversationId(convId);
+      const conv = await ragApi.getConversation(convId);
+      if (conv && conv.messages) {
+        const mapped: DisplayMessage[] = conv.messages.map((m) => ({
+          id: m.id,
+          role: m.role as "user" | "assistant",
+          content: m.content,
+          timestamp: new Date(m.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          status: m.status,
+          sources: m.sources as CitationSource[],
+          hasConflict: m.has_conflict,
+          conflictDetails: m.conflict_details,
+        }));
+        setMessages(mapped);
+      } else {
+        setMessages([]);
+      }
+    } catch (err: any) {
+      console.error("Failed to load conversation:", err);
+      setError("Failed to load conversation from database.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Start a new blank conversation
+  const handleNewConversation = () => {
+    setActiveConversationId(null);
+    setMessages([]);
+    setError(null);
+    setInputQuery("");
+  };
+
+  // Toggle Pin on a conversation
+  const handleTogglePin = async (e: React.MouseEvent, convId: string, currentPinned: boolean) => {
+    e.stopPropagation();
+    try {
+      // Optimistic update
+      setConversations((prev) =>
+        prev
+          .map((c) => (c.id === convId ? { ...c, is_pinned: !currentPinned } : c))
+          .sort((a, b) => {
+            if (a.is_pinned !== b.is_pinned) return a.is_pinned ? -1 : 1;
+            return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+          })
+      );
+      await ragApi.togglePinConversation(convId, !currentPinned);
+      await loadConversations();
+    } catch (err) {
+      console.error("Failed to toggle pin:", err);
+      await loadConversations();
+    }
+  };
+
+  // Delete a conversation
+  const handleDeleteConversation = async (e: React.MouseEvent, convId: string) => {
+    e.stopPropagation();
+    if (!confirm("Are you sure you want to delete this consultation history?")) return;
+    try {
+      setConversations((prev) => prev.filter((c) => c.id !== convId));
+      if (activeConversationId === convId) {
+        handleNewConversation();
+      }
+      await ragApi.deleteConversation(convId);
+    } catch (err) {
+      console.error("Failed to delete conversation:", err);
+      await loadConversations();
+    }
+  };
+
+  // Handle Query Submission
   const handleSubmitQuery = async (queryText: string) => {
     const q = queryText.trim();
     if (!q || loading) return;
@@ -67,13 +179,7 @@ export default function ChatAskPage() {
     setError(null);
     const userTimestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    // Build rolling history for follow-up conversational RAG
-    const historyPayload: MessageHistory[] = messages.map((m) => ({
-      role: m.role,
-      content: m.content,
-    }));
-
-    const userMsg: ChatMessage = {
+    const userMsg: DisplayMessage = {
       id: `usr_${Date.now()}`,
       role: "user",
       content: q,
@@ -85,26 +191,39 @@ export default function ChatAskPage() {
     setLoading(true);
 
     try {
-      const response = await ragApi.askQuestion({
-        query: q,
-        history: historyPayload,
-        user_id: user?.user_id,
+      let activeId = activeConversationId;
+
+      // If no active conversation, create one first in MongoDB
+      if (!activeId) {
+        const created = await ragApi.createConversation({
+          title: q.length > 45 ? q.substring(0, 45).trim() + "..." : q,
+          initial_message: q,
+        });
+        activeId = created.id;
+        setActiveConversationId(created.id);
+      }
+
+      // Send message to MongoDB conversational RAG endpoint
+      const response = await ragApi.sendMessage(activeId, {
+        message: q,
       });
 
       const assistantTimestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-      const assistantMsg: ChatMessage = {
-        id: `ast_${Date.now()}`,
+      const assistantMsg: DisplayMessage = {
+        id: response.assistant_message?.id || `ast_${Date.now()}`,
         role: "assistant",
-        content: response.answer,
+        content: response.answer || response.assistant_message?.content || "",
         timestamp: assistantTimestamp,
         response: response,
-        status: response.status,
-        sources: response.sources || [],
-        hasConflict: response.has_conflict,
-        conflictDetails: response.conflict_details,
+        status: response.status || response.assistant_message?.status,
+        sources: (response.sources || response.assistant_message?.sources || []) as CitationSource[],
+        hasConflict: response.has_conflict || response.assistant_message?.has_conflict,
+        conflictDetails: response.conflict_details || response.assistant_message?.conflict_details,
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
+      // Refresh sidebar so title and timestamps update
+      loadConversations();
     } catch (err: any) {
       console.error("Query execution failed:", err);
       setError("FINEE could not connect to the knowledge service. Please ensure the backend is running and try again.");
@@ -125,11 +244,9 @@ export default function ChatAskPage() {
     setIsDrawerOpen(true);
   };
 
-  const handleNewConversation = () => {
-    setMessages([]);
-    setError(null);
-    setInputQuery("");
-  };
+  // Split conversations into Pinned and Recent
+  const pinnedConversations = conversations.filter((c) => c.is_pinned);
+  const recentConversations = conversations.filter((c) => !c.is_pinned);
 
   // Starter suggestion prompts
   const starterPrompts = [
@@ -142,8 +259,16 @@ export default function ChatAskPage() {
   return (
     <div className="flex flex-col h-screen bg-background text-gray-100 overflow-hidden">
       {/* Top Header */}
-      <header className="h-14 border-b border-surface-border bg-surface/90 backdrop-blur-md px-6 flex items-center justify-between shrink-0 z-20">
+      <header className="h-14 border-b border-surface-border bg-surface/90 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between shrink-0 z-20">
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-surface-raised border border-transparent hover:border-surface-border transition-colors cursor-pointer"
+            title={isSidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+          >
+            {isSidebarOpen ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeft className="w-4 h-4" />}
+          </button>
+
           <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
             <ShieldCheck className="w-4 h-4" />
           </div>
@@ -152,8 +277,8 @@ export default function ChatAskPage() {
               FINEE<span className="text-emerald-400">.ai</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             </h1>
-            <p className="text-[10px] text-gray-400 font-mono">
-              Compliance-Grounded Financial Advisory Intelligence
+            <p className="text-[10px] text-gray-400 font-mono hidden sm:block">
+              Compliance-Grounded Financial Advisory Intelligence · MongoDB Persistent
             </p>
           </div>
         </div>
@@ -171,6 +296,174 @@ export default function ChatAskPage() {
 
       {/* Main Conversational Workspace */}
       <div className="flex-1 flex overflow-hidden relative">
+        {/* Left Sidebar: Persistent Chat History */}
+        {isSidebarOpen && (
+          <aside className="w-72 sm:w-80 border-r border-surface-border bg-surface flex flex-col h-full shrink-0 z-10 transition-all duration-200">
+            {/* Sidebar Header & New Chat Button */}
+            <div className="p-3 border-b border-surface-border">
+              <button
+                onClick={handleNewConversation}
+                className="w-full px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>New Consultation</span>
+              </button>
+            </div>
+
+            {/* Conversation List */}
+            <div className="flex-1 overflow-y-auto p-2 space-y-4 text-xs font-sans">
+              {loadingConversations && (
+                <div className="p-4 text-center text-gray-500 font-mono text-[11px] flex items-center justify-center gap-2">
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-emerald-400" />
+                  <span>Loading chat history...</span>
+                </div>
+              )}
+
+              {!loadingConversations && conversations.length === 0 && (
+                <div className="p-6 text-center space-y-2">
+                  <MessageSquare className="w-8 h-8 text-gray-600 mx-auto" />
+                  <p className="text-xs text-gray-400 font-medium">No conversations yet</p>
+                  <p className="text-[11px] text-gray-500 font-mono">
+                    Start a new consultation to persist your queries and grounded answers in MongoDB.
+                  </p>
+                </div>
+              )}
+
+              {/* 1. Pinned Conversations Section */}
+              {pinnedConversations.length > 0 && (
+                <div className="space-y-1">
+                  <div className="px-2 py-1 text-[10px] font-bold font-mono uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                    <Pin className="w-3 h-3" />
+                    <span>Pinned Consultations ({pinnedConversations.length})</span>
+                  </div>
+
+                  <div className="space-y-1">
+                    {pinnedConversations.map((conv) => {
+                      const isActive = activeConversationId === conv.id;
+                      return (
+                        <div
+                          key={conv.id}
+                          onClick={() => handleSelectConversation(conv.id)}
+                          className={`group relative p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                            isActive
+                              ? "bg-emerald-950/40 border-emerald-500/50 text-white"
+                              : "bg-surface-raised/60 border-surface-border hover:border-emerald-500/30 hover:bg-surface-raised text-gray-300 hover:text-white"
+                          }`}
+                        >
+                          <div className="flex-1 min-w-0 pr-1">
+                            <div className="flex items-center gap-1.5">
+                              <Pin className="w-3 h-3 text-emerald-400 shrink-0" />
+                              <p className="text-xs font-medium truncate">{conv.title}</p>
+                            </div>
+                            <div className="flex items-center gap-2 mt-1 text-[10px] font-mono text-gray-500">
+                              <span>{conv.message_count} msgs</span>
+                              <span>•</span>
+                              <span>{new Date(conv.updated_at).toLocaleDateString([], { month: "short", day: "numeric" })}</span>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={(e) => handleTogglePin(e, conv.id, true)}
+                              title="Unpin conversation"
+                              className="p-1 rounded text-emerald-400 hover:text-emerald-300 hover:bg-surface transition-colors cursor-pointer"
+                            >
+                              <PinOff className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={(e) => handleDeleteConversation(e, conv.id)}
+                              title="Delete conversation"
+                              className="p-1 rounded text-gray-500 hover:text-red-400 hover:bg-surface transition-colors cursor-pointer"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* 2. Recent Conversations Section */}
+              {recentConversations.length > 0 && (
+                <div className="space-y-1">
+                  <div className="px-2 py-1 text-[10px] font-bold font-mono uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+                    <Clock className="w-3 h-3" />
+                    <span>Recent Consultations ({recentConversations.length})</span>
+                  </div>
+
+                  <div className="space-y-1">
+                    {recentConversations.map((conv) => {
+                      const isActive = activeConversationId === conv.id;
+                      return (
+                        <div
+                          key={conv.id}
+                          onClick={() => handleSelectConversation(conv.id)}
+                          className={`group relative p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                            isActive
+                              ? "bg-emerald-950/40 border-emerald-500/50 text-white"
+                              : "bg-surface-raised/40 border-transparent hover:border-surface-border hover:bg-surface-raised text-gray-300 hover:text-white"
+                          }`}
+                        >
+                          <div className="flex-1 min-w-0 pr-1">
+                            <div className="flex items-center gap-1.5">
+                              <MessageSquare className="w-3 h-3 text-gray-400 shrink-0" />
+                              <p className="text-xs font-medium truncate">{conv.title}</p>
+                            </div>
+                            <div className="flex items-center gap-2 mt-1 text-[10px] font-mono text-gray-500">
+                              <span>{conv.message_count} msgs</span>
+                              <span>•</span>
+                              <span>{new Date(conv.updated_at).toLocaleDateString([], { month: "short", day: "numeric" })}</span>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={(e) => handleTogglePin(e, conv.id, false)}
+                              title="Pin conversation"
+                              className="p-1 rounded text-gray-400 hover:text-emerald-400 hover:bg-surface transition-colors cursor-pointer"
+                            >
+                              <Pin className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={(e) => handleDeleteConversation(e, conv.id)}
+                              title="Delete conversation"
+                              className="p-1 rounded text-gray-500 hover:text-red-400 hover:bg-surface transition-colors cursor-pointer"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* User Session Footer */}
+            <div className="p-3 border-t border-surface-border bg-surface-raised/50 flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 font-bold text-xs flex items-center justify-center shrink-0">
+                {user?.name
+                  ? user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .substring(0, 2)
+                      .toUpperCase()
+                  : "U"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-white truncate">{user?.name || "Advisor Session"}</p>
+                <p className="text-[10px] font-mono text-gray-400 truncate">{user?.email || "advisor@apexwealth.com"}</p>
+              </div>
+            </div>
+          </aside>
+        )}
+
         {/* Chat Stream Column */}
         <div className="flex-1 flex flex-col justify-between overflow-hidden relative">
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6 max-w-4xl w-full mx-auto">
@@ -185,7 +478,7 @@ export default function ChatAskPage() {
                     Welcome to FINEE<span className="text-emerald-400">.ai</span>
                   </h2>
                   <p className="text-xs text-gray-400 font-sans leading-relaxed">
-                    Ask any financial advisory or compliance question. Responses are strictly grounded in approved institutional guidelines, regulatory rules, and fee schedules.
+                    Ask any financial advisory or compliance question. Responses are strictly grounded in approved institutional guidelines, regulatory rules, and fee schedules with persistent MongoDB chat history.
                   </p>
                 </div>
 
@@ -416,7 +709,7 @@ export default function ChatAskPage() {
               </button>
             </div>
             <p className="text-center text-[10px] text-gray-500 font-mono mt-2">
-              All responses are generated exclusively from verified institutional and regulatory sources.
+              All responses are generated exclusively from verified institutional and regulatory sources · Persisted in MongoDB
             </p>
           </div>
         </div>

@@ -119,6 +119,16 @@ class Settings(BaseSettings):
         description="Connection URL for PostgreSQL with pgvector extension",
     )
 
+    # MongoDB Chat Persistence Settings
+    MONGODB_URI: str = Field(
+        default="mongodb://localhost:27017",
+        description="MongoDB connection URI for chat history and conversation persistence",
+    )
+    MONGODB_DATABASE: str = Field(
+        default="finee_ai",
+        description="MongoDB database name for persistent collections",
+    )
+
 
 
     # LLM Generation & Output Control Settings

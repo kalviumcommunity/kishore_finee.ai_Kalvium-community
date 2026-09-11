@@ -33,6 +33,7 @@ class QueryRequest(BaseModel):
     use_reranker: Optional[bool] = Field(default=None, description="Enable or bypass re-ranking")
     history: Optional[List[Dict[str, str]]] = Field(default=None, description="Prior conversation history turns")
     session_id: Optional[str] = Field(default=None, description="Session identifier")
+    conversation_id: Optional[str] = Field(default=None, description="Persistent MongoDB conversation ID")
     user_id: Optional[str] = Field(default="usr_advisor_default", description="User ID for activity monitoring")
     client_context: Optional[Dict[str, Any]] = Field(default=None, description="Client or entity context (e.g. Acme Holdings, Tier 1)")
 
@@ -46,6 +47,7 @@ class QueryResponse(BaseModel):
     refusal_reason: Optional[str] = None
     metrics: Dict[str, Any]
     question: str
+    conversation_id: Optional[str] = None
     rewritten_query: Optional[str] = None
     pipeline_metrics: Optional[Dict[str, Any]] = None
     usage: Optional[Dict[str, Any]] = None
@@ -258,6 +260,7 @@ async def query_knowledge_base(payload: QueryRequest) -> Dict[str, Any]:
             "refusal_reason": rag_result.get("refusal_reason"),
             "metrics": rag_result.get("metrics", {}),
             "question": query_str,
+            "conversation_id": payload.conversation_id,
             "rewritten_query": rewritten_query,
             "pipeline_metrics": pipeline_metrics,
             "usage": usage,

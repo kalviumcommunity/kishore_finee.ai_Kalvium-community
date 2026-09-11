@@ -269,6 +269,46 @@ export interface KnowledgeBaseData {
   total_chunks_count: number;
 }
 
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant" | "system";
+  content: string;
+  timestamp: string;
+  status?: "answered" | "refused_weak_context" | "refused_empty_context" | "conflicting_evidence" | "error" | "answered" | string;
+  refusal_reason?: string;
+  sources?: CitationSource[];
+  ranked_snippets?: RankedSnippet[];
+  audit_trail?: AuditTrailStep[];
+  usage?: UsageMetrics;
+  pipeline_metrics?: PipelineMetrics;
+  has_conflict?: boolean;
+  conflict_details?: ConflictDetails;
+  rewritten_query?: string;
+}
+
+export interface Conversation {
+  id: string;
+  user_id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+  is_pinned: boolean;
+  messages: ChatMessage[];
+  client_context?: Record<string, any>;
+  metadata?: Record<string, any>;
+}
+
+export interface ConversationSummary {
+  id: string;
+  user_id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+  is_pinned: boolean;
+  message_count: number;
+  last_message_preview?: string;
+}
+
 export interface TestRetrievalResult {
   query: string;
   status: string;
@@ -288,3 +328,5 @@ export interface TestRetrievalResult {
   }[];
   refusal_reason?: string;
 }
+
+
