@@ -294,7 +294,7 @@ class TestGuardedAnswerPipeline:
     def test_config_settings_defaults(self):
         """Verify Settings contains the new retrieval guardrails configuration."""
         cfg = Settings()
-        assert cfg.MIN_TOP_SCORE == 0.72
+        assert cfg.MIN_TOP_SCORE == 0.70
         assert cfg.MIN_SUPPORTING_CHUNKS == 1
         assert cfg.RETRIEVAL_TOP_K == 4
         assert "approved knowledge base" in cfg.SAFE_REFUSAL_MESSAGE

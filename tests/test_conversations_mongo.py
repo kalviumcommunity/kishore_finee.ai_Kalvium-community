@@ -193,6 +193,15 @@ import asyncio
 
 def test_execute_chat_turn_persists_rag():
     """Verify full chat turn records user question and assistant grounded answer with sources."""
+    from src.retrieval.chroma_store import get_chroma_store
+    chroma = get_chroma_store()
+    chroma.add_chunks([
+        {
+            "text": "SEBI guidelines require mandatory risk disclosures on all promotional materials and advertisements.",
+            "metadata": {"source": "sebi_guidelines.pdf", "chunk_index": 1, "section": "Advertising"},
+        }
+    ])
+
     service = get_conversation_service()
     user_id = "usr_turn_tester"
 
@@ -283,6 +292,15 @@ def test_api_get_conversation_by_id(client: TestClient, advisor_token: str):
 
 def test_api_send_message_in_conversation(client: TestClient, advisor_token: str):
     """Verify POST /conversations/{id}/messages executes RAG and returns assistant response."""
+    from src.retrieval.chroma_store import get_chroma_store
+    chroma = get_chroma_store()
+    chroma.add_chunks([
+        {
+            "text": "Under AIF regulations, sponsor commitment must remain at minimum 2.5% of corpus or 5 crore rupees.",
+            "metadata": {"source": "aif_regulations.pdf", "chunk_index": 1, "section": "Commitment"},
+        }
+    ])
+
     headers = {"Authorization": f"Bearer {advisor_token}"}
 
     create_res = client.post("/conversations", json={}, headers=headers)

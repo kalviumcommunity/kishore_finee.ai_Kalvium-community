@@ -277,50 +277,52 @@ class ConversationService:
         top_score = rag_result.get("metrics", {}).get("top_score", 0.0)
         status_code = rag_result.get("status", "answered")
 
-        # Format sources with full metadata for citations
+        # Format sources with full metadata for citations (only when answered)
         formatted_sources: List[ChatMessageSource] = []
-        for idx, src in enumerate(raw_sources, start=1):
-            chunk_text = src.get("text", "")
-            meta = src.get("metadata", {})
-            score = src.get("score") or meta.get("score") or top_score
-            formatted_sources.append(
-                ChatMessageSource(
-                    marker=src.get("marker", f"[{idx}]"),
-                    source=src.get("source") or meta.get("source") or "Approved Policy Document",
-                    document_id=meta.get("document_id") or meta.get("source", "doc_policy"),
-                    section=meta.get("section", f"Section {idx}.0"),
-                    page=meta.get("page", 1),
-                    approval_status=meta.get("approval_status", "approved"),
-                    effective_date=meta.get("effective_date", "2026-01-01"),
-                    version=meta.get("document_version", "2.4"),
-                    text=chunk_text,
-                    relevance_score=round(float(score), 4) if score else 0.85,
-                    is_direct_evidence=idx == 1,
+        if status_code == "answered":
+            for idx, src in enumerate(raw_sources, start=1):
+                chunk_text = src.get("text", "")
+                meta = src.get("metadata", {})
+                score = src.get("score") or meta.get("score") or top_score
+                formatted_sources.append(
+                    ChatMessageSource(
+                        marker=src.get("marker", f"[{idx}]"),
+                        source=src.get("source") or meta.get("source") or "Approved Policy Document",
+                        document_id=meta.get("document_id") or meta.get("source", "doc_policy"),
+                        section=meta.get("section", f"Section {idx}.0"),
+                        page=meta.get("page", 1),
+                        approval_status=meta.get("approval_status", "approved"),
+                        effective_date=meta.get("effective_date", "2026-01-01"),
+                        version=meta.get("document_version", "2.4"),
+                        text=chunk_text,
+                        relevance_score=round(float(score), 4) if score else 0.85,
+                        is_direct_evidence=idx == 1,
+                    )
                 )
-            )
 
-        # Format ranked snippets for inspector panel
+        # Format ranked snippets for inspector panel (only when answered)
         ranked_snippets: List[RankedSnippet] = []
-        for idx, chunk in enumerate(selected_chunks if selected_chunks else raw_sources, start=1):
-            c_text = chunk.get("text", "") if isinstance(chunk, dict) else getattr(chunk, "text", "")
-            c_meta = chunk.get("metadata", {}) if isinstance(chunk, dict) else getattr(chunk, "metadata", {})
-            if hasattr(c_meta, "model_dump"):
-                c_meta = c_meta.model_dump()
-            c_score = chunk.get("score") or c_meta.get("score") or (top_score if idx == 1 else top_score - (idx * 0.04))
+        if status_code == "answered":
+            for idx, chunk in enumerate(selected_chunks if selected_chunks else raw_sources, start=1):
+                c_text = chunk.get("text", "") if isinstance(chunk, dict) else getattr(chunk, "text", "")
+                c_meta = chunk.get("metadata", {}) if isinstance(chunk, dict) else getattr(chunk, "metadata", {})
+                if hasattr(c_meta, "model_dump"):
+                    c_meta = c_meta.model_dump()
+                c_score = chunk.get("score") or c_meta.get("score") or (top_score if idx == 1 else top_score - (idx * 0.04))
 
-            ranked_snippets.append(
-                RankedSnippet(
-                    rank=idx,
-                    type="Direct Evidence" if idx == 1 else "Supporting Context",
-                    source=c_meta.get("source", f"Policy Document {idx}"),
-                    section=c_meta.get("section", "Standard Procedures"),
-                    page=c_meta.get("page", 1),
-                    approval_status=c_meta.get("approval_status", "approved"),
-                    score=round(float(c_score), 4) if c_score else 0.82,
-                    text=c_text,
-                    marker=f"[{idx}]",
+                ranked_snippets.append(
+                    RankedSnippet(
+                        rank=idx,
+                        type="Direct Evidence" if idx == 1 else "Supporting Context",
+                        source=c_meta.get("source", f"Policy Document {idx}"),
+                        section=c_meta.get("section", "Standard Procedures"),
+                        page=c_meta.get("page", 1),
+                        approval_status=c_meta.get("approval_status", "approved"),
+                        score=round(float(c_score), 4) if c_score else 0.82,
+                        text=c_text,
+                        marker=f"[{idx}]",
+                    )
                 )
-            )
 
         # Check for conflict
         raw_sources_dicts = [s.model_dump() for s in formatted_sources]
@@ -337,8 +339,8 @@ class ConversationService:
             "approved_sources_filtered": real_doc_count,
             "candidates_retrieved": len(ranked_snippets),
             "chunks_synthesized": len(formatted_sources),
-            "top_score": top_score,
-            "supporting_chunks_count": rag_result.get("metrics", {}).get("supporting_chunks_count", 0),
+            "top_score": top_score if status_code == "answered" else 0.0,
+            "supporting_chunks_count": rag_result.get("metrics", {}).get("supporting_chunks_count", 0) if status_code == "answered" else 0,
             "guardrail_status": "PASSED" if status_code == "answered" else "REFUSED",
             "reranker_applied": settings.RERANK_ENABLED,
         }
@@ -358,12 +360,21 @@ class ConversationService:
         ]
         if rewritten_query and rewritten_query != question:
             audit_trail.append({"step": "Follow-up Query Rewritten", "timestamp": f"{round(latency_ms * 0.2, 1)}ms", "detail": f"'{rewritten_query}'"})
-        audit_trail.extend([
-            {"step": "Vector Retrieval (Cosine HNSW)", "timestamp": f"{round(latency_ms * 0.4, 1)}ms", "detail": f"Retrieved {len(ranked_snippets)} candidates"},
-            {"step": "Re-ranking Engine", "timestamp": f"{round(latency_ms * 0.65, 1)}ms", "detail": f"Top candidate score: {top_score:.3f}"},
-            {"step": "Guardrail Check", "timestamp": f"{round(latency_ms * 0.8, 1)}ms", "detail": f"Status: {status_code}"},
-            {"step": "Grounded Synthesis", "timestamp": f"{round(latency_ms, 1)}ms", "detail": f"Synthesized answer with {len(formatted_sources)} sources"},
-        ])
+        
+        if status_code == "answered":
+            audit_trail.extend([
+                {"step": "Vector Retrieval (Cosine HNSW)", "timestamp": f"{round(latency_ms * 0.4, 1)}ms", "detail": f"Retrieved {len(ranked_snippets)} candidate chunks"},
+                {"step": "Re-ranking Engine", "timestamp": f"{round(latency_ms * 0.65, 1)}ms", "detail": f"Top candidate score: {top_score:.3f}"},
+                {"step": "Guardrail Check", "timestamp": f"{round(latency_ms * 0.8, 1)}ms", "detail": f"Status: PASSED (Score: {top_score:.3f} >= {settings.MIN_TOP_SCORE})"},
+                {"step": "Grounded Synthesis", "timestamp": f"{round(latency_ms, 1)}ms", "detail": f"Synthesized answer with {len(formatted_sources)} approved sources"},
+            ])
+        else:
+            audit_trail.extend([
+                {"step": "Vector Retrieval (Cosine HNSW)", "timestamp": f"{round(latency_ms * 0.4, 1)}ms", "detail": "Retrieved candidate chunks evaluated for relevance"},
+                {"step": "Re-ranking & Relevance Filter", "timestamp": f"{round(latency_ms * 0.65, 1)}ms", "detail": "Relevance threshold filter evaluated candidate evidence"},
+                {"step": "Guardrail Check", "timestamp": f"{round(latency_ms * 0.8, 1)}ms", "detail": f"Status: REFUSED ({rag_result.get('refusal_reason') or 'Insufficient evidence'})"},
+                {"step": "Grounded Synthesis", "timestamp": f"{round(latency_ms, 1)}ms", "detail": "Refused prior to LLM synthesis (0 sources used)"},
+            ])
 
         # 3. Assistant Message
         assistant_msg = ChatMessage(

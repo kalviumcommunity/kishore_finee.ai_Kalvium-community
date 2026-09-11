@@ -13,6 +13,7 @@ from .context_injection import (
     count_tokens,
     format_chunk,
     format_prompt_overview,
+    validate_and_sanitize_citations,
 )
 from .conversational_rag import (
     ConversationSession,

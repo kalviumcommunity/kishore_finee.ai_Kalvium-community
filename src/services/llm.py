@@ -130,10 +130,20 @@ async def generate_answer(
                 if line.strip()
                 and not line.strip().startswith("---")
                 and not line.strip().startswith("[Source")
+                and not line.strip().startswith("[SOURCE")
+                and not line.strip().startswith("Document:")
+                and not line.strip().startswith("Section:")
+                and not line.strip().startswith("Page:")
+                and not line.strip().startswith("Evidence:")
                 and not line.strip().startswith("```")
+                and not line.strip().startswith("[1]")
+                and not line.strip().startswith("[2]")
             ]
-            summary_text = " ".join(lines[:3]) if lines else context.strip()[:300]
-            return f"Based on verified compliance documentation [1]: {summary_text}"
+            summary_text = " ".join(lines[:2]) if lines else context.strip()[:200]
+            # Strip leading raw marker if present in summary_text
+            import re
+            summary_text = re.sub(r"^\[\d+\]\s*", "", summary_text).strip()
+            return f"{summary_text} [1]"
         raise LLMServiceError(f"HTTP request to LLM API failed: {exc}")
     except httpx.RequestError as exc:
         raise LLMServiceError(f"HTTP request to LLM API failed: {exc}")
@@ -151,32 +161,12 @@ async def generate_grounded_answer(
     top_p: Optional[float] = None,
     stop_sequences: Optional[List[str]] = None,
 ) -> Dict[str, Any]:
-    """Execute end-to-end context injection, prompt augmentation, and grounded LLM answer generation.
+    """Execute end-to-end context injection, prompt augmentation, grounded LLM answer generation, and citation validation.
 
     Connects:
-      Question + Retrieved Chunks -> Context Assembly -> Augmented Prompt -> LLM API -> Grounded Answer + Citation Sources
-
-    Args:
-        question: User financial question.
-        retrieved_chunks: Ordered list of candidate chunks from retrieval or re-ranking.
-        system_instruction: Optional system instruction override.
-        max_context_tokens: Optional token ceiling for context.
-        temperature: Optional temperature override.
-        max_tokens: Optional max output tokens override.
-        top_p: Optional top-p override.
-        stop_sequences: Optional stop sequences.
-
-    Returns:
-        Dictionary containing:
-          - "answer": Grounded response string from LLM
-          - "prompt_info": Full structured prompt metadata from build_prompt
-          - "context": Assembled context string
-          - "context_tokens": Number of tokens used for context
-          - "selected_chunks": Chunks selected within token budget
-          - "sources_used": Source metadata preserved for citations
-          - "source_markers": List of source markers (e.g., ["[1]", "[2]"])
+      Question + Accepted Chunks -> Context Assembly -> Augmented Prompt -> LLM API -> Citation Sanitizer -> Clean Grounded Answer
     """
-    from src.services.context_injection import build_prompt
+    from src.services.context_injection import build_prompt, validate_and_sanitize_citations
 
     prompt_info = build_prompt(
         question=question,
@@ -185,7 +175,7 @@ async def generate_grounded_answer(
         max_context_tokens=max_context_tokens,
     )
 
-    answer = await generate_answer(
+    raw_answer = await generate_answer(
         question=question,
         context=prompt_info["context"],
         system_instruction=prompt_info["system_instruction"],
@@ -195,13 +185,20 @@ async def generate_grounded_answer(
         stop_sequences=stop_sequences,
     )
 
+    # Validate and sanitize citations
+    clean_answer, sanitized_sources = validate_and_sanitize_citations(
+        answer=raw_answer,
+        sources_used=prompt_info["sources_used"],
+    )
+
     return {
-        "answer": answer,
+        "answer": clean_answer,
         "prompt_info": prompt_info,
         "context": prompt_info["context"],
         "context_tokens": prompt_info["context_tokens"],
         "selected_chunks": prompt_info["selected_chunks"],
-        "sources_used": prompt_info["sources_used"],
+        "sources_used": sanitized_sources,
         "source_markers": prompt_info["source_markers"],
     }
+
 

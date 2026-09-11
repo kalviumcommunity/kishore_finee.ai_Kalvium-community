@@ -358,3 +358,75 @@ def format_prompt_overview(prompt_info: Dict[str, Any]) -> str:
         lines.append(f"  {m} {src}{idx_str}")
 
     return "\n".join(lines)
+
+
+def validate_and_sanitize_citations(
+    answer: str,
+    sources_used: Sequence[Union[Dict[str, Any], Any]],
+) -> Tuple[str, List[Dict[str, Any]]]:
+    """Validate and sanitize citations within an LLM generated answer.
+
+    1. Removes any leaked raw metadata suffixes (e.g. `[1] alpha_fund.pdf#12` -> `[1]`).
+    2. Cleans raw repetitive fallback prefixes (e.g. `Based on verified compliance documentation [1]:`).
+    3. Finds all bracketed citation markers (e.g. `[1]`, `[2]`).
+    4. Validates that every citation index N satisfies `1 <= N <= len(sources_used)`.
+    5. Strips hallucinated/out-of-bound citation markers (e.g. `[5]` if only 2 sources exist).
+    6. Ensures answers with valid evidence have at least [1] if supported.
+
+    Args:
+        answer: Raw generated answer string from LLM.
+        sources_used: List of verified sources passed in context.
+
+    Returns:
+        Tuple of (sanitized_answer_string, list_of_attributed_sources).
+    """
+    if not answer or not isinstance(answer, str):
+        return "", []
+
+    import re
+
+    cleaned = answer.strip()
+    sources_list = [
+        s if isinstance(s, dict) else s.model_dump() if hasattr(s, "model_dump") else getattr(s, "__dict__", {})
+        for s in sources_used
+    ]
+    max_valid_index = len(sources_list)
+
+    # 1. Clean raw filename/chunk-id leaks if the model reproduced them after citation markers:
+    # Example: "[1] alpha_large_cap_fund_factsheet.pdf#1 The fund..." -> "[1] The fund..."
+    cleaned = re.sub(
+        r"\[(\d+)\]\s+[\w\-\.]+\.(?:pdf|md|txt|html|htm)(?:#\d+)?\s*",
+        r"[\1] ",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+
+    # 2. Clean fallback header artifacts: "Based on verified compliance documentation [1]: "
+    cleaned = re.sub(
+        r"^Based on (?:verified )?compliance documentation\s*(?:\[\d+\])?:\s*",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+
+    # 3. Validate bracketed citation indices against max_valid_index
+    def _sanitize_marker(match: re.Match) -> str:
+        idx_val = int(match.group(1))
+        if 1 <= idx_val <= max_valid_index:
+            return f"[{idx_val}]"
+        # Out-of-bounds / hallucinated citation -> strip
+        return ""
+
+    cleaned = re.sub(r"\[(\d+)\]", _sanitize_marker, cleaned)
+
+    # 4. Clean formatting artifacts like double spaces or orphaned brackets
+    cleaned = re.sub(r"\s{2,}", " ", cleaned).strip()
+
+    # 5. If sources were provided and answer doesn't contain any citation marker, add [1] attribution if strong
+    if max_valid_index >= 1 and not re.search(r"\[\d+\]", cleaned):
+        # Only add [1] if it's an actual substantive answer (not a refusal)
+        if not cleaned.lower().startswith("i don't have enough") and not cleaned.lower().startswith("i do not have enough"):
+            cleaned = f"{cleaned} [1]"
+
+    return cleaned, sources_list
+

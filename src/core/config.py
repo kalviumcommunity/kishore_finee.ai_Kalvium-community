@@ -189,18 +189,30 @@ class Settings(BaseSettings):
         description="Reserved token budget for system instructions and user question",
     )
 
-    # Retrieval Guardrails & Safe Refusal Settings
+    # Retrieval Guardrails, Relevance Filtering & Safe Refusal Settings
     MIN_TOP_SCORE: float = Field(
-        default=0.72,
+        default=0.70,
         description="Minimum relevance/similarity score required for top retrieved chunk",
+    )
+    MIN_RERANK_SCORE: float = Field(
+        default=5.0,
+        description="Minimum reranker score on a 0-10 scale required for candidate acceptance",
+    )
+    RERANK_SCORE_DROPOFF_THRESHOLD: float = Field(
+        default=3.5,
+        description="Maximum drop in reranker score from top candidate before subsequent candidates are filtered",
+    )
+    SCORE_DROPOFF_RATIO: float = Field(
+        default=0.65,
+        description="Minimum ratio of candidate score relative to top score to avoid distractor inclusion",
     )
     MIN_SUPPORTING_CHUNKS: int = Field(
         default=1,
-        description="Minimum number of retrieved chunks meeting the MIN_TOP_SCORE threshold",
+        description="Minimum number of retrieved chunks meeting relevance thresholds",
     )
     RETRIEVAL_TOP_K: int = Field(
         default=4,
-        description="Default number of chunks retrieved for guardrail evaluation",
+        description="Default number of chunks retrieved for candidate evaluation",
     )
     SAFE_REFUSAL_MESSAGE: str = Field(
         default="I don't have enough reliable evidence in the approved knowledge base to answer that question.",
