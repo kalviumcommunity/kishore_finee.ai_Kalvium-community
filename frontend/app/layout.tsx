@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Sidebar } from "@/components/Sidebar";
+import { AuthProvider } from "@/context/AuthContext";
+import { AppShell } from "@/components/AppShell";
 
 export const metadata: Metadata = {
   title: "FINEE.ai — Compliance-Grounded Knowledge Control",
@@ -14,11 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-background text-gray-100 min-h-screen flex antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
-        <Sidebar />
-        <div className="flex-1 ml-64 min-w-0 flex flex-col min-h-screen">
-          {children}
-        </div>
+      <body className="bg-background text-gray-100 min-h-screen antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+        <AuthProvider>
+          <AppShell>{children}</AppShell>
+        </AuthProvider>
       </body>
     </html>
   );

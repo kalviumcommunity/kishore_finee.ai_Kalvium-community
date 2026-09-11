@@ -23,8 +23,8 @@ class QueryLogEntry(BaseModel):
     id: str = Field(default_factory=lambda: f"qry_{uuid.uuid4().hex[:10]}")
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     session_id: Optional[str] = None
-    user_id: str = "usr_marcus_vance"
-    user_name: str = "Marcus Vance (Senior Advisor)"
+    user_id: str = "usr_advisor_default"
+    user_name: str = "Financial Advisor"
     question: str
     rewritten_query: Optional[str] = None
     answer: str
@@ -90,111 +90,33 @@ class ActivityTracker:
         self._seed_initial_data()
 
     def _seed_initial_data(self) -> None:
-        """Seed realistic enterprise initial users and historical audit events."""
-        seed_users = [
-            UserProfile(
-                user_id="usr_marcus_vance",
-                name="Marcus Vance",
-                role="Senior Wealth Advisor",
-                department="Private Wealth Advisory",
-                email="m.vance@finee.ai",
-                queries_count=18,
-                prompt_tokens=24800,
-                completion_tokens=6200,
-                total_tokens=31000,
-                cost_estimate_usd=0.0074,
-                refusal_count=2,
-                conflict_count=1,
-                status="active",
-            ),
-            UserProfile(
-                user_id="usr_elena_rostova",
-                name="Elena Rostova",
-                role="Lead Compliance Officer",
-                department="Regulatory & Compliance",
-                email="e.rostova@finee.ai",
-                queries_count=32,
-                prompt_tokens=49100,
-                completion_tokens=11400,
-                total_tokens=60500,
-                cost_estimate_usd=0.0142,
-                refusal_count=4,
-                conflict_count=3,
-                status="active",
-            ),
-            UserProfile(
-                user_id="usr_devin_chen",
-                name="Devin Chen",
-                role="Portfolio Risk Analyst",
-                department="Asset Management",
-                email="d.chen@finee.ai",
-                queries_count=14,
-                prompt_tokens=19500,
-                completion_tokens=4800,
-                total_tokens=24300,
-                cost_estimate_usd=0.0058,
-                refusal_count=1,
-                conflict_count=0,
-                status="active",
-            ),
-            UserProfile(
-                user_id="usr_sarah_jenkins",
-                name="Sarah Jenkins",
-                role="Investment Associate",
-                department="Global Equities",
-                email="s.jenkins@finee.ai",
-                queries_count=9,
-                prompt_tokens=12400,
-                completion_tokens=3100,
-                total_tokens=15500,
-                cost_estimate_usd=0.0037,
-                refusal_count=1,
-                conflict_count=0,
-                status="idle",
-            ),
-        ]
-        for u in seed_users:
-            self._users[u.user_id] = u
+        """Seed initial real administrator profile and system startup audit event."""
+        admin_user = UserProfile(
+            user_id="usr_admin_vaishnavi",
+            name="Vaishnavi Pallempati",
+            role="ADMIN",
+            department="Executive & Regulatory Compliance",
+            email="pallempativaishnavi@gmail.com",
+            queries_count=0,
+            prompt_tokens=0,
+            completion_tokens=0,
+            total_tokens=0,
+            cost_estimate_usd=0.0,
+            refusal_count=0,
+            conflict_count=0,
+            status="active",
+        )
+        self._users[admin_user.user_id] = admin_user
 
-        # Seed initial audit trail
-        initial_events = [
-            AuditEvent(
-                actor="System Ingestion Engine",
-                event_type="CORPUS_INDEXED",
-                description="Initial compliance knowledge corpus indexed: 42 policy documents, 186 vector chunks.",
-                status="SUCCESS",
-                metadata={"documents": 42, "chunks": 186, "model": "text-embedding-3-small"},
-            ),
-            AuditEvent(
-                actor="Elena Rostova (Compliance)",
-                event_type="DOCUMENT_APPROVED",
-                description="Approved regulatory policy: AML & KYC Guidance 2026 (v2.4).",
-                status="SUCCESS",
-                metadata={"document": "aml-policy.md", "version": "2.4"},
-            ),
-            AuditEvent(
-                actor="Marcus Vance (Advisor)",
-                event_type="QUERY_EXECUTED",
-                description="Verified suitability requirements for high-net-worth discretionary portfolio.",
-                status="SUCCESS",
-                metadata={"client": "Acme Holdings", "relevance_score": 0.942},
-            ),
-            AuditEvent(
-                actor="Retrieval Guardrail",
-                event_type="GUARDRAIL_TRIGGERED",
-                description="Safe refusal triggered for out-of-domain query ('crypto derivatives tax loophole'). Top score 0.412 below threshold 0.720.",
-                status="WARNING",
-                metadata={"query": "crypto derivatives tax loophole", "top_score": 0.412, "action": "SAFE_REFUSAL"},
-            ),
-            AuditEvent(
-                actor="Compliance Engine",
-                event_type="CONFLICT_DETECTED",
-                description="Identified conflicting advisory fee caps between Fee Schedule 2024 (1.5%) and Global Wealth Standard 2026 (1.25%).",
-                status="WARNING",
-                metadata={"source_a": "fee-schedule-2024.pdf", "source_b": "wealth-standard-2026.md"},
-            ),
-        ]
-        self._audit_events.extend(initial_events)
+        # Initial system event
+        init_event = AuditEvent(
+            actor="System",
+            event_type="SYSTEM_INITIALIZED",
+            description="FINEE.ai Compliance Knowledge Control Platform initialized and ready.",
+            status="SUCCESS",
+            metadata={"environment": "production_ready"},
+        )
+        self._audit_events.append(init_event)
 
     def calculate_cost(self, prompt_tokens: int, completion_tokens: int) -> float:
         """Calculate estimated cost in USD based on token counts."""
@@ -215,7 +137,7 @@ class ActivityTracker:
         latency_ms: float = 0.0,
         prompt_tokens: int = 0,
         completion_tokens: int = 0,
-        user_id: str = "usr_marcus_vance",
+        user_id: str = "usr_advisor_default",
         session_id: Optional[str] = None,
         rewritten_query: Optional[str] = None,
         refusal_reason: Optional[str] = None,
@@ -236,7 +158,7 @@ class ActivityTracker:
 
             # Get user info
             user = self._users.get(user_id)
-            user_name = user.name if user else "Marcus Vance"
+            user_name = user.name if user else "Financial Advisor"
 
             entry = QueryLogEntry(
                 session_id=session_id,
@@ -440,14 +362,14 @@ class ActivityTracker:
             total_q = len(self._queries)
             refusals = sum(1 for q in self._queries if "refused" in q.status)
             conflicts = sum(1 for q in self._queries if q.has_conflict or q.status == "conflicting_evidence")
-            avg_lat = sum(q.latency_ms for q in self._queries) / max(1, total_q) if total_q > 0 else 320.0
+            avg_lat = round(sum(q.latency_ms for q in self._queries) / total_q, 1) if total_q > 0 else 0.0
 
             return {
-                "total_queries": max(total_q, 73),
+                "total_queries": total_q,
                 "refusal_count": refusals,
-                "refusal_rate_pct": round((refusals / max(1, total_q)) * 100, 1) if total_q > 0 else 4.2,
-                "conflicts_detected": max(conflicts, 2),
-                "avg_latency_ms": round(avg_lat, 1),
+                "refusal_rate_pct": round((refusals / total_q) * 100, 1) if total_q > 0 else 0.0,
+                "conflicts_detected": conflicts,
+                "avg_latency_ms": avg_lat,
                 "active_advisors_count": len([u for u in self._users.values() if u.status == "active"]),
                 "system_status": "OPERATIONAL",
                 "guardrail_status": "ENFORCING",

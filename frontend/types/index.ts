@@ -2,6 +2,49 @@
  * TypeScript Interfaces for FINEE.ai Enterprise Frontend.
  */
 
+export type UserRole = "USER" | "ADMIN";
+
+export interface UserProfile {
+  user_id: string;
+  name: string;
+  role: UserRole | string;
+  department: string;
+  email: string;
+  firm?: string;
+  avatar_initials?: string;
+  queries_count: number;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  cost_estimate_usd: number;
+  last_active: string;
+  refusal_count: number;
+  conflict_count: number;
+  status: string;
+  isAdmin?: boolean;
+}
+
+export interface AuthTokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  user: UserProfile;
+}
+
+export interface AdminLoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface GoogleAuthPayload {
+  token?: string;
+  email: string;
+  name?: string;
+  picture?: string;
+  firm?: string;
+  department?: string;
+}
+
 export interface CitationSource {
   marker: string;
   source: string;
@@ -64,75 +107,52 @@ export interface UsageMetrics {
   model: string;
 }
 
-export interface AuditTrailItem {
+export interface AuditTrailStep {
   step: string;
   timestamp: string;
   detail: string;
 }
 
-export interface MessageHistory {
-  role: "user" | "assistant";
-  content: string;
+export interface QueryResponse {
+  answer: string;
+  sources: CitationSource[];
+  status: "answered" | "refused_weak_context" | "refused_empty_context" | "conflicting_evidence" | "error";
+  metrics: {
+    top_score: number;
+    supporting_chunks_count: number;
+    retrieved_chunks_count: number;
+    llm_called: boolean;
+  };
+  question: string;
+  rewritten_query?: string;
+  refusal_reason?: string;
+  pipeline_metrics: PipelineMetrics;
+  usage: UsageMetrics;
+  has_conflict: boolean;
+  conflict_details?: ConflictDetails;
+  ranked_snippets: RankedSnippet[];
+  audit_trail: AuditTrailStep[];
 }
 
 export interface QueryRequest {
   query: string;
-  k?: number;
-  min_top_score?: number;
-  min_supporting_chunks?: number;
-  use_reranker?: boolean;
-  history?: MessageHistory[];
-  session_id?: string;
+  history?: { role: "user" | "assistant"; content: string }[];
   user_id?: string;
   client_context?: {
     entity_name?: string;
     entity_id?: string;
     risk_tier?: string;
+    account_type?: string;
+    jurisdiction?: string;
     [key: string]: any;
   };
+  filter_metadata?: Record<string, any>;
+  top_k?: number;
 }
 
-export interface QueryResponse {
-  answer: string;
-  sources: CitationSource[];
-  status: "answered" | "refused_weak_context" | "refused_empty_context" | "refused_insufficient_support" | "conflicting_evidence" | string;
-  refusal_reason?: string;
-  metrics: {
-    top_score?: number;
-    supporting_chunks_count?: number;
-    retrieved_chunks_count?: number;
-    llm_called?: boolean;
-    [key: string]: any;
-  };
-  question: string;
-  rewritten_query?: string;
-  pipeline_metrics?: PipelineMetrics;
-  usage?: UsageMetrics;
-  has_conflict: boolean;
-  conflict_details?: ConflictDetails;
-  ranked_snippets: RankedSnippet[];
-  audit_trail: AuditTrailItem[];
-  history?: MessageHistory[];
-}
-
-export interface DocumentRecord {
-  document_id: string;
-  original_filename: string;
-  stored_filename: string;
-  upload_timestamp: string;
-  status: "uploaded" | "processing" | "indexed" | "failed" | string;
-  error_message?: string;
-  chunks_created: number;
-  chunks_indexed: number;
-  file_size_bytes: number;
-  content_type?: string;
-  completed_at?: string;
-  metadata: {
-    approval_status?: string;
-    version?: string;
-    stored_path?: string;
-    [key: string]: any;
-  };
+export interface MessageHistory {
+  role: "user" | "assistant";
+  content: string;
 }
 
 export interface DocumentChunk {
@@ -142,30 +162,35 @@ export interface DocumentChunk {
   section: string;
   page: number;
   approval_status: string;
-  token_count: number;
+  token_count?: number;
 }
 
-export interface DocumentTimelineItem {
+export interface DocumentTimelineEvent {
   action: string;
   timestamp: string;
   actor: string;
   status: string;
 }
 
-export interface DocumentDetail {
+export interface DocumentRecord {
   document_id: string;
   original_filename: string;
   stored_filename: string;
   upload_timestamp: string;
   status: string;
+  chunks_created: number;
+  chunks_indexed: number;
+  file_size_bytes: number;
+  metadata: Record<string, any>;
+}
+
+export interface DocumentDetail extends DocumentRecord {
   approval_status: string;
   version: string;
-  file_size_bytes: number;
-  content_type?: string;
+  content_type: string;
   chunks_count: number;
   chunks: DocumentChunk[];
-  metadata: Record<string, any>;
-  timeline: DocumentTimelineItem[];
+  timeline: DocumentTimelineEvent[];
 }
 
 export interface AuditEvent {
@@ -174,25 +199,8 @@ export interface AuditEvent {
   actor: string;
   event_type: string;
   description: string;
-  status: "SUCCESS" | "WARNING" | "INFO" | "ERROR" | string;
-  metadata: Record<string, any>;
-}
-
-export interface UserProfile {
-  user_id: string;
-  name: string;
-  role: string;
-  department: string;
-  email: string;
-  queries_count: number;
-  prompt_tokens: number;
-  completion_tokens: number;
-  total_tokens: number;
-  cost_estimate_usd: number;
-  last_active: string;
-  refusal_count: number;
-  conflict_count: number;
   status: string;
+  metadata: Record<string, any>;
 }
 
 export interface OverviewData {

@@ -104,7 +104,7 @@ async def upload_document(
 
         # Record audit event
         get_activity_tracker().record_audit_event(
-            actor="Marcus Vance (Advisor)",
+            actor="Authorized Advisor",
             event_type="DOCUMENT_UPLOADED",
             description=f"Uploaded and indexed '{storage_meta['original_filename']}' ({indexing_res['summary']['chunks_indexed']} chunks).",
             status="SUCCESS",
@@ -228,10 +228,10 @@ async def get_document_detail(document_id: str) -> Dict[str, Any]:
     version = record.metadata.get("version", "1.0")
 
     timeline = [
-        {"action": "Uploaded", "timestamp": record.upload_timestamp, "actor": "Marcus Vance", "status": "COMPLETED"},
+        {"action": "Uploaded", "timestamp": record.upload_timestamp, "actor": "Advisor", "status": "COMPLETED"},
         {"action": "Extraction & Semantic Chunking", "timestamp": record.upload_timestamp, "actor": "System Pipeline", "status": "COMPLETED"},
         {"action": "Vector Indexed (text-embedding-3-small)", "timestamp": record.completed_at or record.upload_timestamp, "actor": "ChromaDB Engine", "status": "COMPLETED"},
-        {"action": "Compliance Approval", "timestamp": record.completed_at or record.upload_timestamp, "actor": "Elena Rostova (Compliance)", "status": "APPROVED" if approval_status == "approved" else "PENDING"},
+        {"action": "Compliance Approval", "timestamp": record.completed_at or record.upload_timestamp, "actor": "Compliance Officer", "status": "APPROVED" if approval_status == "approved" else "PENDING"},
     ]
 
     return {
@@ -261,7 +261,7 @@ async def approve_document(document_id: str) -> Dict[str, Any]:
 
     tracker.update(document_id, approval_status="approved")
     get_activity_tracker().record_audit_event(
-        actor="Elena Rostova (Compliance)",
+        actor="Compliance Officer",
         event_type="DOCUMENT_APPROVED",
         description=f"Approved policy document: '{record.original_filename}'.",
         status="SUCCESS",
@@ -280,7 +280,7 @@ async def request_review_document(document_id: str) -> Dict[str, Any]:
 
     tracker.update(document_id, approval_status="review_requested")
     get_activity_tracker().record_audit_event(
-        actor="Marcus Vance (Advisor)",
+        actor="Advisor",
         event_type="DOCUMENT_REVIEW_REQUESTED",
         description=f"Review requested for document '{record.original_filename}'.",
         status="WARNING",

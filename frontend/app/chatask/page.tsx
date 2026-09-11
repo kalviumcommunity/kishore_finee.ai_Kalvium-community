@@ -1,556 +1,496 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
-  Search,
   Send,
-  Sparkles,
   ShieldCheck,
   ShieldAlert,
   FileText,
   Clock,
-  Layers,
-  Cpu,
-  ArrowRight,
-  RefreshCw,
+  Sparkles,
   AlertCircle,
-  HelpCircle,
   CheckCircle2,
-  Building,
-  User,
-  History,
+  RefreshCw,
+  X,
+  ChevronRight,
+  ExternalLink,
+  MessageSquare,
+  Plus,
+  HelpCircle,
   RotateCcw,
+  ArrowRight,
 } from "lucide-react";
-
 import { Topbar } from "@/components/Topbar";
-import { EvidenceCard } from "@/components/EvidenceCard";
-import { SourceInspectorDrawer } from "@/components/SourceInspectorDrawer";
-import { ConflictBanner } from "@/components/ConflictBanner";
-import { ConflictingEvidenceModal } from "@/components/ConflictingEvidenceModal";
-import { RetrievalPipelineStatus } from "@/components/RetrievalPipelineStatus";
-import { StatusBadge } from "@/components/StatusBadge";
 import { ragApi } from "@/services/ragApi";
+import { useAuth } from "@/context/AuthContext";
 import { CitationSource, ConflictDetails, MessageHistory, QueryResponse, RankedSnippet } from "@/types";
 
-export default function AnalysisSessionPage() {
-  const [questionInput, setQuestionInput] = useState("");
+interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: string;
+  response?: QueryResponse;
+  status?: string;
+  sources?: CitationSource[];
+  hasConflict?: boolean;
+  conflictDetails?: ConflictDetails;
+}
+
+export default function ChatAskPage() {
+  const { user } = useAuth();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [inputQuery, setInputQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Active Analysis State
-  const [activeResponse, setActiveResponse] = useState<QueryResponse | null>(null);
-  const [conversationHistory, setConversationHistory] = useState<MessageHistory[]>([]);
-  const [selectedSourceForInspector, setSelectedSourceForInspector] = useState<CitationSource | RankedSnippet | null>(null);
-  const [isInspectorOpen, setIsInspectorOpen] = useState(false);
-  const [isConflictModalOpen, setIsConflictModalOpen] = useState(false);
-  const [activeRightTab, setActiveRightTab] = useState<"evidence" | "pipeline" | "audit">("evidence");
+  // Evidence Drawer State
+  const [selectedSource, setSelectedSource] = useState<CitationSource | RankedSnippet | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Client Context State
-  const [clientContext, setClientContext] = useState({
-    entity_name: "Marcus Vance Portfolio",
-    entity_id: "CLI-8902",
-    risk_tier: "Tier 1 - Discretionary HNW",
-    account_type: "Discretionary Wealth Management",
-    jurisdiction: "Global Wealth (Tier 1)",
-  });
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const presetQuestions = [
-    "What evidence supports the advisory fee charged to Marcus?",
-    "Does client suitability require an annual KYC refresh?",
-    "What are the reporting thresholds for AML suspicious activities?",
-    "Is there a conflicting fee schedule for Tier 1 wealth accounts?",
-    "What is the cafeteria lunch menu today?", // Safe Refusal demonstration
-  ];
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
-  // Initial demo query on mount if empty
   useEffect(() => {
-    handleQuery("What evidence supports the advisory fee charged to Marcus?", false);
-  }, []);
+    scrollToBottom();
+  }, [messages, loading]);
 
-  const handleQuery = async (queryText: string, isFollowUp: boolean = false) => {
+  // Handle Form Submission
+  const handleSubmitQuery = async (queryText: string) => {
     const q = queryText.trim();
-    if (!q) return;
+    if (!q || loading) return;
 
-    setLoading(true);
     setError(null);
+    const userTimestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    // Build rolling history for follow-up conversational RAG
+    const historyPayload: MessageHistory[] = messages.map((m) => ({
+      role: m.role,
+      content: m.content,
+    }));
+
+    const userMsg: ChatMessage = {
+      id: `usr_${Date.now()}`,
+      role: "user",
+      content: q,
+      timestamp: userTimestamp,
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    setInputQuery("");
+    setLoading(true);
 
     try {
-      const payload = {
+      const response = await ragApi.askQuestion({
         query: q,
-        history: isFollowUp ? conversationHistory : [],
-        user_id: "usr_marcus_vance",
-        client_context: clientContext,
+        history: historyPayload,
+        user_id: user?.user_id,
+      });
+
+      const assistantTimestamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const assistantMsg: ChatMessage = {
+        id: `ast_${Date.now()}`,
+        role: "assistant",
+        content: response.answer,
+        timestamp: assistantTimestamp,
+        response: response,
+        status: response.status,
+        sources: response.sources || [],
+        hasConflict: response.has_conflict,
+        conflictDetails: response.conflict_details,
       };
 
-      const res = await ragApi.askQuestion(payload);
-      setActiveResponse(res);
-
-      // Update history
-      const newHistory: MessageHistory[] = isFollowUp ? [...conversationHistory] : [];
-      newHistory.push({ role: "user", content: q });
-      newHistory.push({ role: "assistant", content: res.answer });
-      setConversationHistory(newHistory);
-      setQuestionInput("");
+      setMessages((prev) => [...prev, assistantMsg]);
     } catch (err: any) {
-      console.error("Query failed:", err);
-      setError(err.message || "Failed to execute query against RAG pipeline.");
+      console.error("Query execution failed:", err);
+      setError("FINEE could not connect to the knowledge service. Please ensure the backend is running and try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleInspectSource = (source: CitationSource | RankedSnippet) => {
-    setSelectedSourceForInspector(source);
-    setIsInspectorOpen(true);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmitQuery(inputQuery);
+    }
   };
 
-  const handleClearSession = () => {
-    setConversationHistory([]);
-    setQuestionInput("");
-    handleQuery("What evidence supports the advisory fee charged to Marcus?", false);
+  const handleOpenSourceDrawer = (source: CitationSource | RankedSnippet) => {
+    setSelectedSource(source);
+    setIsDrawerOpen(true);
   };
 
-  const isRefused = activeResponse?.status.includes("refused");
+  const handleNewConversation = () => {
+    setMessages([]);
+    setError(null);
+    setInputQuery("");
+  };
+
+  // Starter suggestion prompts
+  const starterPrompts = [
+    "What are the approved advisory fee limits for discretionary wealth accounts?",
+    "What documentation is required to verify client suitability prior to trading?",
+    "What are the mandatory reporting thresholds for AML suspicious activities?",
+    "What are the fiduciary obligations regarding advisor conflicts of interest?",
+  ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <Topbar
-        title="Analysis Session & Compliance Advisory"
-        subtitle="Conversational RAG • Grounded Verification • Evidence Attestation"
-      />
-
-      {/* Main 3-Column Work Area */}
-      <main className="flex-1 p-6 grid grid-cols-1 xl:grid-cols-12 gap-6 min-h-[calc(100vh-4rem)]">
-        {/* ========================================================================= */}
-        {/* COLUMN 1: Client & Advisory Context (Left - 3 Cols) */}
-        {/* ========================================================================= */}
-        <section className="xl:col-span-3 space-y-5">
-          {/* Client Entity Card */}
-          <div className="bg-surface border border-surface-border rounded-xl p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider font-mono">
-                Client Context
-              </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-800 text-emerald-400 font-bold">
-                ACTIVE SESSION
-              </span>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-xl bg-surface-raised border border-surface-border flex items-center justify-center text-emerald-400 shrink-0 font-bold">
-                <Building className="w-5 h-5" />
-              </div>
-              <div className="min-w-0">
-                <h3 className="text-sm font-bold text-white truncate">{clientContext.entity_name}</h3>
-                <p className="text-xs text-gray-400 font-mono mt-0.5">{clientContext.entity_id}</p>
-              </div>
-            </div>
-
-            <div className="space-y-2 text-xs divide-y divide-surface-border/60 pt-2 border-t border-surface-border">
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-gray-400">Risk Profile:</span>
-                <span className="text-emerald-400 font-medium font-mono">{clientContext.risk_tier}</span>
-              </div>
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-gray-400">Account Type:</span>
-                <span className="text-gray-200 font-mono text-[11px] truncate max-w-[140px]">
-                  {clientContext.account_type}
-                </span>
-              </div>
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-gray-400">Jurisdiction:</span>
-                <span className="text-gray-200 font-mono text-[11px]">{clientContext.jurisdiction}</span>
-              </div>
-            </div>
+    <div className="flex flex-col h-screen bg-background text-gray-100 overflow-hidden">
+      {/* Top Header */}
+      <header className="h-14 border-b border-surface-border bg-surface/90 backdrop-blur-md px-6 flex items-center justify-between shrink-0 z-20">
+        <div className="flex items-center gap-3">
+          <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+            <ShieldCheck className="w-4 h-4" />
           </div>
-
-          {/* Preset Suggested Questions */}
-          <div className="bg-surface border border-surface-border rounded-xl p-5 space-y-3">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Preset Compliance Queries
-              </h4>
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            </div>
-            <div className="space-y-2">
-              {presetQuestions.map((q, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleQuery(q, false)}
-                  disabled={loading}
-                  className="w-full text-left p-2.5 rounded-lg bg-surface-raised/70 hover:bg-surface-raised border border-surface-border/60 hover:border-surface-borderLight text-xs text-gray-300 hover:text-white transition-all line-clamp-2 leading-relaxed"
-                >
-                  "{q}"
-                </button>
-              ))}
-            </div>
+          <div>
+            <h1 className="text-xs font-bold text-white tracking-tight flex items-center gap-2">
+              FINEE<span className="text-emerald-400">.ai</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            </h1>
+            <p className="text-[10px] text-gray-400 font-mono">
+              Compliance-Grounded Financial Advisory Intelligence
+            </p>
           </div>
+        </div>
 
-          {/* Conversation History Pill List */}
-          {conversationHistory.length > 0 && (
-            <div className="bg-surface border border-surface-border rounded-xl p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <History className="w-3.5 h-3.5 text-emerald-400" />
-                  Session Turns ({conversationHistory.length / 2})
-                </h4>
-                <button
-                  onClick={handleClearSession}
-                  className="text-[11px] text-gray-500 hover:text-gray-300 flex items-center gap-1"
-                >
-                  <RotateCcw className="w-3 h-3" /> Reset
-                </button>
-              </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleNewConversation}
+            className="px-3 py-1.5 rounded-lg bg-surface-raised hover:bg-surface-hover border border-surface-border text-xs text-gray-300 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5 text-emerald-400" />
+            <span>New Chat</span>
+          </button>
+        </div>
+      </header>
 
-              <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-                {conversationHistory
-                  .filter((m) => m.role === "user")
-                  .map((msg, i) => (
-                    <div
-                      key={i}
-                      className="p-2 rounded-lg bg-surface-raised border border-surface-border text-xs text-gray-300 truncate"
-                    >
-                      <span className="text-emerald-400 font-mono mr-1">Turn {i + 1}:</span>
-                      {msg.content}
-                    </div>
-                  ))}
-              </div>
-            </div>
-          )}
-        </section>
-
-        {/* ========================================================================= */}
-        {/* COLUMN 2: Grounded Q&A, Citations, & Dialogue (Center - 6 Cols) */}
-        {/* ========================================================================= */}
-        <section className="xl:col-span-6 space-y-5">
-          {/* Main Search / Query Input Form */}
-          <div className="bg-surface border border-surface-border rounded-2xl p-3 shadow-lg relative">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleQuery(questionInput, conversationHistory.length > 0);
-              }}
-              className="flex items-center gap-2"
-            >
-              <div className="pl-3 text-emerald-400">
-                <Search className="w-4 h-4" />
-              </div>
-              <input
-                type="text"
-                value={questionInput}
-                onChange={(e) => setQuestionInput(e.target.value)}
-                placeholder="Ask compliance rule, fee guideline, KYC requirement, or follow-up question..."
-                className="flex-1 bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none py-2 px-1"
-                disabled={loading}
-              />
-              <button
-                type="submit"
-                disabled={loading || !questionInput.trim()}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-surface-raised disabled:text-gray-600 text-white font-medium text-xs flex items-center gap-2 transition-all shadow-md"
-              >
-                {loading ? (
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <>
-                    <span>Ask FINEE</span>
-                    <Send className="w-3 h-3" />
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
-
-          {/* Error Banner */}
-          {error && (
-            <div className="p-4 rounded-xl bg-red-950/40 border border-red-800 text-red-300 text-xs flex items-center gap-3">
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          {/* Active Question & Grounded Answer Container */}
-          {activeResponse && (
-            <div className="bg-surface border border-surface-border rounded-2xl p-6 space-y-5 shadow-xl relative overflow-hidden">
-              {/* Question Header */}
-              <div className="border-b border-surface-border pb-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <User className="w-3.5 h-3.5 text-gray-400" />
-                    Marcus Vance (Advisor Query)
-                  </span>
-                  <StatusBadge status={activeResponse.status} />
+      {/* Main Conversational Workspace */}
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* Chat Stream Column */}
+        <div className="flex-1 flex flex-col justify-between overflow-hidden relative">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6 max-w-4xl w-full mx-auto">
+            {/* Welcome State when empty */}
+            {messages.length === 0 && (
+              <div className="py-8 sm:py-12 space-y-8 animate-in fade-in duration-300">
+                <div className="text-center space-y-3 max-w-xl mx-auto">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto shadow-inner">
+                    <ShieldCheck className="w-6 h-6" />
+                  </div>
+                  <h2 className="text-xl font-bold text-white tracking-tight font-sans">
+                    Welcome to FINEE<span className="text-emerald-400">.ai</span>
+                  </h2>
+                  <p className="text-xs text-gray-400 font-sans leading-relaxed">
+                    Ask any financial advisory or compliance question. Responses are strictly grounded in approved institutional guidelines, regulatory rules, and fee schedules.
+                  </p>
                 </div>
-                <h2 className="text-base font-bold text-white leading-snug">
-                  "{activeResponse.question}"
-                </h2>
 
-                {/* Rewritten query chip if follow-up rewrite occurred */}
-                {activeResponse.rewritten_query &&
-                  activeResponse.rewritten_query !== activeResponse.question && (
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-brand-500/10 border border-brand-500/30 text-brand-300 text-xs font-mono">
-                      <Sparkles className="w-3 h-3 text-brand-400" />
-                      <span>Rewritten Standalone Query:</span>
-                      <span className="text-white">"{activeResponse.rewritten_query}"</span>
+                {/* Example Starter Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto pt-2">
+                  {starterPrompts.map((prompt, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleSubmitQuery(prompt)}
+                      className="p-3.5 rounded-xl bg-surface border border-surface-border hover:border-emerald-500/50 hover:bg-surface-raised transition-all text-left group shadow-sm flex flex-col justify-between space-y-2 cursor-pointer"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-xs font-medium text-gray-200 group-hover:text-white leading-snug">
+                          "{prompt}"
+                        </p>
+                        <ArrowRight className="w-3.5 h-3.5 text-gray-500 group-hover:text-emerald-400 shrink-0 transition-colors mt-0.5" />
+                      </div>
+                      <span className="text-[10px] font-mono text-gray-500 group-hover:text-emerald-400/80">
+                        Ask FINEE &rarr;
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Message Stream */}
+            {messages.map((msg) => {
+              const isUser = msg.role === "user";
+              const isRefusal = msg.status && msg.status.includes("refused");
+
+              return (
+                <div
+                  key={msg.id}
+                  className={`flex gap-3.5 ${isUser ? "justify-end" : "justify-start"} animate-in fade-in duration-200`}
+                >
+                  {/* Assistant Icon */}
+                  {!isUser && (
+                    <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                      <ShieldCheck className="w-4 h-4" />
                     </div>
                   )}
+
+                  <div className={`space-y-2.5 max-w-2xl w-full ${isUser ? "items-end flex flex-col" : ""}`}>
+                    {/* Message Bubble Header */}
+                    <div className="flex items-center gap-2 text-[11px] font-mono text-gray-400">
+                      <span className="font-semibold text-gray-300">
+                        {isUser ? user?.name || "You" : "FINEE Knowledge Assistant"}
+                      </span>
+                      <span>•</span>
+                      <span>{msg.timestamp}</span>
+                      {!isUser && !isRefusal && (
+                        <span className="px-1.5 py-0.2 rounded bg-emerald-950/60 border border-emerald-800 text-emerald-300 text-[9px] font-bold">
+                          Grounded
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Content Box */}
+                    {isUser ? (
+                      <div className="bg-emerald-600/90 text-white rounded-2xl rounded-tr-none px-4 py-3 text-xs leading-relaxed shadow-md">
+                        {msg.content}
+                      </div>
+                    ) : isRefusal ? (
+                      /* Refusal State Card */
+                      <div className="w-full bg-surface border border-amber-500/40 rounded-2xl p-4 space-y-3 shadow-lg">
+                        <div className="flex items-start gap-2.5 text-amber-400">
+                          <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
+                          <div className="space-y-1">
+                            <h4 className="text-xs font-bold uppercase tracking-wider font-mono">
+                              Insufficient Evidence in Approved Knowledge Base
+                            </h4>
+                            <p className="text-xs text-gray-300 leading-relaxed font-sans">
+                              {msg.content}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="p-3 rounded-xl bg-surface-raised border border-surface-border text-[11px] text-gray-400 space-y-1 font-mono">
+                          <p className="text-gray-300 font-semibold">Guardrail Compliance Check:</p>
+                          <p>The available evidence did not meet the minimum confidence threshold required for regulatory grounding.</p>
+                        </div>
+
+                        <div className="flex items-center gap-2 pt-1">
+                          <button
+                            onClick={() => handleSubmitQuery("What are the approved advisory fee limits for wealth accounts?")}
+                            className="px-3 py-1.5 rounded-lg bg-surface-raised hover:bg-surface-hover border border-surface-border text-xs text-gray-300 hover:text-white transition-colors cursor-pointer"
+                          >
+                            Try Approved Fee Limits
+                          </button>
+                        </div>
+                      </div>
+                    ) : msg.hasConflict ? (
+                      /* Conflicting Evidence State Card */
+                      <div className="w-full bg-surface border border-amber-500/40 rounded-2xl p-4 space-y-3 shadow-lg">
+                        <div className="flex items-start gap-2.5 text-amber-400">
+                          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                          <div className="space-y-1">
+                            <h4 className="text-xs font-bold uppercase tracking-wider font-mono">
+                              Conflicting Evidence Detected
+                            </h4>
+                            <p className="text-xs text-gray-300 leading-relaxed font-sans">
+                              {msg.content}
+                            </p>
+                          </div>
+                        </div>
+
+                        {msg.conflictDetails && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                            <div className="p-3 rounded-xl bg-surface-raised border border-surface-border space-y-1">
+                              <span className="text-[10px] font-mono text-amber-400 font-bold block">SOURCE A</span>
+                              <p className="font-semibold text-white truncate">{msg.conflictDetails.source_a.title}</p>
+                              <p className="text-gray-400 text-[11px] line-clamp-3">"{msg.conflictDetails.source_a.excerpt}"</p>
+                            </div>
+                            <div className="p-3 rounded-xl bg-surface-raised border border-surface-border space-y-1">
+                              <span className="text-[10px] font-mono text-amber-400 font-bold block">SOURCE B</span>
+                              <p className="font-semibold text-white truncate">{msg.conflictDetails.source_b.title}</p>
+                              <p className="text-gray-400 text-[11px] line-clamp-3">"{msg.conflictDetails.source_b.excerpt}"</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      /* Grounded Answer Card */
+                      <div className="bg-surface border border-surface-border rounded-2xl rounded-tl-none p-5 text-xs text-gray-200 leading-relaxed shadow-lg space-y-4">
+                        <div className="whitespace-pre-wrap font-sans text-xs sm:text-[13px] text-gray-100 leading-relaxed">
+                          {msg.content}
+                        </div>
+
+                        {/* Sources List Underneath */}
+                        {msg.sources && msg.sources.length > 0 && (
+                          <div className="pt-3 border-t border-surface-border space-y-2">
+                            <h5 className="text-[10px] font-bold uppercase tracking-wider text-gray-400 font-mono flex items-center gap-1.5">
+                              <FileText className="w-3 h-3 text-emerald-400" />
+                              Supporting Compliance Sources ({msg.sources.length})
+                            </h5>
+
+                            <div className="flex flex-wrap gap-2 pt-1">
+                              {msg.sources.map((source, idx) => (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleOpenSourceDrawer(source)}
+                                  className="px-2.5 py-1.5 rounded-lg bg-surface-raised hover:bg-surface-hover border border-surface-border hover:border-emerald-500/50 text-[11px] text-gray-300 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer group shadow-sm"
+                                >
+                                  <span className="font-mono text-emerald-400 font-bold">
+                                    {source.marker || `[${idx + 1}]`}
+                                  </span>
+                                  <span className="truncate max-w-[200px]">{source.source}</span>
+                                  <ChevronRight className="w-3 h-3 text-gray-500 group-hover:text-emerald-400 transition-colors" />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* User Icon */}
+                  {isUser && (
+                    <div className="w-8 h-8 rounded-xl bg-surface-raised border border-surface-border text-emerald-400 font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                      {user?.name
+                        ? user.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .substring(0, 2)
+                            .toUpperCase()
+                        : "U"}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Loading Indicator */}
+            {loading && (
+              <div className="flex gap-3.5 justify-start animate-in fade-in duration-150">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                </div>
+                <div className="bg-surface border border-surface-border rounded-2xl rounded-tl-none px-4 py-3 text-xs text-gray-300 flex items-center gap-2.5 shadow-md">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="font-mono text-[11px]">FINEE is searching the approved knowledge base and verifying evidence...</span>
+                </div>
               </div>
+            )}
 
-              {/* Conflicting Evidence Alert Banner (if conflict detected) */}
-              {activeResponse.has_conflict && activeResponse.conflict_details && (
-                <ConflictBanner
-                  conflict={activeResponse.conflict_details}
-                  onOpenModal={() => setIsConflictModalOpen(true)}
-                />
-              )}
-
-              {/* SAFE REFUSAL STATE (0 Hallucination guarantee) */}
-              {isRefused ? (
-                <div className="bg-red-950/30 border border-red-800/60 rounded-xl p-5 space-y-3">
-                  <div className="flex items-center gap-2.5 text-red-400 font-bold text-sm">
-                    <ShieldAlert className="w-5 h-5" />
-                    <span>Compliance Safe Refusal Triggered (0 Hallucination)</span>
-                  </div>
-                  <p className="text-sm text-gray-200 leading-relaxed font-sans bg-surface-raised/80 p-4 rounded-lg border border-surface-border">
-                    {activeResponse.answer}
-                  </p>
-                  <div className="text-xs text-gray-400 space-y-1 pt-1">
-                    <p>
-                      <span className="text-gray-300 font-medium">Diagnostic Reason:</span>{" "}
-                      {activeResponse.refusal_reason || "Relevance score did not satisfy guardrail threshold."}
-                    </p>
-                    <p className="font-mono text-[11px] text-red-300">
-                      Top score: {(activeResponse.metrics.top_score || 0).toFixed(4)} (Threshold: 0.7200)
-                    </p>
-                  </div>
+            {/* Network / Connection Error */}
+            {error && (
+              <div className="p-3.5 rounded-xl bg-red-950/50 border border-red-800 text-xs text-red-300 flex items-center justify-between shadow-lg">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+                  <span>{error}</span>
                 </div>
-              ) : (
-                /* GROUNDED ANSWER WITH CITATION MARKERS */
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                      Grounded Answer
-                    </span>
-                    <span className="text-[11px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/60">
-                      100% Policy Grounded
-                    </span>
-                  </div>
-
-                  <div className="p-4 rounded-xl bg-surface-raised border border-surface-border text-sm text-gray-100 leading-relaxed font-sans border-l-4 border-l-emerald-500 whitespace-pre-line">
-                    {activeResponse.answer}
-                  </div>
-                </div>
-              )}
-
-              {/* EVIDENCE USED / CITATIONS SECTION */}
-              {activeResponse.sources && activeResponse.sources.length > 0 && (
-                <div className="space-y-3 pt-4 border-t border-surface-border">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                      Verified Evidence ({activeResponse.sources.length} sources used)
-                    </h3>
-                    <span className="text-[11px] text-gray-400 font-mono">Click card to inspect</span>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-3">
-                    {activeResponse.sources.map((src, idx) => (
-                      <EvidenceCard
-                        key={idx}
-                        source={src}
-                        onInspect={() => handleInspectSource(src)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Follow-up Question Quick Bar */}
-              <div className="pt-4 border-t border-surface-border flex items-center justify-between text-xs text-gray-400">
-                <span className="font-mono text-[11px]">
-                  Latency: {activeResponse.usage?.latency_ms || 145}ms • Total Tokens:{" "}
-                  {activeResponse.usage?.total_tokens || 420}
-                </span>
-                <span className="text-emerald-400 font-mono font-medium">
-                  Cost: ${activeResponse.usage?.cost_usd ? activeResponse.usage.cost_usd.toFixed(5) : "0.00018"}
-                </span>
+                <button
+                  onClick={() => handleSubmitQuery(inputQuery || "What are the approved advisory fee limits for wealth accounts?")}
+                  className="px-2.5 py-1 rounded bg-red-900/80 hover:bg-red-800 text-white font-mono text-[10px] transition-colors"
+                >
+                  Retry
+                </button>
               </div>
-            </div>
-          )}
-        </section>
+            )}
 
-        {/* ========================================================================= */}
-        {/* COLUMN 3: Retrieved Evidence, Pipeline Trace & Audit (Right - 3 Cols) */}
-        {/* ========================================================================= */}
-        <section className="xl:col-span-3 space-y-5">
-          {/* Right Sidebar Tab Switcher */}
-          <div className="bg-surface border border-surface-border rounded-xl p-1 flex items-center">
-            <button
-              onClick={() => setActiveRightTab("evidence")}
-              className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                activeRightTab === "evidence"
-                  ? "bg-surface-raised text-white font-semibold border border-surface-border"
-                  : "text-gray-400 hover:text-gray-200"
-              }`}
-            >
-              Ranked Snippets
-            </button>
-            <button
-              onClick={() => setActiveRightTab("pipeline")}
-              className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                activeRightTab === "pipeline"
-                  ? "bg-surface-raised text-white font-semibold border border-surface-border"
-                  : "text-gray-400 hover:text-gray-200"
-              }`}
-            >
-              Pipeline
-            </button>
-            <button
-              onClick={() => setActiveRightTab("audit")}
-              className={`flex-1 py-1.5 text-xs font-medium rounded-lg transition-all ${
-                activeRightTab === "audit"
-                  ? "bg-surface-raised text-white font-semibold border border-surface-border"
-                  : "text-gray-400 hover:text-gray-200"
-              }`}
-            >
-              Audit Trail
-            </button>
+            <div ref={messagesEndRef} />
           </div>
 
-          {/* TAB 1: RANKED SNIPPETS / RETRIEVED EVIDENCE */}
-          {activeRightTab === "evidence" && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider font-mono">
-                  Retrieved Candidates
-                </h4>
-                <span className="text-xs text-gray-400 font-mono">HNSW Cosine Space</span>
-              </div>
-
-              {activeResponse?.ranked_snippets && activeResponse.ranked_snippets.length > 0 ? (
-                activeResponse.ranked_snippets.map((snip, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => handleInspectSource(snip)}
-                    className="bg-surface border border-surface-border hover:border-surface-borderLight rounded-xl p-4 cursor-pointer transition-all space-y-2 group"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-mono font-bold text-emerald-400 px-2 py-0.5 rounded bg-surface-raised border border-surface-border">
-                        Rank #{snip.rank} • {snip.type}
-                      </span>
-                      <span className="text-xs font-mono font-bold text-emerald-400">
-                        {(snip.score * 100).toFixed(1)}%
-                      </span>
-                    </div>
-
-                    <h5 className="text-xs font-semibold text-white truncate group-hover:text-emerald-300">
-                      {snip.source}
-                    </h5>
-                    <p className="text-[11px] text-gray-400 font-mono">
-                      {snip.section} • Page {snip.page}
-                    </p>
-
-                    <p className="text-xs text-gray-300 line-clamp-2 bg-surface-raised/60 p-2 rounded border border-surface-border/40">
-                      "{snip.text}"
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <div className="p-8 text-center bg-surface border border-surface-border rounded-xl text-gray-500 text-xs">
-                  No snippets retrieved. Ask a question to view candidate vectors.
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* TAB 2: PIPELINE TRACE & TOKEN METRICS */}
-          {activeRightTab === "pipeline" && (
-            <div className="space-y-4">
-              <RetrievalPipelineStatus
-                metrics={activeResponse?.pipeline_metrics}
-                latencyMs={activeResponse?.usage?.latency_ms || 145}
+          {/* Sticky Input Bar at Bottom */}
+          <div className="p-4 border-t border-surface-border bg-surface/80 backdrop-blur-md">
+            <div className="max-w-4xl mx-auto relative flex items-center">
+              <textarea
+                ref={textareaRef}
+                rows={1}
+                value={inputQuery}
+                onChange={(e) => setInputQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask FINEE a financial advisory or compliance question (e.g. fee limits, suitability, AML)..."
+                disabled={loading}
+                className="w-full bg-surface-raised border border-surface-border focus:border-emerald-500 rounded-2xl pl-4 pr-12 py-3.5 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none resize-none transition-colors shadow-inner"
               />
-
-              {/* Token Observability Box */}
-              <div className="bg-surface border border-surface-border rounded-xl p-4 space-y-3">
-                <h4 className="text-xs font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <Cpu className="w-3.5 h-3.5 text-emerald-400" /> Token Observability
-                </h4>
-
-                <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                  <div className="p-2.5 rounded-lg bg-surface-raised border border-surface-border">
-                    <span className="text-[10px] text-gray-500 block">PROMPT TOKENS</span>
-                    <span className="text-sm font-bold text-white">
-                      {activeResponse?.usage?.prompt_tokens || 280}
-                    </span>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-surface-raised border border-surface-border">
-                    <span className="text-[10px] text-gray-500 block">COMPLETION</span>
-                    <span className="text-sm font-bold text-white">
-                      {activeResponse?.usage?.completion_tokens || 140}
-                    </span>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-surface-raised border border-surface-border">
-                    <span className="text-[10px] text-gray-500 block">TOTAL TOKENS</span>
-                    <span className="text-sm font-bold text-emerald-400">
-                      {activeResponse?.usage?.total_tokens || 420}
-                    </span>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-surface-raised border border-surface-border">
-                    <span className="text-[10px] text-gray-500 block">EST. COST</span>
-                    <span className="text-sm font-bold text-emerald-400">
-                      ${activeResponse?.usage?.cost_usd ? activeResponse.usage.cost_usd.toFixed(5) : "0.00018"}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <button
+                onClick={() => handleSubmitQuery(inputQuery)}
+                disabled={loading || !inputQuery.trim()}
+                className="absolute right-2.5 p-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-surface-border disabled:text-gray-500 text-white transition-all shadow-md cursor-pointer disabled:cursor-not-allowed"
+                title="Send query (Enter)"
+              >
+                <Send className="w-4 h-4" />
+              </button>
             </div>
-          )}
+            <p className="text-center text-[10px] text-gray-500 font-mono mt-2">
+              All responses are generated exclusively from verified institutional and regulatory sources.
+            </p>
+          </div>
+        </div>
 
-          {/* TAB 3: AUDIT TRAIL */}
-          {activeRightTab === "audit" && (
-            <div className="bg-surface border border-surface-border rounded-xl p-4 space-y-3">
-              <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-emerald-400" />
-                Query Execution Audit Trail
-              </h4>
+        {/* Source Evidence Inspector Drawer (Slides in on demand) */}
+        {isDrawerOpen && selectedSource && (
+          <div className="w-80 md:w-96 border-l border-surface-border bg-surface flex flex-col h-full z-30 shadow-2xl animate-in slide-in-from-right duration-200">
+            {/* Drawer Header */}
+            <div className="p-4 border-b border-surface-border flex items-center justify-between bg-surface-raised">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-emerald-400" />
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                  Source Evidence Details
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsDrawerOpen(false)}
+                className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-surface transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
-              <div className="space-y-3 relative pl-3 border-l border-surface-border">
-                {activeResponse?.audit_trail && activeResponse.audit_trail.length > 0 ? (
-                  activeResponse.audit_trail.map((item, idx) => (
-                    <div key={idx} className="relative pl-3 space-y-0.5">
-                      <span className="absolute -left-[19px] top-1.5 w-2 h-2 rounded-full bg-emerald-400" />
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-semibold text-white">{item.step}</p>
-                        <span className="text-[10px] font-mono text-gray-400">{item.timestamp}</span>
-                      </div>
-                      <p className="text-[11px] text-gray-400 font-mono">{item.detail}</p>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-xs text-gray-500">No audit trail available.</p>
+            {/* Drawer Content */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs font-sans">
+              {/* Document Identity */}
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-mono text-gray-400 block uppercase">Document Source</span>
+                <p className="font-semibold text-white break-words">
+                  {selectedSource.source}
+                </p>
+                {"document_id" in selectedSource && (
+                  <p className="text-[10px] font-mono text-gray-400">{selectedSource.document_id}</p>
                 )}
               </div>
+
+              {/* Status & Version Pill Grid */}
+              <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+                <div className="p-2.5 rounded-xl bg-surface-raised border border-surface-border">
+                  <span className="text-[9px] text-gray-500 block uppercase">Approval Status</span>
+                  <span className="text-emerald-400 font-bold capitalize">
+                    {selectedSource.approval_status || "Approved"}
+                  </span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-surface-raised border border-surface-border">
+                  <span className="text-[9px] text-gray-500 block uppercase">Section / Page</span>
+                  <span className="text-gray-200">
+                    {selectedSource.section || "General"} · P.{selectedSource.page || 1}
+                  </span>
+                </div>
+              </div>
+
+              {/* Grounded Evidence Excerpt */}
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-mono text-gray-400 block uppercase">Verified Text Excerpt</span>
+                <div className="p-3.5 rounded-xl bg-surface-raised border border-emerald-500/30 text-gray-200 leading-relaxed font-sans text-xs">
+                  "{selectedSource.text}"
+                </div>
+              </div>
+
+              {/* Relevance Reason */}
+              <div className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-800/40 text-[11px] text-emerald-300 font-mono space-y-1">
+                <span className="font-bold block flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  Grounded Evidence Attestation
+                </span>
+                <p className="text-gray-400">
+                  Retrieved and verified from the approved knowledge corpus to support the advisor answer.
+                </p>
+              </div>
             </div>
-          )}
-        </section>
-      </main>
-
-      {/* Slide-Over Source Inspector Drawer */}
-      <SourceInspectorDrawer
-        source={selectedSourceForInspector}
-        isOpen={isInspectorOpen}
-        onClose={() => setIsInspectorOpen(false)}
-      />
-
-      {/* Conflicting Evidence Modal */}
-      <ConflictingEvidenceModal
-        conflict={activeResponse?.conflict_details || null}
-        isOpen={isConflictModalOpen}
-        onClose={() => setIsConflictModalOpen(false)}
-        onRequestReview={() => {
-          // Log escalation
-        }}
-      />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

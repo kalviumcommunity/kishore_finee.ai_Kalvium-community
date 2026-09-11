@@ -31,7 +31,7 @@ class QueryRequest(BaseModel):
     use_reranker: Optional[bool] = Field(default=None, description="Enable or bypass re-ranking")
     history: Optional[List[Dict[str, str]]] = Field(default=None, description="Prior conversation history turns")
     session_id: Optional[str] = Field(default=None, description="Session identifier")
-    user_id: Optional[str] = Field(default="usr_marcus_vance", description="User ID for activity monitoring")
+    user_id: Optional[str] = Field(default="usr_advisor_default", description="User ID for activity monitoring")
     client_context: Optional[Dict[str, Any]] = Field(default=None, description="Client or entity context (e.g. Acme Holdings, Tier 1)")
 
 
@@ -212,7 +212,7 @@ async def query_knowledge_base(payload: QueryRequest) -> Dict[str, Any]:
 
         # Audit trail for this query
         audit_trail = [
-            {"step": "Query Received", "timestamp": "0ms", "detail": f"User: {payload.user_id or 'usr_marcus_vance'}"},
+            {"step": "Query Received", "timestamp": "0ms", "detail": f"User: {payload.user_id or 'usr_advisor_default'}"},
         ]
         if rewritten_query and rewritten_query != query_str:
             audit_trail.append({"step": "Follow-up Query Rewritten", "timestamp": "42ms", "detail": f"'{rewritten_query}'"})
@@ -235,7 +235,7 @@ async def query_knowledge_base(payload: QueryRequest) -> Dict[str, Any]:
             latency_ms=latency_ms,
             prompt_tokens=prompt_tokens,
             completion_tokens=comp_tokens,
-            user_id=payload.user_id or "usr_marcus_vance",
+            user_id=payload.user_id or "usr_advisor_default",
             session_id=payload.session_id,
             rewritten_query=rewritten_query,
             refusal_reason=rag_result.get("refusal_reason"),

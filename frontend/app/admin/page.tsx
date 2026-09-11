@@ -58,31 +58,31 @@ export default function AdminOverviewPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             label="Approved Policies"
-            value={stats?.approved_documents ?? 28}
-            subtext="96.4% retrieval ready"
+            value={stats?.approved_documents ?? 0}
+            subtext="Production retrieval ready"
             icon={<FileCheck className="w-4 h-4 text-emerald-400" />}
             accentColor="emerald"
             badge="Active"
           />
           <StatCard
             label="Processing Pipeline"
-            value={stats?.processing_documents ?? 1}
+            value={stats?.processing_documents ?? 0}
             subtext="Ingestion & Vectorizing"
-            icon={<RefreshCw className="w-4 h-4 text-amber-400 animate-spin" />}
+            icon={<RefreshCw className="w-4 h-4 text-amber-400" />}
             accentColor="amber"
             badge="Live"
           />
           <StatCard
             label="Pending Review"
-            value={stats?.pending_documents ?? 3}
+            value={stats?.pending_documents ?? 0}
             subtext="Awaiting Compliance Approval"
             icon={<Clock className="w-4 h-4 text-blue-400" />}
             accentColor="blue"
           />
           <StatCard
-            label="Archived / Superseded"
-            value={stats?.archived_documents ?? 2}
-            subtext="Deprecated from Search"
+            label="Archived / Deprecated"
+            value={stats?.archived_documents ?? 0}
+            subtext="Removed from Search"
             icon={<Archive className="w-4 h-4 text-gray-400" />}
             accentColor="purple"
           />
@@ -151,7 +151,7 @@ export default function AdminOverviewPage() {
                 Persistent indexing ready for sub-second similarity search & re-ranking.
               </p>
               <div className="text-[11px] font-mono text-emerald-400">
-                {stats?.vector_chunks_indexed || 37} active vectors
+                {stats?.vector_chunks_indexed ?? 0} active vectors
               </div>
             </div>
           </div>

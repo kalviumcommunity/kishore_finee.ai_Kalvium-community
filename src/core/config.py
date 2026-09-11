@@ -225,6 +225,40 @@ class Settings(BaseSettings):
         description="List of supported file extensions for runtime document ingestion",
     )
 
+    # Authentication & Role-Based Security Settings
+    ADMIN_EMAIL: str = Field(
+        default="pallempativaishnavi@gmail.com",
+        description="Configured Super Administrator work email address",
+    )
+    ADMIN_PASSWORD: str = Field(
+        default="vaishnavi123",
+        description="Configured Super Administrator development password",
+    )
+    ADMIN_PASSWORD_HASH: Optional[str] = Field(
+        default=None,
+        description="Optional pre-computed PBKDF2/bcrypt hash for admin password",
+    )
+    JWT_SECRET_KEY: str = Field(
+        default="finee-enterprise-secret-jwt-key-2026-compliance-rag-platform",
+        description="Cryptographic secret key for signing session tokens",
+    )
+    JWT_ALGORITHM: str = Field(
+        default="HS256",
+        description="Algorithm for signing authentication tokens",
+    )
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(
+        default=1440,
+        description="Token expiration duration in minutes (24 hours)",
+    )
+    GOOGLE_CLIENT_ID: Optional[str] = Field(
+        default=None,
+        description="Google OAuth Client ID for advisory authentication",
+    )
+    GOOGLE_CLIENT_SECRET: Optional[str] = Field(
+        default=None,
+        description="Google OAuth Client Secret",
+    )
+
     # Observability & Logging
 
     LOG_LEVEL: str = Field(

@@ -278,7 +278,7 @@ export default function DocumentDetailPage() {
                 <div className="py-2.5 flex items-center justify-between">
                   <span className="text-gray-400">Total Tokens:</span>
                   <span className="font-mono text-gray-200">
-                    {document.chunks.reduce((acc, c) => acc + c.token_count, 0)} tokens
+                    {document.chunks.reduce((acc, c) => acc + (c.token_count || 0), 0)} tokens
                   </span>
                 </div>
               </div>

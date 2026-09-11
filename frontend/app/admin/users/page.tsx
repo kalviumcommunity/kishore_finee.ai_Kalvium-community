@@ -73,30 +73,30 @@ export default function UserMonitoringPage() {
         {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
-            label="Monitored Advisors"
-            value={users.length || 4}
-            subtext="Active in Private Wealth"
+            label="Monitored Personnel"
+            value={users.length}
+            subtext="Authenticated Users"
             icon={<Users className="w-4 h-4 text-emerald-400" />}
             accentColor="emerald"
           />
           <StatCard
             label="Total Queries"
-            value={totalQueries || 73}
-            subtext="100% Policy Grounded"
+            value={totalQueries}
+            subtext="Grounded RAG Queries"
             icon={<MessageSquare className="w-4 h-4 text-blue-400" />}
             accentColor="blue"
           />
           <StatCard
             label="Total Tokens Consumed"
-            value={(totalTokens || 131300).toLocaleString()}
+            value={totalTokens.toLocaleString()}
             subtext="Prompt + Completion"
             icon={<Cpu className="w-4 h-4 text-purple-400" />}
             accentColor="purple"
           />
           <StatCard
             label="Estimated LLM Spend"
-            value={`$${(totalCost || 0.0311).toFixed(4)}`}
-            subtext="Cost per query: ~$0.0004"
+            value={`$${totalCost.toFixed(4)}`}
+            subtext="Calculated LLM Spend"
             icon={<DollarSign className="w-4 h-4 text-emerald-400" />}
             accentColor="emerald"
           />
@@ -144,45 +144,53 @@ export default function UserMonitoringPage() {
                       Loading monitored users...
                     </td>
                   </tr>
-                ) : users.map((user) => (
-                  <tr key={user.user_id} className="hover:bg-surface-raised/40 transition-colors">
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-full bg-surface-raised border border-surface-border text-emerald-400 font-bold flex items-center justify-center shrink-0">
-                          {user.name.split(" ").map((n) => n[0]).join("")}
-                        </div>
-                        <div>
-                          <p className="font-semibold text-white">{user.name}</p>
-                          <p className="text-[10px] text-gray-400 font-mono">{user.role}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-gray-300 font-sans">{user.department}</td>
-                    <td className="py-3 px-4 font-mono text-gray-200 font-bold">
-                      {user.queries_count}
-                    </td>
-                    <td className="py-3 px-4 font-mono text-emerald-400 font-semibold">
-                      {user.total_tokens.toLocaleString()}
-                    </td>
-                    <td className="py-3 px-4 font-mono text-gray-200">
-                      ${user.cost_estimate_usd.toFixed(4)}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className="font-mono text-xs px-2 py-0.5 rounded bg-surface-raised border border-surface-border text-amber-400">
-                        {user.refusal_count}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-right">
-                      <button
-                        onClick={() => handleSelectUser(user.user_id)}
-                        className="px-3 py-1.5 rounded-lg bg-surface-raised hover:bg-surface-hover border border-surface-border text-emerald-400 font-medium inline-flex items-center gap-1.5 transition-colors"
-                      >
-                        <span>Inspect Activity</span>
-                        <ArrowRight className="w-3 h-3" />
-                      </button>
+                ) : users.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="py-12 text-center text-gray-500 font-mono text-xs">
+                      No authenticated users recorded yet.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  users.map((user) => (
+                    <tr key={user.user_id} className="hover:bg-surface-raised/40 transition-colors">
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-full bg-surface-raised border border-surface-border text-emerald-400 font-bold flex items-center justify-center shrink-0">
+                            {user.name ? user.name.split(" ").map((n) => n[0]).join("") : "U"}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-white">{user.name}</p>
+                            <p className="text-[10px] text-gray-400 font-mono">{user.role}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 text-gray-300 font-sans">{user.department}</td>
+                      <td className="py-3 px-4 font-mono text-gray-200 font-bold">
+                        {user.queries_count}
+                      </td>
+                      <td className="py-3 px-4 font-mono text-emerald-400 font-semibold">
+                        {user.total_tokens.toLocaleString()}
+                      </td>
+                      <td className="py-3 px-4 font-mono text-gray-200">
+                        ${user.cost_estimate_usd.toFixed(4)}
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="font-mono text-xs px-2 py-0.5 rounded bg-surface-raised border border-surface-border text-amber-400">
+                          {user.refusal_count}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <button
+                          onClick={() => handleSelectUser(user.user_id)}
+                          className="px-3 py-1.5 rounded-lg bg-surface-raised hover:bg-surface-hover border border-surface-border text-emerald-400 font-medium inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+                        >
+                          <span>Inspect Activity</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
