@@ -1,0 +1,121 @@
+{
+  "benchmark": "runtime_document_upload_and_dynamic_indexing",
+  "config": {
+    "upload_dir": "./data/uploads",
+    "max_upload_size_bytes": 10485760,
+    "supported_extensions": [
+      ".txt",
+      ".md",
+      ".pdf",
+      ".html",
+      ".htm"
+    ],
+    "vector_collection": "rag_chunks"
+  },
+  "total_uploads_tested": 4,
+  "upload_records": [
+    {
+      "filename": "financial-advisor-code-of-conduct.md",
+      "description": "Valid Markdown Document Upload",
+      "status_code": 201,
+      "response": {
+        "status": "indexed",
+        "document_id": "doc_90659ef24c94",
+        "filename": "financial-advisor-code-of-conduct.md",
+        "summary": {
+          "chunks_created": 1,
+          "chunks_indexed": 1
+        }
+      },
+      "success": true
+    },
+    {
+      "filename": "client-suitability-guideline.txt",
+      "description": "Valid Plain Text Document Upload",
+      "status_code": 201,
+      "response": {
+        "status": "indexed",
+        "document_id": "doc_70ed65321530",
+        "filename": "client-suitability-guideline.txt",
+        "summary": {
+          "chunks_created": 1,
+          "chunks_indexed": 1
+        }
+      },
+      "success": true
+    },
+    {
+      "filename": "unauthorized-binary.exe",
+      "description": "Unsupported Executable File (Expected HTTP 415 Rejection)",
+      "status_code": 415,
+      "response": {
+        "detail": "Unsupported file type: '.exe'. Supported extensions: .htm, .html, .md, .pdf, .txt"
+      },
+      "success": true
+    },
+    {
+      "filename": "empty-notice.txt",
+      "description": "Empty Document (Expected HTTP 400 Rejection)",
+      "status_code": 400,
+      "response": {
+        "detail": "Uploaded file 'empty-notice.txt' is empty (0 bytes)."
+      },
+      "success": true
+    }
+  ],
+  "runtime_query_test": {
+    "query": "What are the rules regarding undisclosed third-party commissions for financial advisors?",
+    "http_status": 200,
+    "rag_status": "answered",
+    "answer": "Under the Financial Advisor Code of Conduct 2026, advisors are strictly prohibited from receiving undisclosed third-party commissions on mutual funds and must place client interests first [1].",
+    "sources_count": 3,
+    "sources": [
+      {
+        "marker": "[1]",
+        "source": "ombudsman-rules.txt",
+        "chunk_index": 0,
+        "metadata": {
+          "approval_status": "approved",
+          "source": "ombudsman-rules.txt",
+          "document_id": "doc_258af6c8da0c",
+          "upload_timestamp": "2026-09-09T09:30:14.462760+00:00",
+          "effective_date": "2026-09-09",
+          "chunk_index": 0,
+          "document_version": "1.0"
+        },
+        "id": "doc_258af6c8da0c:0"
+      },
+      {
+        "marker": "[2]",
+        "source": "ombudsman-rules.txt",
+        "chunk_index": 0,
+        "metadata": {
+          "approval_status": "approved",
+          "upload_timestamp": "2026-09-09T09:32:33.311448+00:00",
+          "chunk_index": 0,
+          "effective_date": "2026-09-09",
+          "document_id": "doc_acace399fe89",
+          "document_version": "1.0",
+          "source": "ombudsman-rules.txt"
+        },
+        "id": "doc_acace399fe89:0"
+      },
+      {
+        "marker": "[3]",
+        "source": "ombudsman-rules.txt",
+        "chunk_index": 0,
+        "metadata": {
+          "upload_timestamp": "2026-09-09T09:44:09.413196+00:00",
+          "chunk_index": 0,
+          "approval_status": "approved",
+          "document_version": "1.0",
+          "effective_date": "2026-09-09",
+          "source": "ombudsman-rules.txt",
+          "document_id": "doc_f9c169e763d3"
+        },
+        "id": "doc_f9c169e763d3:0"
+      }
+    ]
+  },
+  "tracked_documents_count": 2
+}

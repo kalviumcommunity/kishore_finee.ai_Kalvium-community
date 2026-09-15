@@ -119,6 +119,16 @@ class Settings(BaseSettings):
         description="Connection URL for PostgreSQL with pgvector extension",
     )
 
+    # MongoDB Chat Persistence Settings
+    MONGODB_URI: str = Field(
+        default="mongodb://localhost:27017",
+        description="MongoDB connection URI for chat history and conversation persistence",
+    )
+    MONGODB_DATABASE: str = Field(
+        default="finee_ai",
+        description="MongoDB database name for persistent collections",
+    )
+
 
 
     # LLM Generation & Output Control Settings
@@ -159,6 +169,116 @@ class Settings(BaseSettings):
     RERANK_TIMEOUT_SECONDS: float = Field(
         default=5.0,
         description="Timeout in seconds for re-ranking scoring calls",
+    )
+
+    # Context Injection & Token Budget Settings
+    MAX_MODEL_CONTEXT_TOKENS: int = Field(
+        default=8192,
+        description="Total context window limit of the model (e.g., 8192, 128000)",
+    )
+    MAX_CONTEXT_TOKENS: int = Field(
+        default=5000,
+        description="Maximum tokens allocated for injected retrieved context",
+    )
+    RESERVED_ANSWER_TOKENS: int = Field(
+        default=1500,
+        description="Reserved token budget for model answer completion",
+    )
+    RESERVED_INSTRUCTION_TOKENS: int = Field(
+        default=800,
+        description="Reserved token budget for system instructions and user question",
+    )
+
+    # Retrieval Guardrails, Relevance Filtering & Safe Refusal Settings
+    MIN_TOP_SCORE: float = Field(
+        default=0.70,
+        description="Minimum relevance/similarity score required for top retrieved chunk",
+    )
+    MIN_RERANK_SCORE: float = Field(
+        default=5.0,
+        description="Minimum reranker score on a 0-10 scale required for candidate acceptance",
+    )
+    RERANK_SCORE_DROPOFF_THRESHOLD: float = Field(
+        default=3.5,
+        description="Maximum drop in reranker score from top candidate before subsequent candidates are filtered",
+    )
+    SCORE_DROPOFF_RATIO: float = Field(
+        default=0.65,
+        description="Minimum ratio of candidate score relative to top score to avoid distractor inclusion",
+    )
+    MIN_SUPPORTING_CHUNKS: int = Field(
+        default=1,
+        description="Minimum number of retrieved chunks meeting relevance thresholds",
+    )
+    RETRIEVAL_TOP_K: int = Field(
+        default=4,
+        description="Default number of chunks retrieved for candidate evaluation",
+    )
+    SAFE_REFUSAL_MESSAGE: str = Field(
+        default="I don't have enough reliable evidence in the approved knowledge base to answer that question.",
+        description="Standardized compliance refusal text returned when retrieval evidence is insufficient",
+    )
+
+    # Conversational RAG & Query Rewriting Settings
+    MAX_CONVERSATION_TURNS: int = Field(
+        default=5,
+        description="Maximum recent conversation turns (user/assistant pairs) retained in rolling history",
+    )
+    MAX_HISTORY_TOKENS: int = Field(
+        default=1000,
+        description="Maximum token budget allocated for conversation history in query rewriting prompt",
+    )
+    QUERY_REWRITE_MODEL: Optional[str] = Field(
+        default=None,
+        description="Model override for follow-up query rewriting (defaults to CHAT_MODEL)",
+    )
+
+    # Document Upload & Dynamic Indexing Settings
+    UPLOAD_DIR: str = Field(
+        default="./data/uploads",
+        description="Local filesystem directory for safely storing runtime uploaded documents",
+    )
+    MAX_UPLOAD_SIZE_BYTES: int = Field(
+        default=10 * 1024 * 1024,
+        description="Maximum allowed file size for document upload in bytes (default: 10MB)",
+    )
+    SUPPORTED_UPLOAD_EXTENSIONS: list[str] = Field(
+        default=[".txt", ".md", ".pdf", ".html", ".htm"],
+        description="List of supported file extensions for runtime document ingestion",
+    )
+
+    # Authentication & Role-Based Security Settings
+    ADMIN_EMAIL: str = Field(
+        default="pallempativaishnavi@gmail.com",
+        description="Configured Super Administrator work email address",
+    )
+    ADMIN_PASSWORD: str = Field(
+        default="vaishnavi123",
+        description="Configured Super Administrator development password",
+    )
+    ADMIN_PASSWORD_HASH: Optional[str] = Field(
+        default=None,
+        description="Optional pre-computed PBKDF2/bcrypt hash for admin password",
+    )
+    JWT_SECRET_KEY: str = Field(
+        default="finee-enterprise-secret-jwt-key-2026-compliance-rag-platform",
+        description="Cryptographic secret key for signing session tokens",
+    )
+    JWT_ALGORITHM: str = Field(
+        default="HS256",
+        description="Algorithm for signing authentication tokens",
+    )
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(
+        default=1440,
+        description="Token expiration duration in minutes (24 hours)",
+    )
+    GOOGLE_CLIENT_ID: Optional[str] = Field(
+        default=None,
+        description="Google OAuth Client ID for advisory authentication",
+    )
+    GOOGLE_CLIENT_SECRET: Optional[str] = Field(
+        default=None,
+        description="Google OAuth Client Secret",
     )
 
     # Observability & Logging

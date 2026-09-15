@@ -9,6 +9,7 @@ from src.retrieval.reranker import (
     RerankConfigurationError,
     RerankError,
     RerankScoringError,
+    filter_relevant_candidates,
     format_rerank_comparison,
     parse_rerank_score,
     rerank,

@@ -18,15 +18,20 @@ from src.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-RERANK_PROMPT_TEMPLATE = """Score how relevant the following chunk is to the query from 0 to 10.
+RERANK_PROMPT_TEMPLATE = """Score how directly and specifically the following document evidence answers or pertains to the user query from 0 to 10.
+
+Grounding Criteria:
+- If the document provides direct, specific supporting facts for the query entity/topic, score HIGH (7.0 to 10.0).
+- If the document is partially relevant or background context, score MEDIUM (4.0 to 6.9).
+- If the document is about a different fund, different entity, unrelated policy, out-of-scope topic, or does NOT contain evidence to answer the query, score LOW (0.0 to 3.9).
 
 Query:
 {query}
 
-Chunk:
+Evidence Chunk:
 {chunk_text}
 
-Return only the numeric score."""
+Return ONLY the single numerical score between 0.0 and 10.0."""
 
 
 class RerankError(Exception):
@@ -71,11 +76,46 @@ def parse_rerank_score(response_text: str, fallback_score: float = 5.0) -> float
         return fallback_score
 
 
+STOPWORDS = {
+    "a", "about", "above", "after", "again", "against", "all", "am", "an", "and",
+    "any", "are", "aren't", "as", "at", "be", "because", "been", "before", "being",
+    "below", "between", "both", "but", "by", "can", "can't", "cannot", "could",
+    "couldn't", "did", "didn't", "do", "does", "doesn't", "doing", "don't", "down",
+    "during", "each", "few", "for", "from", "further", "had", "hadn't", "has",
+    "hasn't", "have", "haven't", "having", "he", "he'd", "he'll", "he's", "her",
+    "here", "here's", "hers", "herself", "him", "himself", "his", "how", "how's",
+    "i", "i'd", "i'll", "i'm", "i've", "if", "in", "into", "is", "isn't", "it",
+    "it's", "its", "itself", "let's", "me", "more", "most", "mustn't", "my",
+    "myself", "no", "nor", "not", "of", "off", "on", "once", "only", "or",
+    "other", "ought", "our", "ours", "ourselves", "out", "over", "own", "same",
+    "shan't", "she", "she'd", "she'll", "she's", "should", "shouldn't", "so",
+    "some", "such", "than", "that", "that's", "the", "their", "theirs", "them",
+    "themselves", "then", "there", "there's", "these", "they", "they'd", "they'll",
+    "they're", "they've", "this", "those", "through", "to", "too", "under",
+    "until", "up", "very", "was", "wasn't", "we", "we'd", "we'll", "we're",
+    "we've", "were", "weren't", "what", "what's", "when", "when's", "where",
+    "where's", "which", "while", "who", "who's", "whom", "why", "why's", "with",
+    "won't", "would", "wouldn't", "you", "you'd", "you'll", "you're", "you've",
+    "your", "yours", "yourself", "yourselves"
+}
+
+
+def _match_token_in_text(token: str, text: str) -> bool:
+    """Check if token or its root stem matches within text."""
+    if token in text:
+        return True
+    # Basic morphological stemming
+    stem = re.sub(r"(?:ing|ed|es|s|tion|tions|ment|ments|ive|al)$", "", token)
+    if len(stem) >= 3 and stem in text:
+        return True
+    return False
+
+
 def _deterministic_relevance_scorer(query: str, chunk_text: str) -> float:
     """Deterministic scoring heuristic for offline testing and fallback execution.
 
-    Evaluates exact keyword matches, n-gram lexical overlap, and key financial term
-    density without calling external paid APIs.
+    Evaluates content word overlap (excluding stopwords), multi-word phrase matching,
+    entity-specific alignment, and domain term presence.
 
     Args:
         query: User search query.
@@ -90,34 +130,56 @@ def _deterministic_relevance_scorer(query: str, chunk_text: str) -> float:
     q_clean = query.lower()
     c_clean = chunk_text.lower()
 
-    q_words = re.findall(r"\b\w+\b", q_clean)
-    if not q_words:
+    all_q_words = re.findall(r"\b\w+\b", q_clean)
+    if not all_q_words:
         return 0.0
 
-    # 1. Exact unigram overlap ratio
-    matched_unigrams = sum(1 for w in q_words if w in c_clean)
-    unigram_ratio = matched_unigrams / len(q_words)
+    # Extract non-stopword content tokens
+    content_words = [w for w in all_q_words if w not in STOPWORDS and len(w) > 1]
+    if not content_words:
+        content_words = all_q_words
+
+    # 1. Content Word Overlap Ratio (using root stem matching)
+    matched_content = sum(1 for w in content_words if _match_token_in_text(w, c_clean))
+    content_ratio = matched_content / len(content_words)
 
     # 2. Bigram phrase overlap
     bigram_matches = 0
-    total_bigrams = max(1, len(q_words) - 1)
-    for i in range(len(q_words) - 1):
-        bigram = f"{q_words[i]} {q_words[i+1]}"
-        if bigram in c_clean:
-            bigram_matches += 1
-    bigram_ratio = bigram_matches / total_bigrams
+    total_bigrams = max(1, len(content_words) - 1)
+    for i in range(len(content_words) - 1):
+        w1, w2 = content_words[i], content_words[i+1]
+        if _match_token_in_text(w1, c_clean) and _match_token_in_text(w2, c_clean):
+            bigram = f"{w1} {w2}"
+            if bigram in c_clean or f"{w1}" in c_clean:
+                bigram_matches += 1
+    bigram_ratio = bigram_matches / total_bigrams if len(content_words) > 1 else (1.0 if content_ratio > 0.8 else 0.0)
 
-    # 3. Financial domain term density bonus
+    # 3. Exact phrase match bonus
+    # Check if a 3+ word substantive query phrase exists verbatim in the chunk
+    phrase_bonus = 0.0
+    if len(content_words) >= 3:
+        sub_phrase = " ".join(content_words[:3])
+        if sub_phrase in c_clean:
+            phrase_bonus = 1.5
+
+    # 4. Out-of-scope / zero content match penalty:
+    # If less than 35% of substantive content words match, clamp score near zero
+    if content_ratio < 0.35:
+        return round(content_ratio * 3.0, 2)
+
+    # 5. Financial / domain term density bonus
     financial_keywords = [
-        "fee", "advisory", "schedule", "yield", "bond", "fund",
+        "fee", "advisory", "schedule", "yield", "bond", "fund", "equity",
         "compliance", "kyc", "aml", "security", "penalty", "deposit",
-        "billing", "quarterly", "interest", "annual", "rate", "matur"
+        "billing", "quarterly", "interest", "annual", "rate", "matur",
+        "objective", "investment", "portfolio", "risk", "discretionary",
+        "rubric", "submission", "guideline", "sebi", "aif", "disclosure"
     ]
-    domain_hits = sum(1 for kw in financial_keywords if kw in q_clean and kw in c_clean)
-    domain_bonus = min(2.0, domain_hits * 0.5)
+    domain_hits = sum(1 for kw in financial_keywords if _match_token_in_text(kw, q_clean) and _match_token_in_text(kw, c_clean))
+    domain_bonus = min(1.5, domain_hits * 0.3)
 
-    # Combine into 0–10 scale
-    base_score = (unigram_ratio * 5.0) + (bigram_ratio * 3.0) + domain_bonus
+    # Combine into calibrated 0–10 scale
+    base_score = (content_ratio * 6.0) + (bigram_ratio * 2.5) + phrase_bonus + domain_bonus
     return max(0.0, min(10.0, round(base_score, 2)))
 
 
@@ -246,6 +308,79 @@ def rerank(
         item["rank"] = new_rank
 
     return top_results
+
+
+def filter_relevant_candidates(
+    query: str,
+    candidates: Sequence[Dict[str, Any]],
+    min_rerank_score: Optional[float] = None,
+    min_vector_score: Optional[float] = None,
+    max_dropoff: Optional[float] = None,
+    dropoff_ratio: Optional[float] = None,
+) -> List[Dict[str, Any]]:
+    """Filter candidate chunks to retain only genuinely relevant evidence, discarding distractors.
+
+    Ensures that:
+    1. Top candidate meets minimum relevance standards. If not, returns [] indicating insufficient evidence.
+    2. Subsequent candidates meet the minimum threshold and do not drop excessively relative to the top candidate.
+    3. Low-relevance distractors (e.g. other fund factsheets when querying a specific fund) are excluded.
+
+    Args:
+        query: User query string.
+        candidates: Sequence of candidate chunks (preferably after re-ranking).
+        min_rerank_score: Minimum reranker score required (default: settings.MIN_RERANK_SCORE).
+        min_vector_score: Minimum vector similarity required (default: settings.MIN_TOP_SCORE).
+        max_dropoff: Maximum absolute drop in rerank score from top candidate (default: settings.RERANK_SCORE_DROPOFF_THRESHOLD).
+        dropoff_ratio: Minimum fraction of top score candidate must maintain (default: settings.SCORE_DROPOFF_RATIO).
+
+    Returns:
+        Filtered list of accepted candidate chunks.
+    """
+    if not candidates:
+        return []
+
+    min_r = min_rerank_score if min_rerank_score is not None else settings.MIN_RERANK_SCORE
+    min_v = min_vector_score if min_vector_score is not None else settings.MIN_TOP_SCORE
+    dropoff_limit = max_dropoff if max_dropoff is not None else settings.RERANK_SCORE_DROPOFF_THRESHOLD
+    ratio_limit = dropoff_ratio if dropoff_ratio is not None else settings.SCORE_DROPOFF_RATIO
+
+    # Inspect top candidate
+    top_candidate = candidates[0]
+    top_rerank = top_candidate.get("rerank_score")
+    top_vec = float(top_candidate.get("score", 0.0))
+
+    # If top candidate is below minimum thresholds, all candidates are rejected
+    if top_rerank is not None and top_rerank < min_r:
+        logger.info("Top candidate rerank_score (%.2f) below min_rerank_score (%.2f). Rejecting all.", top_rerank, min_r)
+        return []
+
+    if top_rerank is None and top_vec < min_v:
+        logger.info("Top candidate vector score (%.4f) below min_vector_score (%.4f). Rejecting all.", top_vec, min_v)
+        return []
+
+    accepted: List[Dict[str, Any]] = []
+
+    for idx, cand in enumerate(candidates):
+        r_score = cand.get("rerank_score")
+        v_score = float(cand.get("score", 0.0))
+
+        # Check threshold
+        if r_score is not None:
+            if r_score < min_r:
+                continue
+            if top_rerank is not None and (top_rerank - r_score) > dropoff_limit:
+                logger.debug("Candidate %d rejected due to rerank dropoff (top=%.2f, cand=%.2f, limit=%.2f)", idx, top_rerank, r_score, dropoff_limit)
+                continue
+        else:
+            if v_score < min_v:
+                continue
+            if top_vec > 0 and (v_score / top_vec) < ratio_limit:
+                continue
+
+        accepted.append(cand)
+
+    return accepted
+
 
 
 def retrieve_and_rerank(

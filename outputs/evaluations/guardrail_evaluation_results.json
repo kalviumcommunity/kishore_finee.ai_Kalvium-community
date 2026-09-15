@@ -1,0 +1,64 @@
+{
+  "guardrail_configuration": {
+    "min_top_score": 0.72,
+    "min_supporting_chunks": 1,
+    "retrieval_top_k": 4,
+    "safe_refusal_message": "I don't have enough reliable evidence in the approved knowledge base to answer that question."
+  },
+  "evaluation_summary": {
+    "total_scenarios_evaluated": 4,
+    "refused_scenarios": 3,
+    "answered_scenarios": 1,
+    "llm_calls_prevented": 3
+  },
+  "scenario_evaluations": [
+    {
+      "scenario": "Scenario 1: Strong Retrieval (In-Domain Query)",
+      "question": "What evidence supports the advisory fee charged to Marcus?",
+      "retrieved_chunks_count": 2,
+      "top_score": 0.942,
+      "supporting_chunks_count": 2,
+      "status": "answered",
+      "llm_called": true,
+      "sources_count": 2,
+      "refusal_reason": null,
+      "response_sample": "Marcus was charged an advisory fee of $1,250.00 on 20 August 2026 confirmed via invoice #INV-2026-08..."
+    },
+    {
+      "scenario": "Scenario 2: Weak Retrieval (Out-of-Domain Query)",
+      "question": "What is the corporate cafeteria weekly lunch special menu?",
+      "retrieved_chunks_count": 2,
+      "top_score": 0.542,
+      "supporting_chunks_count": 0,
+      "status": "refused_weak_context",
+      "llm_called": false,
+      "sources_count": 0,
+      "refusal_reason": "Top retrieval score (0.5420) is below minimum threshold (0.7200).",
+      "response_sample": "I don't have enough reliable evidence in the approved knowledge base to answer that question."
+    },
+    {
+      "scenario": "Scenario 3: Empty Retrieval (Unknown Topic Query)",
+      "question": "What is the cryptocurrency staking yield for Token XYZ?",
+      "retrieved_chunks_count": 0,
+      "top_score": 0.0,
+      "supporting_chunks_count": 0,
+      "status": "refused_empty_context",
+      "llm_called": false,
+      "sources_count": 0,
+      "refusal_reason": "No relevant chunks retrieved from knowledge base.",
+      "response_sample": "I don't have enough reliable evidence in the approved knowledge base to answer that question."
+    },
+    {
+      "scenario": "Scenario 4: Insufficient Supporting Chunks (High Minimum Requirement)",
+      "question": "Provide two independent policy sources for the fixed deposit penalty rate.",
+      "retrieved_chunks_count": 2,
+      "top_score": 0.865,
+      "supporting_chunks_count": 1,
+      "status": "refused_insufficient_support",
+      "llm_called": false,
+      "sources_count": 0,
+      "refusal_reason": "Found 1 supporting chunk(s) meeting score threshold, but minimum 2 required.",
+      "response_sample": "I don't have enough reliable evidence in the approved knowledge base to answer that question."
+    }
+  ]
+}

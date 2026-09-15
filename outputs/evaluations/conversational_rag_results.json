@@ -1,0 +1,125 @@
+{
+  "benchmark": "conversational_rag_query_rewriting",
+  "config": {
+    "max_conversation_turns": 5,
+    "max_history_tokens": 1000,
+    "min_top_score": 0.72,
+    "retrieval_top_k": 4
+  },
+  "total_turns_tested": 4,
+  "turns": [
+    {
+      "turn": 1,
+      "turn_type": "Initial Standalone Query",
+      "original_question": "What evidence is required for project submission?",
+      "rewritten_query": "What evidence is required for project submission?",
+      "top_chunk_score": 0.952,
+      "status": "answered",
+      "answer": "Project submissions require three mandatory evidence items: a public GitHub PR link, verified sample output or test artifacts, and a 3-5 minute video explanation demonstrating execution [1].",
+      "sources": [
+        {
+          "marker": "[1]",
+          "source": "submission-policy.pdf",
+          "chunk_index": 0,
+          "metadata": {
+            "source": "submission-policy.pdf",
+            "chunk_index": 0,
+            "document_id": "doc_sub_01"
+          },
+          "id": "doc_sub_01:0"
+        },
+        {
+          "marker": "[2]",
+          "source": "rubric-guidelines.md",
+          "chunk_index": 1,
+          "metadata": {
+            "source": "rubric-guidelines.md",
+            "chunk_index": 1,
+            "document_id": "doc_rubric_01"
+          },
+          "id": "doc_rubric_01:1"
+        }
+      ],
+      "history_length_messages": 2
+    },
+    {
+      "turn": 2,
+      "turn_type": "Follow-up Query (Pronoun / Topic Elision)",
+      "original_question": "What about the video?",
+      "rewritten_query": "What video explanation is required for project submission?",
+      "top_chunk_score": 0.938,
+      "status": "answered",
+      "answer": "The submission video explanation must be 3 to 5 minutes long, feature voice narration covering code changes, and demonstrate all unit test suites passing [1].",
+      "sources": [
+        {
+          "marker": "[1]",
+          "source": "video-requirements.md",
+          "chunk_index": 2,
+          "metadata": {
+            "source": "video-requirements.md",
+            "chunk_index": 2,
+            "document_id": "doc_video_01"
+          },
+          "id": "doc_video_01:2"
+        },
+        {
+          "marker": "[2]",
+          "source": "video-requirements.md",
+          "chunk_index": 3,
+          "metadata": {
+            "source": "video-requirements.md",
+            "chunk_index": 3,
+            "document_id": "doc_video_01"
+          },
+          "id": "doc_video_01:3"
+        }
+      ],
+      "history_length_messages": 4
+    },
+    {
+      "turn": 3,
+      "turn_type": "Follow-up Query (Context Anchor / Scope Question)",
+      "original_question": "Does it apply to Sprint 2?",
+      "rewritten_query": "Does the video requirement apply to Sprint 2?",
+      "top_chunk_score": 0.924,
+      "status": "answered",
+      "answer": "Yes, Sprint 2 submissions strictly enforce all standard submission evidence requirements, including the PR link, test artifacts, and video walkthrough [1].",
+      "sources": [
+        {
+          "marker": "[1]",
+          "source": "sprint-2-syllabus.pdf",
+          "chunk_index": 4,
+          "metadata": {
+            "source": "sprint-2-syllabus.pdf",
+            "chunk_index": 4,
+            "document_id": "doc_sprint2_01"
+          },
+          "id": "doc_sprint2_01:4"
+        },
+        {
+          "marker": "[2]",
+          "source": "sprint-2-syllabus.pdf",
+          "chunk_index": 5,
+          "metadata": {
+            "source": "sprint-2-syllabus.pdf",
+            "chunk_index": 5,
+            "document_id": "doc_sprint2_01"
+          },
+          "id": "doc_sprint2_01:5"
+        }
+      ],
+      "history_length_messages": 6
+    },
+    {
+      "turn": 4,
+      "turn_type": "Out-of-Domain Follow-up (Guardrail Refusal Trigger)",
+      "original_question": "What is the lunch menu for the Sprint 2 review meeting?",
+      "rewritten_query": "What is the lunch menu for the Sprint 2 review meeting?",
+      "top_chunk_score": 0.485,
+      "status": "refused_weak_context",
+      "answer": "I don't have enough reliable evidence in the approved knowledge base to answer that question.",
+      "sources": [],
+      "history_length_messages": 8
+    }
+  ]
+}
