@@ -20,6 +20,7 @@
       },
       "embedding_model": "text-embedding-3-small",
       "id": "43a11ce9-5d3a-4227-b890-da7ced6b6234"
+      "id": "032602e2-17cb-4a10-80f2-df30f87c1859"
     },
     {
       "rank": 2,
@@ -36,6 +37,7 @@
       },
       "embedding_model": "text-embedding-3-small",
       "id": "1c365491-f618-4a5d-9bb0-1936a7e4780e"
+      "id": "fa60e0f4-f84d-4319-8974-96421f106af3"
     },
     {
       "rank": 3,
@@ -52,6 +54,8 @@
       },
       "embedding_model": "text-embedding-3-small",
       "id": "acc5c908-759c-4076-b5ff-6c3058d0b672"
+
+      "id": "59139f32-6e26-4e51-be0e-041428c55e1c"
     }
   ],
   "chromadb_retrieval_k3": [
@@ -70,12 +74,27 @@
       },
       "embedding_model": "text-embedding-3-small",
       "id": "619e3f2b-2874-4457-9508-ac7a3738db8d"
+
+        "document_id": "doc_sec_001",
+        "source": "auth-and-access-guide.md",
+        "page": 2,
+        "chunk_index": 1,
+        "effective_date": "2026-01-01",
+        "approval_status": "approved",
+        "section": "Account Recovery"
+      },
+      "embedding_model": "text-embedding-3-small",
+      "id": "1c67b685-ba91-4017-b76a-1b7990e4fe65"
     },
     {
       "rank": 2,
       "score": 0.8587,
       "text": "To reset your account password, navigate to the FInee.ai login portal and click 'Forgot Password'. Enter your registered email address to receive a secure time-limited one-time password (OTP) verification link.",
       "metadata": {
+        "effective_date": "2026-01-01",
+        "section": "Password Management",
+        "source": "auth-and-access-guide.md",
+        "approval_status": "approved",
         "page": 1,
         "effective_date": "2026-01-01",
         "document_id": "doc_sec_001",
@@ -86,6 +105,10 @@
       },
       "embedding_model": "text-embedding-3-small",
       "id": "4f1376af-f1af-4505-a959-23c9756891ad"
+        "chunk_index": 0
+      },
+      "embedding_model": "text-embedding-3-small",
+      "id": "2b512d5f-4c31-4bea-90fd-53d3c7367403"
     },
     {
       "rank": 3,
@@ -102,6 +125,16 @@
       },
       "embedding_model": "text-embedding-3-small",
       "id": "4a6c3366-d456-4bf1-890a-7d5e3fb05ae9"
+        "effective_date": "2026-01-15",
+        "section": "Expense Ratios and Fee Structures",
+        "chunk_index": 2,
+        "document_id": "doc_mf_101",
+        "source": "mutual-fund-handbook.pdf",
+        "approval_status": "approved",
+        "page": 7
+      },
+      "embedding_model": "text-embedding-3-small",
+      "id": "6ed0dee1-230d-4383-a40d-39b10bf33f4a"
     }
   ],
   "k_tradeoff_demonstration": {

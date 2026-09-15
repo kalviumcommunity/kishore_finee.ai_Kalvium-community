@@ -4,8 +4,12 @@ This directory houses administrative, maintenance, demonstration, and ingestion 
 
 ## Available Scripts
 
-### Retrieval & Semantic Search
+- `demonstrate_streaming_rag.py`: Demonstrates progressive SSE answer streaming, citation delivery (`[1]`), token timing, error event handling, and exports results to `outputs/evaluations/streaming_rag_demo.json`.
+  ```bash
+  python scripts/demonstrate_streaming_rag.py
+  ```
 - `demonstrate_filtered_hybrid_search.py`: Demonstrates metadata filtering, unfiltered vs filtered precision comparison, exact keyword lexical scoring, and weighted hybrid ranking. Exports to `outputs/evaluations/metadata_filtering_hybrid_search_results.json` and `outputs/evaluations/filtered_hybrid_search_demo.json`.
+
   ```bash
   python scripts/demonstrate_filtered_hybrid_search.py
   ```
